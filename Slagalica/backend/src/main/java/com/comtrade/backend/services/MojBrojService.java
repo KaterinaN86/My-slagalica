@@ -18,6 +18,10 @@ public class MojBrojService {
         nums.add((int)(Math.random()*3)*5+10);
         nums.add((int)(Math.random()*4)*25+25);
     }
+    public MojBrojService(int target,LinkedList<Integer> nums){
+        this.target=target;
+        this.nums=nums;
+    }
 
     public LinkedList<Integer> getNums() {
         return nums;
@@ -80,14 +84,5 @@ public class MojBrojService {
     int userSolutionDif(String exp){
         return Math.abs(Integer.parseInt(eval(exp))-target);
     }
-    public   String solve(){
-        return recSolve(target,nums);
-    }
-    public String recSolve(int target, LinkedList<Integer> source){
-        if (target==0){
-            return "";
-        }
 
-        return "";
-    }
 }
