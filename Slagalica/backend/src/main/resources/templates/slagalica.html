@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Slagalica</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+</head>
+<style>
+    * {
+        font-family: 'Quicksand', sans-serif;
+        margin: 0;
+        padding: 0;
+
+
+    }
+    body {
+        background-color: #333366;
+    }
+    .naslov {
+        border: 1px solid gray;
+        border-radius: 10px;
+        margin-top: 20px;
+        background-color: #b1b1b1;
+    }
+
+    .b1, .b2, .b3, .b4, .b5, .b6, .b7, .b8, .b9, .b10, .b11, .b12 {
+        width: 80px !important;
+    }
+
+</style>
+<body>
+<div class="container p-5">
+
+    <h1 class="text-center text-white naslov col-md-12">SLAGALICA</h1>
+
+
+    <div class="row d-block text-center">
+        <div class="pt-5">
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b1" >Z</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b2" >A</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b3" >M</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b4" >L</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b5" >A</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b6" >I</button>
+        </div>
+        <div class="pt-2">
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b7" >I</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b8" >K</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b9" >A</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b10" >T</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b11" >N</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b12" >E</button>
+        </div>
+        <div class="pt-2">
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 w-50" >STOP</button>
+            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 w-50" disabled>ZANIMATI</button>
+        </div>
+        <div class="d-flex">
+            <div class="col-md-6"><button type="button" class="btn btn-secondary btn-lg w-100 mt-3" >Potvrdi</button></div>
+            <div class="col-md-6"><button type="button" class="btn btn-secondary btn-lg w-100 mt-3" >Izbrisi</button></div>
+        </div>
+        <div class="text-center">
+            <a href="izborigara.html"><button type="button" class="btn btn-secondary btn-lg w-25 mt-5" ><img src="images/arrow-81-32.png" alt=""></button></a>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>
