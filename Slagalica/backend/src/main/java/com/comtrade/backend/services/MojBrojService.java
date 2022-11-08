@@ -61,9 +61,6 @@ public class MojBrojService {
         if(exp.startsWith("(")&&exp.endsWith(")")){
             return eval(exp.substring(1,exp.length()-1));
         }
-        if(!exp.contains("+")&& !exp.contains("*")&&!exp.contains("/")&&!exp.contains("-")){
-            return exp;
-        }
         if (exp.contains("(")){
             exp=exp.replace(exp.substring(exp.indexOf("("),exp.lastIndexOf(")")+1),eval(exp.substring(exp.indexOf("("),exp.lastIndexOf(")")+1)));
         }

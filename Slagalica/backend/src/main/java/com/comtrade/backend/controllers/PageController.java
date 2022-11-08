@@ -8,7 +8,7 @@ public class PageController {
 
     @RequestMapping({"","/","/game"})
     public String showGame() {
-        return "skocko";
+        return "glavnimeni";
     }
 
 }

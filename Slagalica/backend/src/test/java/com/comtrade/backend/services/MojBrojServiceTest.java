@@ -71,6 +71,7 @@ class MojBrojServiceTest {
     @Test
     void eval() {
         assertEquals(String.valueOf(2),mbs.eval("((1+3)-3+7/7*1)"));
+        assertEquals(String.valueOf(3),mbs.eval("3"));
     }
 
     @Test
