@@ -1,14 +1,27 @@
 package com.comtrade.backend.security;
 
+
+import com.comtrade.dao.models.User;
+import com.comtrade.dao.models.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class MyUserDetailService implements UserDetailsService {
+
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new MyUserDetails("as");
+        Optional<User> user=userRepository.findByUserName(username);
+        //return new MyUserDetails("mirko");
+        user.orElseThrow(()-> new UsernameNotFoundException("Not found: "+username));
+        return user.map(MyUserDetails::new).get();
     }
 }
