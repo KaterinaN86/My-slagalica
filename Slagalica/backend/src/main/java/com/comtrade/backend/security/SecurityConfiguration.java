@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/**").hasRole("USER")//ovde staviti sve path-ove kojima moze da pristupi samo ulogovani user
-                .antMatchers("/").permitAll()//ovde svi ostali
+                .antMatchers("/**").permitAll()//ovde svi ostali
                 .and().formLogin();
 
     }

@@ -24,7 +24,6 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user=userRepository.findByUserName(username);
-        //return new MyUserDetails("mirko");
         user.orElseThrow(()-> new UsernameNotFoundException("Not found: "+username));
         return user.map(MyUserDetails::new).get();
     }

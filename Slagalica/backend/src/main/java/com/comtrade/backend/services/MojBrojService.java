@@ -1,42 +1,17 @@
 package com.comtrade.backend.services;
 
 
+import com.comtrade.backend.gameClasses.MojBroj;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 
 @Service
 public class MojBrojService {
-    private int target;
-    private LinkedList<Integer> nums;
-    public MojBrojService(){
-        target =(int)(Math.random()*1000);
-        nums=new LinkedList<>();
-        for(int i=0;i<4;i++){
-            nums.add((int)(Math.random()*9)+1);
-        }
-        nums.add((int)(Math.random()*3)*5+10);
-        nums.add((int)(Math.random()*4)*25+25);
-    }
-    public MojBrojService(int target,LinkedList<Integer> nums){
-        this.target=target;
-        this.nums=nums;
-    }
 
-    public LinkedList<Integer> getNums() {
-        return nums;
-    }
-
-    public int getTarget() {
-        return target;
-    }
-
-    @Override
-    public String toString() {
-        return "mojBrojService{" +
-                "target=" + target +
-                ", nums=" + nums +
-                '}';
+    MojBrojService(){}
+    public MojBroj generateGame(){
+        return new MojBroj();
     }
 
     boolean validateBracket(String expression){
@@ -78,7 +53,7 @@ public class MojBrojService {
         }
         return exp;
     }
-    int userSolutionDif(String exp){
+    int userSolutionDif(String exp,int target){
         return Math.abs(Integer.parseInt(eval(exp))-target);
     }
 
