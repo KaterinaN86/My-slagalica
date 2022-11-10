@@ -16,6 +16,10 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+    MyUserDetailService(UserRepository userRepository){
+        this.userRepository=userRepository;
+        this.userRepository.save(new User("user1","pass",true,"ROLE_USER"));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

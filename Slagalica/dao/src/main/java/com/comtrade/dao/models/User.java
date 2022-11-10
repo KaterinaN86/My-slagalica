@@ -3,7 +3,7 @@ package com.comtrade.dao.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,6 +12,14 @@ public class User {
     private String password;
     private Boolean active;
     private String roles;
+
+    public User(){};
+    public User(String userName, String password, Boolean active, String roles) {
+        this.userName = userName;
+        this.password = password;
+        this.active = active;
+        this.roles = roles;
+    }
 
     public int getId() {
         return id;
