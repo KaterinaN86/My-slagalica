@@ -124,7 +124,6 @@ const submitCombination = async (submittedCombination) => {
     }
 
     try {
-        console.log(combinationObject);
         const response = await fetch('http://localhost:8080/skocko/submit', {
             method: 'POST',
             headers: {
@@ -138,7 +137,7 @@ const submitCombination = async (submittedCombination) => {
             isWinningCombination(data);
         }
 
-    } catch (error) {
+    }catch (error) {
         console.log(error)
     }finally{
         numberOfAttempts++;
@@ -159,13 +158,9 @@ const handleWinningCombination = (data) => {
     buttons.forEach((button) => {
         button.style.pointerEvents = 'none';
     })
-
     cleanElementContent(clickedButton);
     printDots(clickedButton, 4, 'red');
-
-    //let resultPlaceholder = document.getElementById('result');
     printMessages(true,data.points);
-
     printCombination(data.combination, document.getElementById("finalTable").children[0].children);
 }
 
@@ -176,7 +171,6 @@ const handleNotWinningCombination = (data) => {
     printDots(clickedButton,data.goodPositions, 'red');
     printDots(clickedButton,data.badPositions, 'yellow')
     printDots(clickedButton,emptyPositions, 'white');
-
     if(numberOfAttempts==5){
         handleLosingGame();
     }

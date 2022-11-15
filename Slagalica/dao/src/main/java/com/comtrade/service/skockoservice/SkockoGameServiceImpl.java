@@ -2,6 +2,7 @@ package com.comtrade.service.skockoservice;
 
 import com.comtrade.model.skockomodel.*;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class SkockoGameServiceImpl {
+
     private final SkockoGameRepository skockoGameRepository;
 
     public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository) {
@@ -17,25 +20,37 @@ public class SkockoGameServiceImpl {
     }
 
     public SkockoGame createNewGame(){
+        log.info("Creating new instance of Skocko game");
         SkockoGame newGame = new SkockoGame();
         skockoGameRepository.save(newGame);
-        System.out.println(newGame);
+        log.info("Created new instance of Skocko game: " + newGame);
         return newGame;
     }
     public ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit) {
+        boolean isWinningCombination;
+        SkockoResponse skockoResponse;
+
+        log.info("Processing submit for game: " + submit.getGameId() +". Submitted combination: " + submit.getCombination());
         Optional<SkockoGame> existingGame = skockoGameRepository.findById(submit.getGameId());
         if (existingGame.isEmpty()) {
+            log.info("Game with id: " + submit.getGameId() + " not found !");
             return ResponseEntity.notFound()
                     .build();
         }
-        boolean isWinningCombination = isWinningCombination(existingGame.get().getCombination(), submit.getCombination());
+
+        isWinningCombination = isWinningCombination(existingGame.get().getCombination(), submit.getCombination());
 
         if(isWinningCombination){
+            skockoResponse = new SkockoResponseWithNumberOfPoints(isWinningCombination,numberOfPoints(submit.getAttempt()), existingGame.get().getCombination());
+            log.info("Returning object" + skockoResponse + "as response for submitting winning combination" + " for game id: " + existingGame.get().getId());
             return ResponseEntity.ok()
-                    .body(new SkockoResponseWithNumberOfPoints(isWinningCombination,numberOfPoints(submit.getAttempt()), existingGame.get().getCombination()));
+                    .body(skockoResponse);
         }
+
+        skockoResponse = new SkockoResponseWithPositions(isWinningCombination, getNumberOfCorrectlyPlacedSymbolInCombination(existingGame.get().getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolInCombination(existingGame.get().getCombination(), submit.getCombination()));
+        log.info("Returning object" + skockoResponse + "as response for submitting non-winning combination" + " for game id: " + existingGame.get().getId());
         return ResponseEntity.ok()
-                .body(new SkockoResponseWithPositions(isWinningCombination,getNumberOfCorrectlyPlacedSymbolInCombination(existingGame.get().getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolInCombination(existingGame.get().getCombination(), submit.getCombination()))); //ovo treba da koristi novu klasu za tacno/netacno i broj bodova
+                .body(skockoResponse);
     }
 
     public static boolean isWinningCombination(List<Integer> winningCombination, List<Integer> submittedCombination) {
@@ -85,14 +100,16 @@ public class SkockoGameServiceImpl {
     }
 
     public ResponseEntity<List<Integer>> getCombination(Long id){
+        log.info("Getting combination for game id: " + id);
         Optional<SkockoGame> existingGame = skockoGameRepository.findById(id);
         if (existingGame.isEmpty()) {
+            log.info("Game with id: " + id + " not found !");
             return ResponseEntity.notFound()
                     .build();
         }else{
+            log.info("Returning combination for game id: " + existingGame.get().getId());
             return ResponseEntity.ok()
                     .body(existingGame.get().getCombination());
         }
-
     }
 }
