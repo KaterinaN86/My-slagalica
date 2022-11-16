@@ -1,4 +1,4 @@
-package com.comtrade.dao.models;
+package com.comtrade.model;
 
 import javax.persistence.*;
 
