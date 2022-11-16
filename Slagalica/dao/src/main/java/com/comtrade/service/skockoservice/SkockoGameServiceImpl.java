@@ -11,14 +11,14 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class SkockoGameServiceImpl {
+public class SkockoGameServiceImpl implements SkockoGameService{
 
     private final SkockoGameRepository skockoGameRepository;
 
     public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository) {
         this.skockoGameRepository = skockoGameRepository;
     }
-
+    @Override
     public SkockoGame createNewGame(){
         log.info("Creating new instance of Skocko game");
         SkockoGame newGame = new SkockoGame();
@@ -26,6 +26,7 @@ public class SkockoGameServiceImpl {
         log.info("Created new instance of Skocko game: " + newGame);
         return newGame;
     }
+    @Override
     public ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit) {
         boolean isWinningCombination;
         SkockoResponse skockoResponse;
@@ -47,16 +48,17 @@ public class SkockoGameServiceImpl {
                     .body(skockoResponse);
         }
 
-        skockoResponse = new SkockoResponseWithPositions(isWinningCombination, getNumberOfCorrectlyPlacedSymbolInCombination(existingGame.get().getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolInCombination(existingGame.get().getCombination(), submit.getCombination()));
+        skockoResponse = new SkockoResponseWithPositions(isWinningCombination, getNumberOfCorrectlyPlacedSymbolsInCombination(existingGame.get().getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolsInCombination(existingGame.get().getCombination(), submit.getCombination()));
         log.info("Returning object" + skockoResponse + "as response for submitting non-winning combination" + " for game id: " + existingGame.get().getId());
         return ResponseEntity.ok()
                 .body(skockoResponse);
     }
-
-    public static boolean isWinningCombination(List<Integer> winningCombination, List<Integer> submittedCombination) {
+    @Override
+    public boolean isWinningCombination(List<Integer> winningCombination, List<Integer> submittedCombination) {
         return submittedCombination.equals(winningCombination);
     }
-    public static  int getNumberOfCorrectlyPlacedSymbolInCombination(List<Integer> winningCombination, List<Integer> submittedCombination){
+    @Override
+    public  int getNumberOfCorrectlyPlacedSymbolsInCombination(List<Integer> winningCombination, List<Integer> submittedCombination){
         int n=0;
         for(int i=0; i<4; i++){
             if(submittedCombination.get(i).equals(winningCombination.get(i)))
@@ -64,7 +66,7 @@ public class SkockoGameServiceImpl {
         }
         return n;
     }
-    public static int getNumberOfMisplacedSymbolInCombination(List<Integer> winningCombination, List<Integer> submittedCombinatio){
+    public int getNumberOfMisplacedSymbolsInCombination(List<Integer> winningCombination, List<Integer> submittedCombinatio){
         int n=0;
         int m=4;
         for(int i=0;i<m; i++){
@@ -86,8 +88,8 @@ public class SkockoGameServiceImpl {
         }
         return n;
     }
-
-    public static Integer numberOfPoints(Integer numberOfAttempts){
+    @Override
+    public Integer numberOfPoints(Integer numberOfAttempts){
         if(numberOfAttempts<0 || numberOfAttempts>5){//promjenio
             return 0;
         }else{
@@ -98,7 +100,7 @@ public class SkockoGameServiceImpl {
             }
         }
     }
-
+    @Override
     public ResponseEntity<List<Integer>> getCombination(Long id){
         log.info("Getting combination for game id: " + id);
         Optional<SkockoGame> existingGame = skockoGameRepository.findById(id);
