@@ -148,7 +148,7 @@ function deleteOnClick() {
 }
 
 function fastAlphabetSwitch() {
-    var alphAbet = ['A', 'B', 'C', 'Č', 'Ć', 'D', 'Dž', 'Đ', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'Lj', 'M', 'N', 'Nj', 'O', 'P', 'R', 'S', 'Š', 'T', 'U', 'V', 'Z', 'Ž']
+    var alphabet = ['A', 'B', 'C', 'Č', 'Ć', 'D', 'Dž', 'Đ', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'Lj', 'M', 'N', 'Nj', 'O', 'P', 'R', 'S', 'Š', 'T', 'U', 'V', 'Z', 'Ž']
 
     const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
     var idx = 0;
@@ -156,11 +156,11 @@ function fastAlphabetSwitch() {
 
     timer = setInterval(() => {
         buttons.forEach(buttonElem => {
-            document.getElementById(buttonElem).textContent = alphAbet[idx++ % alphAbet.length];
+            document.getElementById(buttonElem).textContent = alphabet[idx++ % alphabet.length];
 
         });
 
-    }, 300);
+    }, 150);
 
 }
 

@@ -4,11 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class PageController {
+public class IndexController {
 
-    @RequestMapping({"","/","/game"})
+    @RequestMapping("/slagalica")
     public String showGame() {
-        return "koznazna";
+        return "slagalica.html";
     }
 
 }
