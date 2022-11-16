@@ -106,16 +106,13 @@ const handleSend = (button) => {
     button.setAttribute("disabled", true);
     clickedButton = button;
     submitCombination(combination);
-    numberOfAttempts++;
-    if (numberOfAttempts < 6) {
+    if (numberOfAttempts < 5) {
         cell_count = 0;
         row_count += 1;
         currentRow = guess_rows[row_count];
         cells = currentRow.getElementsByClassName("tableCell");
         addedSendButton = false;
         combination = [];
-    } else {
-        handleLosingGame();
     }
 }
 
@@ -140,8 +137,10 @@ const submitCombination = async (submittedCombination) => {
             isWinningCombination(data);
         }
 
-    } catch (error) {
+    }catch (error) {
         console.log(error)
+    }finally{
+        numberOfAttempts++;
     }
 
 }
@@ -159,13 +158,9 @@ const handleWinningCombination = (data) => {
     buttons.forEach((button) => {
         button.style.pointerEvents = 'none';
     })
-
     cleanElementContent(clickedButton);
     printDots(clickedButton, 4, 'red');
-
-    let resultPlaceholder = document.getElementById('result');
     printMessages(true,data.points);
-
     printCombination(data.combination, document.getElementById("finalTable").children[0].children);
 }
 
@@ -176,6 +171,9 @@ const handleNotWinningCombination = (data) => {
     printDots(clickedButton,data.goodPositions, 'red');
     printDots(clickedButton,data.badPositions, 'yellow')
     printDots(clickedButton,emptyPositions, 'white');
+    if(numberOfAttempts==5){
+        handleLosingGame();
+    }
 }
 
 const handleLosingGame = async () => {
@@ -196,7 +194,7 @@ const handleLosingGame = async () => {
         .catch((error) => {
             console.log('Fetch error: ', error);
         })
-}
+} 
 
 const printCombination = (data, element) => {//data nek bude kombinacija, tj. onaj niz brojeva, element je niz divova gdje želimo da printamo kombinaciju
     for (let i = 0; i < data.length; i++) {
