@@ -1,13 +1,13 @@
-package com.comtrade.dao;
+package com.comtrade;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DaoApplication {
+public class BackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DaoApplication.class, args);
+		SpringApplication.run(BackendApplication.class, args);
 	}
 
 }

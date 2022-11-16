@@ -1,6 +1,6 @@
-package com.comtrade.backend.controllers;
+package com.comtrade.controller.slagalicacontroller;
 
-import com.comtrade.backend.services.SlagalicaService;
+import com.comtrade.service.slagalicaservice.SlagalicaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,17 +31,17 @@ class SlagalicaControllerTest {
     }
 
     @Test
-    void slovaZaPretraguReci() throws Exception {
+    void getLettersForFindingTheWord() throws Exception {
 
-        String rec = "SADOMIRKIBEO";
+        String word = "SADOMIRKIBEO";
 
-        when(slagalicaService.slovaZaPronalazakReci()).thenReturn(rec);
+        when(slagalicaService.lettersForFindingTheWord()).thenReturn(word);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/slovaZaPretragu"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("slagalica"));
 
-        verify(slagalicaService, times(1)).slovaZaPronalazakReci();
+        verify(slagalicaService, times(1)).lettersForFindingTheWord();
 
     }
 }

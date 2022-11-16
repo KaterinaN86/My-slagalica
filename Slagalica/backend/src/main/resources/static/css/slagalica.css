@@ -1,0 +1,31 @@
+* {
+    font-family: 'Quicksand', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #333366;
+}
+
+.naslov {
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: #b1b1b1;
+}
+
+.b1,
+.b2,
+.b3,
+.b4,
+.b5,
+.b6,
+.b7,
+.b8,
+.b9,
+.b10,
+.b11,
+.b12 {
+    width: 80px !important;
+}
