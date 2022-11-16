@@ -5,6 +5,7 @@ import com.comtrade.model.skockomodel.SkockoResponse;
 import com.comtrade.model.skockomodel.SkockoSubmit;
 import com.comtrade.service.skockoservice.SkockoGameServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
