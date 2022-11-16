@@ -39,17 +39,15 @@
 
     <div class="row d-block text-center">
         <div class="pt-5">
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b1" disabled >6</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b2" disabled>4</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b3" disabled>3</button>
+            <button th:text="${game.target}" type="button" class="btn btn-secondary btn-lg m-2 p-4 b1" disabled >6</button>
         </div>
         <div class="pt-2">
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b7" disabled>1</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b8" disabled>6</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b9" disabled>3</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 mr-5 p-4 b10" disabled>4</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b11" disabled>20</button>
-            <button type="button" class="btn btn-secondary btn-lg m-2 p-4 b12" disabled>100</button>
+            <button th:text="${game.nums[0]}" type="button" class="btn btn-secondary btn-lg m-2 p-4 b7" disabled>1</button>
+            <button th:text="${game.nums[1]}" type="button" class="btn btn-secondary btn-lg m-2 p-4 b8" disabled>6</button>
+            <button th:text="${game.nums[2]}" type="button" class="btn btn-secondary btn-lg m-2 p-4 b9" disabled>3</button>
+            <button th:text="${game.nums[3]}" type="button" class="btn btn-secondary btn-lg m-2 mr-5 p-4 b10" disabled>4</button>
+            <button th:text="${game.nums[4]}" type="button" class="btn btn-secondary btn-lg m-2 p-4 b11" disabled>20</button>
+            <button th:text="${game.nums[5]}" type="button" class="btn btn-secondary btn-lg m-2 p-4 b12" disabled>100</button>
         </div>
         <div class="pt-2">
             <button type="button" class="btn btn-secondary btn-lg m-2 p-4 w-50" >STOP</button>
