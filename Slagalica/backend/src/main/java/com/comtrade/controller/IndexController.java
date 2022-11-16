@@ -10,4 +10,8 @@ public class IndexController {
     public String SkockoIndex(){
         return "skocko.html";
     }
+    @RequestMapping("/slagalica")
+    public String showGame() {
+        return "slagalica.html";
+    }
 }
