@@ -27,6 +27,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").hasRole("USER")//ovde staviti sve path-ove kojima moze da pristupi samo ulogovani user
                 .antMatchers("/*").permitAll()//ovde svi ostali
                 .and().formLogin();
+        http.csrf().disable();
 
     }
     @Bean
