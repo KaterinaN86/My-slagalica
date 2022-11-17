@@ -4,6 +4,7 @@ package com.comtrade.service.slagalicaservice;
 import com.comtrade.model.slagalicamodel.Slagalica;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -63,9 +64,6 @@ public class SlagalicaServiceImp implements SlagalicaService {
         int finalResult = 0;
         String lettersForUserWord = slagalicaUserWordSubmit.getLettersForFindingTheWord();
         String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
-
-
-        //URL url = getClass().getResource("serbian-latin.txt");
 
         try {
 
