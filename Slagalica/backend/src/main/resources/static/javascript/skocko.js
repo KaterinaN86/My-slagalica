@@ -15,6 +15,10 @@ var gameId;
 // User picked combination to be filled with symbols from the buttons clicked
 var combination = [];
 
+var display = document.getElementById("display");
+var seconds = 120;
+var countdown = null;
+
 
 document.addEventListener("DOMContentLoaded", ()=>{
     handleNewGame();
@@ -31,6 +35,7 @@ const handleNewGame = () =>{
 
             response.json().then((data) => {
                 gameId = data.id;
+                timer();
             });
         }
     )
@@ -49,9 +54,9 @@ function displaySymbol(object) {
         }
     } else if (text == " ↺ ") {
         //timer("stop");
-        //restart();
+        window.location.reload(true);
     } else if (text == " ⚐ ") {
-        //printFinalResult();
+        handleLosingGame();
     } else {
         cells[cell_count].innerHTML = text;
         cells[cell_count].style.backgroundColor = "#00897B";
@@ -154,11 +159,10 @@ const isWinningCombination = (data) => {
 }
 
 const handleWinningCombination = (data) => {
-    let buttons = document.querySelectorAll(".buttons");
-    buttons.forEach((button) => {
-        button.style.pointerEvents = 'none';
-    })
+    disableSymbolsButtons();
+    disableGiveUpButton();
     cleanElementContent(clickedButton);
+    timer("stop");
     printDots(clickedButton, 4, 'red');
     printMessages(true,data.points);
     printCombination(data.combination, document.getElementById("finalTable").children[0].children);
@@ -188,6 +192,8 @@ const handleLosingGame = async () => {
                 response.json().then((data) => {
                     printMessages(false,0);
                     printCombination(data, document.getElementById('finalTable').children[0].children);
+                    timer("stop");
+                    disableSymbolsButtons();
                 });
             }
         )
@@ -246,11 +252,40 @@ const printMessages = (isWinning, points) =>{
     if(isWinning){
         messageElement.innerHTML = 'Čestitamo, pogodili ste traženu kombinaciju !';
     }else{
-        messageElement.innerHTML = 'Niste pogodili traženu kombinaciju. Tražena kombinacija izgleda ovako:';
+        messageElement.innerHTML = 'Izgubili ste. Tražena kombinacija izgleda ovako:';
     }
     pointsElement.innerHTML = 'Osvojili ste ' + points + ' bodova.';
     messageElement.style.visibility = 'visible';
     pointsElement.style.visibility = 'visible';
+}
+
+const timer = (order) => {
+	if (order == "stop") {
+		clearInterval(countdown);
+		seconds = 120;
+	} else {
+		countdown = setInterval(function() {
+			if (seconds === 0) {
+				timer("stop");
+				handleLosingGame();
+				return;
+			}
+			display.innerHTML = seconds;
+			seconds--;
+		}, 1000);
+	}
+}
+
+const disableSymbolsButtons = () =>{
+    let buttons = document.querySelectorAll(".buttons");
+    buttons.forEach((button) => {
+        button.style.pointerEvents = 'none';
+    })
+}
+
+const disableGiveUpButton = ()=>{
+    let button = document.getElementById('giveupbutton');
+    button.style.pointerEvents = 'none';
 }
 
 
