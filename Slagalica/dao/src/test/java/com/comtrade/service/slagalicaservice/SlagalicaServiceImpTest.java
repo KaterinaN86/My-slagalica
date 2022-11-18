@@ -27,8 +27,7 @@ class SlagalicaServiceImpTest {
 
     @Mock
     SlagalicaRepository slagalicaRepository;
-    @Mock
-    ResourceUtils resourceUtils;
+
     SlagalicaService slagalicaService;
 
     Slagalica slagalica;
@@ -65,7 +64,7 @@ class SlagalicaServiceImpTest {
 
         slagalica = null;
         String userWord = "MASKIRANJE";
-        slagalica = Slagalica.builder().id(1L).lettersForFindingTheWord("IMABSIRKENKJ").build();
+        slagalica = Slagalica.builder().id(1L).lettersForFindingTheWord("IMAASIRKENKJ").build();
         slagalicaUserWordSubmit = SlagalicaUserWordSubmit.builder()
                                                          .gameId(2L)
                                                          .userWord(userWord)
@@ -73,5 +72,6 @@ class SlagalicaServiceImpTest {
                                                          .build();
 
         assertEquals(userWord.length()*2, slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
+        assertNotNull(slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
     }
 }
