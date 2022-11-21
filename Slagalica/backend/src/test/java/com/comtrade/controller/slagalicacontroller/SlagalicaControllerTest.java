@@ -37,9 +37,9 @@ class SlagalicaControllerTest {
 
         when(slagalicaService.lettersForFindingTheWord()).thenReturn(word);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/slovaZaPretragu"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/play"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("slagalica"));
+                .andExpect(MockMvcResultMatchers.view().name("slagalica.html"));
 
         verify(slagalicaService, times(1)).lettersForFindingTheWord();
 
