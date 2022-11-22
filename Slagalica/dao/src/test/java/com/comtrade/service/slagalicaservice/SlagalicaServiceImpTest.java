@@ -2,6 +2,7 @@ package com.comtrade.service.slagalicaservice;
 
 import com.comtrade.model.slagalicamodel.Slagalica;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
+import com.comtrade.repository.slagalicarepository.DictionaryWordsRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class SlagalicaServiceImpTest {
 
     @Mock
     SlagalicaRepository slagalicaRepository;
+    @Mock
+    DictionaryWordsRepository dictionaryWordsRepository;
 
     SlagalicaService slagalicaService;
 
@@ -36,7 +39,7 @@ class SlagalicaServiceImpTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        slagalicaService = new SlagalicaServiceImp(slagalicaRepository);
+        slagalicaService = new SlagalicaServiceImp(slagalicaRepository, dictionaryWordsRepository);
     }
 
     @Test
