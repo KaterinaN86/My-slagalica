@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Slagalica</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <script>
+
+        function parseButtonText(elem) {
+
+            const btnWord = document.getElementById('userWord');
+            const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
+
+            buttons.forEach(buttonLetter => {
+                if (elem.id == buttonLetter) {
+                    var buttonLetter = document.getElementById(buttonLetter).textContent
+                    console.log(buttonLetter)
+                    btnWord.textContent += buttonLetter
+                    console.log(btnWord.textContent)
+
+                }
+            });
+        }
+
+        function deleteOnClick() {
+
+            var wordUpdate = document.getElementById('userWord').textContent;
+            console.log(wordUpdate)
+            document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 1)
+
+        }
+
+    </script>
+</head>
+<style>
+    * {
+        font-family: 'Quicksand', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #333366;
+    }
+
+    .naslov {
+        border: 1px solid gray;
+        border-radius: 10px;
+        margin-top: 20px;
+        background-color: #b1b1b1;
+    }
+
+    .b1,
+    .b2,
+    .b3,
+    .b4,
+    .b5,
+    .b6,
+    .b7,
+    .b8,
+    .b9,
+    .b10,
+    .b11,
+    .b12 {
+        width: 80px !important;
+    }
+</style>
+
+
+<body>
+<div class="container p-5">
+
+    <h1 class="text-center text-white naslov col-md-12" th:text="'SLAGALICA'">SLAGALICA</h1>
+
+
+    <div class="row d-block text-center">
+        <div class="pt-5">
+            <button th:text="${slovaPretraga[0]}" type="button" id="btn1"
+                    class="btn btn-secondary btn-lg m-2 p-4 b1" onclick="parseButtonText(this)">Z</button>
+            <button th:text="${slovaPretraga[1]}" type="button" id="btn2"
+                    class="btn btn-secondary btn-lg m-2 p-4 b2" onclick="parseButtonText(this)">S</button>
+            <button th:text="${slovaPretraga[2]}" type="button" id="btn3"
+                    class="btn btn-secondary btn-lg m-2 p-4 b3" onclick="parseButtonText(this)">M</button>
+            <button th:text="${slovaPretraga[3]}" type="button" id="btn4"
+                    class="btn btn-secondary btn-lg m-2 p-4 b4" onclick="parseButtonText(this)">L</button>
+            <button th:text="${slovaPretraga[4]}" type="button" id="btn5"
+                    class="btn btn-secondary btn-lg m-2 p-4 b5" onclick="parseButtonText(this)">A</button>
+            <button th:text="${slovaPretraga[5]}" type="button" id="btn6"
+                    class="btn btn-secondary btn-lg m-2 p-4 b6" onclick="parseButtonText(this)">I</button>
+        </div>
+        <div class="pt-2">
+            <button th:text="${slovaPretraga[6]}" type="button" id="btn7"
+                    class="btn btn-secondary btn-lg m-2 p-4 b7" onclick="parseButtonText(this)">I</button>
+            <button th:text="${slovaPretraga[7]}" type="button" id="btn8"
+                    class="btn btn-secondary btn-lg m-2 p-4 b8" onclick="parseButtonText(this)">K</button>
+            <button th:text="${slovaPretraga[8]}" type="button" id="btn9"
+                    class="btn btn-secondary btn-lg m-2 p-4 b9" onclick="parseButtonText(this)">A</button>
+            <button th:text="${slovaPretraga[9]}" type="button" id="btn10"
+                    class="btn btn-secondary btn-lg m-2 p-4 b10" onclick="parseButtonText(this)">T</button>
+            <button th:text="${slovaPretraga[10]}" type="button" id="btn11"
+                    class="btn btn-secondary btn-lg m-2 p-4 b11" onclick="parseButtonText(this)">N</button>
+            <button th:text="${slovaPretraga[11]}" type="button" id="btn12"
+                    class="btn btn-secondary btn-lg m-2 p-4 b12" onclick="parseButtonText(this)">E</button>
+        </div>
+        <div class="pt-2">
+            <button onclick="window.location.href='/slovaZaPretragu'" type="button"
+                    class="btn btn-secondary btn-lg m-2 p-4 w-50">STOP</button>
+            <button type="button" id="userWord" class="btn btn-secondary btn-lg m-2 p-4 w-50" disabled></button>
+        </div>
+        <div class="d-flex">
+            <div class="col-md-6"><button type="button" class="btn btn-secondary btn-lg w-100 mt-3">Potvrdi</button>
+            </div>
+            <div class="col-md-6"><button type="button" id="deleteLetter"
+                                          class="btn btn-secondary btn-lg w-100 mt-3" onclick="deleteOnClick()">Izbrisi</button>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="izborigara.html"><button type="button" class="btn btn-secondary btn-lg w-25 mt-5"><img
+                    src="images/arrow-81-32.png" alt=""></button></a>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+
+</html>
