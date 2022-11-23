@@ -11,10 +11,11 @@
 	<artifactId>dao</artifactId>
 	<name>dao</name>
 	<description>DAO for Slagalica project</description>
+	<packaging>pom</packaging>
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+<!--		<spring-boot.repackage.skip>true</spring-boot.repackage.skip>-->
 	</properties>
 
 	<dependencies>
