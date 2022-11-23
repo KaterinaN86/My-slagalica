@@ -28,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*").permitAll()//ovde svi ostali
                 .and().formLogin();
         http.csrf().disable();
+        http.headers().frameOptions().disable();
 
     }
     @Bean
