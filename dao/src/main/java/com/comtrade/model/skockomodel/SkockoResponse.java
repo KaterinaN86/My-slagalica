@@ -9,4 +9,8 @@ import lombok.*;
 @ToString
 public abstract class SkockoResponse {
     private boolean isWinning;
+
+    public SkockoResponse(boolean isWinning) {
+        this.isWinning = isWinning;
+    }
 }
