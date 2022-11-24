@@ -77,7 +77,10 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
 
             const data = await response.json();
             console.log(data)
-            alert("Time out, you earned " + data + " points")
+            //alert("Time out, you earned " + data + " points")
+            document.getElementById('finalGameResult').textContent = 'Igra je završena, osvojili ste ' + data + ' bodova'
+            disableButtons()
+
         }
 
     } catch (error) {
@@ -164,7 +167,19 @@ function fastAlphabetSwitch() {
 
 }
 
+function disableButtons() {
+
+    const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
+
+    buttons.forEach(buttonLetter => {
+
+        document.getElementById(buttonLetter).setAttribute("disabled", "disabled")
 
 
+    });
 
+    document.getElementById('submitButton').setAttribute("disabled", "disabled")
+    document.getElementById('deleteLetter').setAttribute("disabled", "disabled")
+    document.getElementById('stopButton').setAttribute("disabled", "disabled")
 
+}
