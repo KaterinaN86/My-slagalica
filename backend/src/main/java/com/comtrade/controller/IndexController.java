@@ -14,4 +14,8 @@ public class IndexController {
     public String showGame() {
         return "slagalica.html";
     }
+    @RequestMapping("/MojBroj")
+    public String mojBrojIndex(){
+        return "mojbroj.html";
+    }
 }
