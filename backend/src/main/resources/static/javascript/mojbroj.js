@@ -23,8 +23,8 @@ function handleNewGame(){
                             userExpression.innerText+=event.target.innerText
                         })
                         elems1[i].addEventListener("click",(event)=>{
-                                                    userExpression.innerText+=event.target.innerText
-                                                })
+                            userExpression.innerText+=event.target.innerText
+                        })
                     }
                     document.getElementById("btnDelete").addEventListener("click",()=>{
                         userExpression.innerText=userExpression.innerText.slice(0,userExpression.innerText.length-1)

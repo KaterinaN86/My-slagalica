@@ -1,14 +1,18 @@
 package com.comtrade.service.mojbrojservice;
 
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
 import lombok.extern.slf4j.Slf4j;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import org.hibernate.hql.internal.ast.tree.IdentNode;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.script.ScriptException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,38 +25,71 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public MojBrojGame createNewGame() {
+    public MojBrojGame createNewGame(){
         MojBrojGame game=new MojBrojGame();
+        List<Integer> nums=game.getNumbers();
+        try {
+            int target=eval(game.getSolution());
+            while(target>999 || target<=0){
+                System.out.println(target);
+                game.initializeRandom();
+                target=eval(game.getSolution());
+            }
+            System.out.println(target);
+            nums.set(0,target);
+        } catch (ScriptException e) {
+            game.setSolution("No solution");
+        }
+        game.setNumbers(nums);
         mojBrojRepository.save(game);
         return game;
     }
 
     @Override
-    public boolean validateBrackets() {
-        return false;
+    public MojBrojGame createNewGame(Long id, ArrayList<Integer> nums, Boolean isActive, String solution){
+        MojBrojGame game=new MojBrojGame(id,nums,isActive, solution);
+        mojBrojRepository.save(game);
+        return game;
     }
 
     @Override
-    public String evaluate(String expr) {
-        if(expr.startsWith("(")&&expr.endsWith(")")){
-            return evaluate(expr.substring(1,expr.length()-1));
+    public boolean validateExpression(String expr, long gameId) {
+        Optional<MojBrojGame> game= mojBrojRepository.findById(gameId);
+        if(game.isEmpty()){return false;}
+        MojBrojGame existingGame=game.get();
+        int cnt=0;
+        for(int i=0;i<expr.length();i++){
+            if(expr.charAt(i)=='('){
+                cnt++;
+            } else if (expr.charAt(i)==')') {
+                cnt--;
+            }
+            if(cnt<0){
+                return false;
+            }
         }
-        if (expr.contains("(")){
-            expr=expr.replace(expr.substring(expr.indexOf("("),expr.lastIndexOf(")")+1),evaluate(expr.substring(expr.indexOf("("),expr.lastIndexOf(")")+1)));
+        if (cnt!=0){return false;}
+        expr=expr.replaceAll("[\\(\\)]","");
+        List<String> exprNums= List.of(expr.split("[\\+\\-\\*\\/]"));
+        List<Integer> gameNums=existingGame.getNumbers();
+        List<Integer> gameNumsCoppy=new ArrayList<>();
+        for(Integer i:gameNums){
+            gameNumsCoppy.add(i);
         }
-        if(expr.contains("+")){
-            return String.valueOf(Integer.parseInt(evaluate(expr.substring(0,expr.indexOf("+"))))+Integer.parseInt(evaluate(expr.substring(expr.indexOf("+")+1))));
+        for(String num:exprNums){
+            if(!gameNumsCoppy.contains(Integer.parseInt(num))){
+                return false;
+            }
+            gameNumsCoppy.remove((Object) Integer.parseInt(num));
         }
-        if(expr.contains("-")){
-            return String.valueOf(Integer.parseInt(evaluate(expr.substring(0,expr.lastIndexOf("-"))))-Integer.parseInt(evaluate(expr.substring(expr.lastIndexOf("-")+1))));
-        }
-        if(expr.contains("/")){
-            return String.valueOf(Integer.parseInt(evaluate(expr.substring(0,expr.indexOf("/"))))/Integer.parseInt(evaluate(expr.substring(expr.indexOf("/")+1))));
-        }
-        if(expr.contains("*")){
-            return String.valueOf(Integer.parseInt(evaluate(expr.substring(0,expr.indexOf("*"))))*Integer.parseInt(evaluate(expr.substring(expr.indexOf("*")+1))));
-        }
-        return expr;
+        System.out.println(gameNums);
+        return true;
+    }
+
+    @Override
+    public Integer eval(String expr) throws ScriptException {
+        Expression e=new ExpressionBuilder(expr).build();
+        return (int) e.evaluate();
     }
 
     @Override
@@ -65,9 +102,19 @@ public class MojBrojServiceImpl implements MojBrojService{
         if(existingGame.isActive()==false){
             throw new Exception("You can submit only once");
         }
+        if(!validateExpression(expression,gameId)){
+            throw new Exception("Bad expression");
+        }
         existingGame.setActive(false);
         mojBrojRepository.save(existingGame);
         int target=existingGame.getNumbers().get(0);
-        return Math.abs(Integer.parseInt(evaluate(expression))-target);
+        return Math.abs(eval(expression)-target);
+    }
+
+    @Override
+    public String getSolution(Long gameid) {
+        Optional<MojBrojGame> game=mojBrojRepository.findById(gameid);
+        if (game.isEmpty()){return "";}
+        return game.get().getSolution();
     }
 }
