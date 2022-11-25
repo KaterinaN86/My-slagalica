@@ -44,11 +44,9 @@ public class MojBrojGame {
         }
         numbers.add((int)(Math.random()*3)*5+10);
         numbers.add((int)(Math.random()*4)*25+25);
-        System.out.println(numbers);
         solution="no solution";
 
         int numOfUsedNums=(int)(Math.random()*4+3);
-        System.out.println(numOfUsedNums+":");
         ArrayList<Integer> numsToUse=new ArrayList<>();
         ArrayList<Integer> usedIndexes=new ArrayList<>();
         for(int i=0;i<numOfUsedNums;i++){
@@ -56,25 +54,23 @@ public class MojBrojGame {
             while (usedIndexes.contains(randomIndex)) {
                 randomIndex = (int) (Math.random() *6+1);
             }
-            System.out.println(randomIndex);
             numsToUse.add(numbers.get(randomIndex));
             usedIndexes.add(randomIndex);
         }
         solution=createSolutionFromNums(numsToUse);
     }
     String createSolutionFromNums(ArrayList<Integer> nums){
-        System.out.println(nums);
         String expression="";
         HashMap<Integer,String> op=new HashMap<>();
         op.put(0,"*");
+        op.put(4,"*");
         op.put(1,"+");
         op.put(2,"-");
         op.put(3,"/");
         for(Integer num:nums){
-            expression+=num.toString()+op.get((int)(Math.random()*4));
+            expression+=num.toString()+op.get((int)(Math.random()*5));
         }
         expression=expression.substring(0,expression.length()-1);
-        System.out.println(expression);
         return expression;//todo create brackets
     }
 }
