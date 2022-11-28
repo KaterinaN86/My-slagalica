@@ -6,10 +6,8 @@ import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import org.hibernate.hql.internal.ast.tree.IdentNode;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.List;
