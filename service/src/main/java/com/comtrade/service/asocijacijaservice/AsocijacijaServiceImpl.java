@@ -1,9 +1,9 @@
 package com.comtrade.service.asocijacijaservice;
 
-import com.comtrade.model.asocijacijamodel.AsocijacijaModel;
-import com.comtrade.model.asocijacijamodel.WordModel;
+import com.comtrade.model.asocijacijamodel.*;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -31,11 +31,12 @@ public class AsocijacijaServiceImpl {
     }
 
     //creating new Asocijacija game instance
-    public Long createNewAsocijacijaGame(){
+    public ResponseEntity<Response> createNewAsocijacijaGame(){
         AsocijacijaModel asocijacijaGame = new AsocijacijaModel();
         asocijacijaGame.setWordModel(getRandomWordModel());
         AsocijacijaModel savedAsocijacijaGame = asocijacijaRepository.save(asocijacijaGame);
-        return savedAsocijacijaGame.getId();
+        return ResponseEntity.ok()
+                .body(new ResponseWithGameId(savedAsocijacijaGame.getId()));
     }
 
     //getting optional asocijacija game
@@ -50,7 +51,7 @@ public class AsocijacijaServiceImpl {
         return optionalAsocijacijaGame.get();
     }
 
-    public String getValueOfSpecificField(Long gameId, String fieldName){
+    public ResponseEntity<Response> getValueOfSpecificField(Long gameId, String fieldName){
         AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
         boolean isGameActive = asocijacijaGame.isActive();
         String fieldNameUpperCase = fieldName.toUpperCase();
@@ -60,7 +61,8 @@ public class AsocijacijaServiceImpl {
             //Should return http status
             return null;
         }else{
-            return findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase);
+            return ResponseEntity.ok()
+                    .body(new ResponseWithFieldValue(findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase)));
         }
     }
 
@@ -106,16 +108,24 @@ public class AsocijacijaServiceImpl {
         return asocijacijaGame.getWordModel().getFinalWord();
     }
 
-    public boolean checkSubmittedWord(Long gameId, String fieldName, String submittedWord){
+    public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord){
         AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
         String submittedWordUpperCase = submittedWord.toUpperCase();
         String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
         if(submittedWordUpperCase.equals(referenceWordUpperCase)){
             //Implement better return object
-            return true;
+            return ResponseEntity.ok()
+                    .body(new ResponseWithBoolean(true));
         }else{
             //Implement better return object
-            return false;
+            return ResponseEntity.ok()
+                    .body(new ResponseWithBoolean(false));
         }
+    }
+
+    public void change(Long gameId){
+        AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
+        asocijacijaGame.setActive(false);
+        asocijacijaRepository.save(asocijacijaGame);
     }
 }
