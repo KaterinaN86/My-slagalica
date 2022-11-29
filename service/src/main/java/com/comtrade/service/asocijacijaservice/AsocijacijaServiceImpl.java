@@ -3,14 +3,12 @@ package com.comtrade.service.asocijacijaservice;
 import com.comtrade.model.asocijacijamodel.*;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
+import jakarta.persistence.Index;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AsocijacijaServiceImpl {
@@ -22,50 +20,61 @@ public class AsocijacijaServiceImpl {
         this.wordRepository = wordRepository;
     }
 
-    private WordModel getRandomWordModel(){
+    private WordModel getRandomWordModel() throws NoSuchElementException{
         int randomId = (int)(Math.floor((Math.random()*wordRepository.count()+1)));
         Optional<WordModel> randomWordModel = wordRepository.findById(Long.valueOf(randomId));
         if(randomWordModel.isEmpty()){
-            //todo handling
+            //todo handling - done
             //todo logging
-            System.out.println("No word model for id: " + randomId);
+            throw new NoSuchElementException();
+            //System.out.println("No word model for id: " + randomId);
         }
         return randomWordModel.get();
     }
 
     //creating new Asocijacija game instance
     public ResponseEntity<Response> createNewAsocijacijaGame(){
-        AsocijacijaModel asocijacijaGame = new AsocijacijaModel();
-        asocijacijaGame.setWordModel(getRandomWordModel());
-        AsocijacijaModel savedAsocijacijaGame = asocijacijaRepository.save(asocijacijaGame);
-        return ResponseEntity.ok()
-                .body(new ResponseWithGameId(savedAsocijacijaGame.getId()));
+        try{
+            AsocijacijaModel asocijacijaGame = new AsocijacijaModel();
+            asocijacijaGame.setWordModel(getRandomWordModel());
+            AsocijacijaModel savedAsocijacijaGame = asocijacijaRepository.save(asocijacijaGame);
+
+            return ResponseEntity.ok()
+                    .body(new ResponseWithGameId(savedAsocijacijaGame.getId()));
+
+        }catch (NoSuchElementException ex){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     //getting optional asocijacija game
-    private AsocijacijaModel findSpecificGame(Long gameId){
+    private AsocijacijaModel findSpecificGame(Long gameId) throws NoSuchElementException{
         Optional<AsocijacijaModel> optionalAsocijacijaGame = asocijacijaRepository.findById(gameId);
         if(optionalAsocijacijaGame.isEmpty()){
             //todo handling
             //todo logging
-            System.out.println("No asocijacija game with such id: " + gameId);
-            return null;
+            throw new NoSuchElementException();
+            //System.out.println("No asocijacija game with such id: " + gameId);
+            //return null;
         }
         return optionalAsocijacijaGame.get();
     }
 
     public ResponseEntity<Response> getValueOfSpecificField(Long gameId, String fieldName){
-        AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
-        boolean isGameActive = asocijacijaGame.isActive();
-        String fieldNameUpperCase = fieldName.toUpperCase();
+        try{
+            AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
+            boolean isGameActive = asocijacijaGame.isActive();
+            String fieldNameUpperCase = fieldName.toUpperCase();
 
-        if(isGameActive && (fieldName.contains("5") || fieldName.contains("final"))){
-            //It does not return value of field A|B|C|D 5(column final word) or final word of a game if it is active
-            //Should return http status
-            return null;
-        }else{
-            return ResponseEntity.ok()
-                    .body(new ResponseWithFieldValue(findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase)));
+            if(isGameActive && (fieldName.contains("5") || fieldName.contains("final"))){
+                //It does not return value of field A|B|C|D 5(column final word) or final word of a game if it is active
+                return ResponseEntity.status(403).build();
+            }else{
+                return ResponseEntity.ok()
+                        .body(new ResponseWithFieldValue(findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase)));
+            }
+        }catch (NoSuchElementException | IndexOutOfBoundsException ex){
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -89,7 +98,7 @@ public class AsocijacijaServiceImpl {
         }
     }
     
-    private String findValueOfSpecificCell(String column, String fieldName){
+    private String findValueOfSpecificCell(String column, String fieldName) throws IndexOutOfBoundsException{
         List<String> columnWords = new ArrayList<>(Arrays.asList(column.split(",")));
         if(fieldName.contains("1")){
             return columnWords.get(0);
@@ -102,9 +111,9 @@ public class AsocijacijaServiceImpl {
         } else if (fieldName.contains("5")) {
             return columnWords.get(4);
         }else{
-            //todo handling
-            //todo better return object
-            return null;
+            //todo handling - done
+            //todo logging
+            throw new IndexOutOfBoundsException();
         }
     }
 
@@ -113,17 +122,19 @@ public class AsocijacijaServiceImpl {
     }
 
     public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord){
-        AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
-        String submittedWordUpperCase = submittedWord.toUpperCase();
-        String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
-        if(submittedWordUpperCase.equals(referenceWordUpperCase)){
-            //Implement better return object
-            return ResponseEntity.ok()
-                    .body(new ResponseWithBoolean(true));
-        }else{
-            //Implement better return object
-            return ResponseEntity.ok()
-                    .body(new ResponseWithBoolean(false));
+        try{
+            AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
+            String submittedWordUpperCase = submittedWord.toUpperCase();
+            String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
+            if(submittedWordUpperCase.equals(referenceWordUpperCase)){
+                return ResponseEntity.ok()
+                        .body(new ResponseWithBoolean(true));
+            }else{
+                return ResponseEntity.ok()
+                        .body(new ResponseWithBoolean(false));
+            }
+        }catch (NoSuchElementException | IndexOutOfBoundsException ex){
+            return ResponseEntity.notFound().build();
         }
     }
 
