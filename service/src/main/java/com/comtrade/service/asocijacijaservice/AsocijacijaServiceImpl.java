@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,7 +77,7 @@ public class AsocijacijaServiceImpl {
         }
     }
 
-    private String[] findSpecificColumn(AsocijacijaModel asocijacijaGame, String fieldName){
+    private String findSpecificColumn(AsocijacijaModel asocijacijaGame, String fieldName){
         if(fieldName.contains("A")){
             return asocijacijaGame.getWordModel().getColumna();
         } else if (fieldName.contains("B")) {
@@ -86,17 +89,18 @@ public class AsocijacijaServiceImpl {
         }
     }
     
-    private String findValueOfSpecificCell(String[] column, String fieldName){
+    private String findValueOfSpecificCell(String column, String fieldName){
+        List<String> columnWords = new ArrayList<>(Arrays.asList(column.split(",")));
         if(fieldName.contains("1")){
-            return column[0];
+            return columnWords.get(0);
         }else if(fieldName.contains("2")){
-            return column[1];
+            return columnWords.get(1);
         } else if (fieldName.contains("3")) {
-            return column[2];
+            return columnWords.get(2);
         } else if (fieldName.contains("4")) {
-            return column[3];
+            return columnWords.get(3);
         } else if (fieldName.contains("5")) {
-            return column[4];
+            return columnWords.get(4);
         }else{
             //todo handling
             //todo better return object

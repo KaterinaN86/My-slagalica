@@ -17,10 +17,10 @@ public class WordModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String[] columna;
-    private String[] columnb;
-    private String[] columnc;
-    private String[] columnd;
+    private String columna;
+    private String columnb;
+    private String columnc;
+    private String columnd;
     private String finalWord;
 
 }
