@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+
 public class MojBrojServiceImpl implements MojBrojService{
     private final MojBrojRepository mojBrojRepository;
 
@@ -33,7 +34,6 @@ public class MojBrojServiceImpl implements MojBrojService{
                 game.initializeRandom();
                 target=eval(game.getSolution());
             }
-            System.out.println(target);
             nums.set(0,target);
         } catch (ScriptException e) {
             game.setSolution("No solution");
@@ -70,17 +70,21 @@ public class MojBrojServiceImpl implements MojBrojService{
         expr=expr.replaceAll("[\\(\\)]","");
         List<String> exprNums= List.of(expr.split("[\\+\\-\\*\\/]"));
         List<Integer> gameNums=existingGame.getNumbers();
-        List<Integer> gameNumsCoppy=new ArrayList<>();
+        List<Integer> gameNumsCopy=new ArrayList<>();
         for(Integer i:gameNums){
-            gameNumsCoppy.add(i);
+            gameNumsCopy.add(i);
         }
         for(String num:exprNums){
-            if(!gameNumsCoppy.contains(Integer.parseInt(num))){
+            try {
+                if(!gameNumsCopy.contains(Integer.parseInt(num))){
+                    return false;
+                }
+            }catch (Exception e){
                 return false;
             }
-            gameNumsCoppy.remove((Object) Integer.parseInt(num));
+
+            gameNumsCopy.remove((Object) Integer.parseInt(num));
         }
-        System.out.println(gameNums);
         return true;
     }
 
