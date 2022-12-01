@@ -1,7 +1,7 @@
 package com.comtrade.security;
 
 
-import com.comtrade.model.User;
+import com.comtrade.model.user.User;
 import com.comtrade.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,5 +26,10 @@ public class MyUserDetailService implements UserDetailsService {
         Optional<User> user=userRepository.findByUserName(username);
         user.orElseThrow(()-> new UsernameNotFoundException("Not found: "+username));
         return user.map(MyUserDetails::new).get();
+    }
+
+    public void addUser(String userName, String password) {
+        this.userRepository.save(new User(userName,password,true,"ROLE_USER"));
+        System.out.println("new user"+ userName+password);
     }
 }

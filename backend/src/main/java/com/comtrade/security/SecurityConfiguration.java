@@ -24,9 +24,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/**").hasRole("USER")//ovde staviti sve path-ove kojima moze da pristupi samo ulogovani user
                 .antMatchers("/h2-console/**").permitAll()
-                .and().formLogin();
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/javascript/**").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/NewUser").permitAll()
+                .antMatchers("/**").hasRole("USER")//ovde staviti sve path-ove kojima moze da pristupi samo ulogovani user
+                .and().formLogin()
+                .loginPage("/login").permitAll();
         http.csrf().disable();
         http.headers().frameOptions().disable();
 
