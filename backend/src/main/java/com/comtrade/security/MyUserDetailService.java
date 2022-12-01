@@ -28,8 +28,13 @@ public class MyUserDetailService implements UserDetailsService {
         return user.map(MyUserDetails::new).get();
     }
 
-    public void addUser(String userName, String password) {
-        this.userRepository.save(new User(userName,password,true,"ROLE_USER"));
-        System.out.println("new user"+ userName+password);
+    public String addUser(String userName, String password) {
+        Optional<User> user=userRepository.findByUserName(userName);
+        if(user.isEmpty()) {
+            this.userRepository.save(new User(userName, password, true, "ROLE_USER"));
+            return "Uspesno ste se registrovali";
+        }else{
+            return "Zauseto korisnicko ime";
+        }
     }
 }
