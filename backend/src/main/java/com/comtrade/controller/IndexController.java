@@ -16,6 +16,7 @@ public class IndexController {
     @Autowired
     MyUserDetailService myUserDetailService;
 
+
     @GetMapping ("/login")
     public String login(){
         return "login.html";
@@ -37,6 +38,11 @@ public class IndexController {
         return "mojbroj.html";
     }
 
+    @RequestMapping("/asocijacija")
+    public String asocijacijaIndex() {
+        return "asocijacija.html";
+    }
+    
     @PostMapping("/NewUser")
     public ResponseEntity<RegistrationResponse> addUser(@RequestBody UserToRegister userToRegister){
         String msg=myUserDetailService.addUser(userToRegister.getUserName(),userToRegister.getPassword());
