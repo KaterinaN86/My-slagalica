@@ -79,6 +79,8 @@ public class AsocijacijaServiceImpl {
                 return ResponseEntity.status(403).build();
             }else{
                 log.info("Returning value of field: " + fieldName + " for game id: " + gameId);
+                asocijacijaGame.setPoints(asocijacijaGame.getPoints() - 0.25);
+                asocijacijaRepository.save(asocijacijaGame);
                 return ResponseEntity.ok()
                         .body(new ResponseWithFieldValue(findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase)));
             }
@@ -137,6 +139,14 @@ public class AsocijacijaServiceImpl {
             String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
             log.info("Checking submit for game id: " + gameId);
             if(submittedWordUpperCase.equals(referenceWordUpperCase)){
+                if(fieldName.contains("final")){
+                    asocijacijaGame.setActive(false);
+                    asocijacijaGame.setPoints(asocijacijaGame.getPoints() + 10);
+                    asocijacijaRepository.save(asocijacijaGame);
+                }else{
+                    asocijacijaGame.setPoints(asocijacijaGame.getPoints() + 5);
+                    asocijacijaRepository.save(asocijacijaGame);
+                }
                 return ResponseEntity.ok()
                         .body(new ResponseWithBoolean(true));
             }else{
@@ -152,5 +162,20 @@ public class AsocijacijaServiceImpl {
         AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
         asocijacijaGame.setActive(false);
         asocijacijaRepository.save(asocijacijaGame);
+    }
+
+    public ResponseEntity<Response> getNumberOfPoints(SubmitNumberOfFields submit){
+        try{
+            AsocijacijaModel asocijacijaGame = findSpecificGame(submit.getGameId());
+            if(!asocijacijaGame.isActive()){
+                return ResponseEntity.ok()
+                        .body(new ResponseWithNumberOfPoints(asocijacijaGame.getPoints()));
+            }else{
+                log.info("Forbidden request for number of points:" + "- game with id: " + submit.getGameId() + " still active.");
+                return ResponseEntity.status(403).build();
+            }
+        }catch (NoSuchElementException ex){
+            return ResponseEntity.notFound().build();
+        }
     }
 }

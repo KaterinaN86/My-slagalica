@@ -18,4 +18,8 @@ public class IndexController {
     public String mojBrojIndex(){
         return "mojbroj.html";
     }
+    @RequestMapping("/asocijacija")
+    public String asocijacijaIndex(){
+        return "asocijacija.html";
+    }
 }

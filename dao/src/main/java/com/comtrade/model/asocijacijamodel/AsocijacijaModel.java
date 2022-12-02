@@ -19,8 +19,17 @@ public class AsocijacijaModel {
     @JoinColumn(name = "rijeci_id")
     private WordModel wordModel;
     private boolean isActive;
+    private Double points;
 
     public AsocijacijaModel(){
         this.isActive = true;
+        this.points = 4.0;
+    }
+
+    public AsocijacijaModel(Long id, WordModel wordModel) {
+        this.id = id;
+        this.wordModel = wordModel;
+        this.isActive = true;
+        this.points = 4.0;
     }
 }
