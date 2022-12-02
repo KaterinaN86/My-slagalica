@@ -1,11 +1,30 @@
 package com.comtrade.controller;
 
+import com.comtrade.model.user.RegistrationResponse;
+import com.comtrade.model.user.UserToRegister;
+import com.comtrade.security.MyUserDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
+    @Autowired
+    MyUserDetailService myUserDetailService;
 
+
+    @GetMapping ("/login")
+    public String login(){
+        return "login.html";
+    }
+    @GetMapping("/register")
+    public String register(){
+        return "register.html";
+    }
     @RequestMapping("/skocko")
     public String SkockoIndex(){
         return "skocko.html";
@@ -18,8 +37,15 @@ public class IndexController {
     public String mojBrojIndex(){
         return "mojbroj.html";
     }
+
     @RequestMapping("/asocijacija")
-    public String asocijacijaIndex(){
+    public String asocijacijaIndex() {
         return "asocijacija.html";
+    }
+    
+    @PostMapping("/NewUser")
+    public ResponseEntity<RegistrationResponse> addUser(@RequestBody UserToRegister userToRegister){
+        String msg=myUserDetailService.addUser(userToRegister.getUserName(),userToRegister.getPassword());
+        return ResponseEntity.ok().body(new RegistrationResponse(msg));
     }
 }
