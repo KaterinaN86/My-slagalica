@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,11 +15,12 @@ import java.util.Optional;
 @Service
 public class MyUserDetailService implements UserDetailsService {
 
+    BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
     @Autowired
     UserRepository userRepository;
     MyUserDetailService(UserRepository userRepository){
         this.userRepository=userRepository;
-        this.userRepository.save(new User("user1","pass",true,"ROLE_USER"));
+        this.userRepository.save(new User("user1","$2a$12$mnMgxQ2qD.504qfnw3jcFOaGwWjOrET5bc0YkNiIqb3cAZnpU1sxm",true,"ROLE_USER"));
     }
 
     @Override
@@ -31,7 +33,7 @@ public class MyUserDetailService implements UserDetailsService {
     public String addUser(String userName, String password) {
         Optional<User> user=userRepository.findByUserName(userName);
         if(user.isEmpty()) {
-            this.userRepository.save(new User(userName, password, true, "ROLE_USER"));
+            this.userRepository.save(new User(userName, bCryptPasswordEncoder.encode(password), true, "ROLE_USER"));
             return "Uspesno ste se registrovali";
         }else{
             return "Zauseto korisnicko ime";
