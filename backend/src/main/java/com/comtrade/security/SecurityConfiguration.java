@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/h2-console/**","/login").permitAll()
                 .antMatchers("/javascript/**","/css/**").permitAll()
                 .antMatchers("/register","/NewUser").permitAll()
                 .antMatchers("/**").hasRole("USER")//ovde staviti sve path-ove kojima moze da pristupi samo ulogovani user
