@@ -44,7 +44,7 @@ public class IndexController {
 
     @PostMapping("/NewUser")
     public ResponseEntity<RegistrationResponse> addUser(@RequestBody UserToRegister userToRegister){
-        myUserDetailService.addUser(userToRegister.getUserName(),userToRegister.getPassword());
-        return ResponseEntity.ok().body(new RegistrationResponse("Uspesno ste se registrovali"));
+        String msg=myUserDetailService.addUser(userToRegister.getUserName(),userToRegister.getPassword());
+        return ResponseEntity.ok().body(new RegistrationResponse(msg));
     }
 }
