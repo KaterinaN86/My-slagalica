@@ -1,10 +1,11 @@
 package com.comtrade.model.asocijacijamodel;
 
-import jakarta.persistence.*;
-import jakarta.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
 
 
 @Entity
