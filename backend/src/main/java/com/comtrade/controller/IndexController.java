@@ -29,6 +29,15 @@ public class IndexController {
     public String homePage(){
         return "homePage.html";
     }
+
+    @GetMapping("OnePlayer")
+    public String onePlayer(){
+        return "onePlayer.html";
+    }
+    @GetMapping("TwoPlayers")
+    public String TwoPlayers(){
+        return "twoPlayer.html";
+    }
     @RequestMapping("/skocko")
     public String SkockoIndex(){
         return "skocko.html";
