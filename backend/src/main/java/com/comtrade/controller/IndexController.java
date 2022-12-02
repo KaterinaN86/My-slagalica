@@ -24,6 +24,11 @@ public class IndexController {
     public String register(){
         return "register.html";
     }
+
+    @GetMapping({"","/","/home"})
+    public String homePage(){
+        return "homePage.html";
+    }
     @RequestMapping("/skocko")
     public String SkockoIndex(){
         return "skocko.html";
