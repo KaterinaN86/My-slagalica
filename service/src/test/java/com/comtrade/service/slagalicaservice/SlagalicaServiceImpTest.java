@@ -1,5 +1,6 @@
 package com.comtrade.service.slagalicaservice;
 
+import com.comtrade.model.slagalicamodel.DictionaryWord;
 import com.comtrade.model.slagalicamodel.Slagalica;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
@@ -15,11 +16,16 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +58,8 @@ class SlagalicaServiceImpTest {
         Assertions.assertNotNull(savedSlagalicaGame);
     }
 
+
+
     @Test
     void testLettersForFindingTheWord() {
 
@@ -73,7 +81,7 @@ class SlagalicaServiceImpTest {
                              .lettersForFindingTheWord(lettersForFindingTheWord)
                              .computerLongestWord("MASKE")
                              .build();
-        when(slagalicaRepository.findById(1L).get().getComputerLongestWord().length()).thenReturn(anyInt());
+        when(slagalicaRepository.findAll().get(0).getComputerLongestWord().length()).thenReturn(anyInt());
         slagalicaUserWordSubmit = SlagalicaUserWordSubmit.builder()
                                                          .gameId(GAME_ID)
                                                          .userWord(userWord)
@@ -81,5 +89,16 @@ class SlagalicaServiceImpTest {
                                                          .build();
         assertEquals(userWord.length()*2, slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
         Assertions.assertNotNull(slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
+    }
+
+    @Test
+    void testComputersLongestWord() {
+
+        String lettersForWord = "UVIBUKUŽAHIC";
+        String expectedComputerWord = "UK";
+        DictionaryWord dictionaryWordd = DictionaryWord.builder().id(1L).wordFromDictionary("BUKA").build();
+        //List<DictionaryWord> dictionaryWordList = new ArrayList<>();
+        //when(slagalicaService.computersLongestWord(lettersForWord)).thenReturn(null);
+        assertEquals(expectedComputerWord, slagalicaService.computersLongestWord(lettersForWord));
     }
 }

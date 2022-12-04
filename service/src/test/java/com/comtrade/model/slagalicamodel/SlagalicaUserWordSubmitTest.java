@@ -84,5 +84,20 @@ class SlagalicaUserWordSubmitTest {
         Assertions.assertEquals(userWord, slagalicaUserWordSubmit.getUserWord());
         Assertions.assertEquals(lettersForUserWord, slagalicaUserWordSubmit.getLettersForFindingTheWord());
 
+        SlagalicaUserWordSubmit slagalicaUserWordSubmit2 = new SlagalicaUserWordSubmit();
+        assertEquals(null, slagalicaUserWordSubmit2.getGameId());
+        assertEquals(null, slagalicaUserWordSubmit2.getLettersForFindingTheWord());
+        assertEquals(null, slagalicaUserWordSubmit2.getUserWord());
+
+    }
+
+    @Test
+    void testBuilder() {
+
+        slagalicaUserWordSubmit = null;
+        slagalicaUserWordSubmit = SlagalicaUserWordSubmit.builder().gameId(2L).lettersForFindingTheWord("MAROPELSAIMAS").userWord("OPEL").build();
+
+        assertNotNull(slagalicaUserWordSubmit);
+        assertEquals("OPEL", slagalicaUserWordSubmit.getUserWord());
     }
 }

@@ -59,6 +59,7 @@ class SlagalicaTest {
     @Test
     void testConstructors() {
 
+        // All args constructor
         slagalica = null;
         Long id = 3L;
         String word = "MOEAIRTISABI";
@@ -68,6 +69,39 @@ class SlagalicaTest {
         Assertions.assertEquals(id, slagalica.getId());
         Assertions.assertEquals(word, slagalica.getLettersForFindingTheWord());
 
+        // No args constructor
+        Slagalica slagalica2 = new Slagalica();
+        assertEquals(null, slagalica2.getId());
+        assertEquals(null, slagalica2.getLettersForFindingTheWord());
+        assertEquals(null, slagalica2.getComputerLongestWord());
 
+
+
+
+    }
+
+    @Test
+    void setComputerLongestWord() {
+
+        String expectedWord = "MALA";
+        String realWord = slagalica.getComputerLongestWord();
+
+        Assertions.assertEquals(expectedWord, realWord);
+
+        slagalica.setComputerLongestWord("BORE");
+        expectedWord = "BORE";
+        realWord = slagalica.getComputerLongestWord();
+
+        Assertions.assertEquals(expectedWord, realWord);
+    }
+
+    @Test
+    void testBuilder() {
+
+        slagalica = null;
+        slagalica = Slagalica.builder().id(2L).lettersForFindingTheWord("MAROPELSAIMAS").computerLongestWord("OPEL").build();
+
+        assertNotNull(slagalica);
+        assertEquals("OPEL", slagalica.getComputerLongestWord());
     }
 }

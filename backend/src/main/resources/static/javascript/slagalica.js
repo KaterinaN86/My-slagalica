@@ -137,7 +137,7 @@ function parseButtonText(elem) {
             btnWord.textContent += buttonLetter.textContent
             buttonLetter.setAttribute("disabled", "disabled")
             lastClickedButtons.push(buttonLetter)
-            console.log(lastClickedButtons)
+            //console.log(lastClickedButtons)
 
 
         }

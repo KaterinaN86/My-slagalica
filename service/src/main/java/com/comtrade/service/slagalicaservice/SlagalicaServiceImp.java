@@ -6,11 +6,8 @@ import com.comtrade.model.slagalicamodel.Slagalica;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
-import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -92,6 +89,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         }
 
+
+
         return s;
     }
 
@@ -100,7 +99,6 @@ public class SlagalicaServiceImp implements SlagalicaService {
     public Integer userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit) {
 
         int finalResult = 0;
-        Map<Integer, String> mapToReturn = new HashMap<>();
         String lettersForUserWord = slagalicaUserWordSubmit.getLettersForFindingTheWord();
         String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
 
@@ -136,7 +134,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
             }
         }
 
-        int computerWordlength = slagalicaRepository.findById((long) slagalicaRepository.findAll().size()).get().getComputerLongestWord().length();
+        int computerWordlength = Optional.of(slagalicaRepository.findAll().get(0).getComputerLongestWord().length()).orElse(0);
 
         if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 && occurrences > 0) {
             if(computerWordlength == chosenUserWord.length()) {
