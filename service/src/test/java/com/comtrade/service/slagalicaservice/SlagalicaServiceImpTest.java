@@ -18,11 +18,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SlagalicaServiceImpTest {
 
+    public static final long GAME_ID = 1L;
     @Mock
     SlagalicaRepository slagalicaRepository;
     @Mock
@@ -42,7 +45,7 @@ class SlagalicaServiceImpTest {
     @Test
     void testSaveLetterForFindingWords() {
 
-        Slagalica slagalicaGameToSave = Slagalica.builder().id(1L).build();
+        Slagalica slagalicaGameToSave = Slagalica.builder().id(GAME_ID).build();
         Mockito.when(slagalicaRepository.save(ArgumentMatchers.any())).thenReturn(slagalicaGameToSave);
         Slagalica savedSlagalicaGame = slagalicaService.saveLetterForFindingWords();
 
@@ -64,13 +67,18 @@ class SlagalicaServiceImpTest {
 
         slagalica = null;
         String userWord = "MASKIRANJE";
-        slagalica = Slagalica.builder().id(1L).lettersForFindingTheWord("IMAASIRKENKJ").build();
+        String lettersForFindingTheWord = "IMAASIRKENKJ";
+        slagalica = Slagalica.builder()
+                             .id(GAME_ID)
+                             .lettersForFindingTheWord(lettersForFindingTheWord)
+                             .computerLongestWord("MASKE")
+                             .build();
+        when(slagalicaRepository.findById(1L).get().getComputerLongestWord().length()).thenReturn(anyInt());
         slagalicaUserWordSubmit = SlagalicaUserWordSubmit.builder()
-                                                         .gameId(2L)
+                                                         .gameId(GAME_ID)
                                                          .userWord(userWord)
                                                          .lettersForFindingTheWord(slagalica.getLettersForFindingTheWord())
                                                          .build();
-
         assertEquals(userWord.length()*2, slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
         Assertions.assertNotNull(slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
     }

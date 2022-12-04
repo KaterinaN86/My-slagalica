@@ -22,7 +22,7 @@ class SlagalicaTest {
 
     @BeforeEach
     void setUp() {
-        slagalica = new Slagalica(1L, "SAMBOIREMALA");
+        slagalica = new Slagalica(1L, "SAMBOIREMALA", "MALA");
     }
 
     @Test
@@ -62,7 +62,8 @@ class SlagalicaTest {
         slagalica = null;
         Long id = 3L;
         String word = "MOEAIRTISABI";
-        slagalica = new Slagalica(id, word);
+        String computerWord = "TISA";
+        slagalica = new Slagalica(id, word, computerWord);
 
         Assertions.assertEquals(id, slagalica.getId());
         Assertions.assertEquals(word, slagalica.getLettersForFindingTheWord());

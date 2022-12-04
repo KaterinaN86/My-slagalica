@@ -1,12 +1,16 @@
 package com.comtrade.service.slagalicaservice;
 
 
+import com.comtrade.model.slagalicamodel.DictionaryWord;
 import com.comtrade.model.slagalicamodel.Slagalica;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
+import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -25,9 +29,43 @@ public class SlagalicaServiceImp implements SlagalicaService {
     public Slagalica saveLetterForFindingWords() {
         Slagalica slagalicaGame = new Slagalica();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
+        slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         slagalicaRepository.save(slagalicaGame);
-
         return slagalicaGame;
+    }
+
+    @Override
+    public String computersLongestWord(String lettersForWord) {
+
+        List<DictionaryWord> wordsDictionary = dictionaryWordRepository.findAll();
+        String longestWord = "";
+
+        for (DictionaryWord dictionaryWord : wordsDictionary) {
+
+            String word = dictionaryWord.getWordFromDictionary();
+
+            if (word.length() < longestWord.length()) {
+                continue;
+            }
+            if (word.length() > lettersForWord.length()) {
+                continue;
+            }
+
+            int wordIndex = 0;
+            int inputIndex = 0;
+
+            while (inputIndex < lettersForWord.length() && wordIndex < word.length()) {
+                if (word.charAt(wordIndex) == lettersForWord.charAt(inputIndex)) {
+                    wordIndex++;
+                }
+                inputIndex++;
+            }
+            if (wordIndex >= word.length()) {
+                longestWord = word;
+            }
+        }
+
+        return longestWord;
     }
 
     @Override
@@ -62,12 +100,10 @@ public class SlagalicaServiceImp implements SlagalicaService {
     public Integer userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit) {
 
         int finalResult = 0;
+        Map<Integer, String> mapToReturn = new HashMap<>();
         String lettersForUserWord = slagalicaUserWordSubmit.getLettersForFindingTheWord();
         String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
 
-
-        //File file = ResourceUtils.getFile("classpath:static/serbian-latin.txt");
-        //List<String> wordDictionary = Files.readAllLines(file.toPath());
         int result = 0;
 
         Map<Character, Integer> lettersOfUserWordMap = new HashMap<>();
@@ -100,8 +136,17 @@ public class SlagalicaServiceImp implements SlagalicaService {
             }
         }
 
-        if(dictionaryWordRepository.findByWord(chosenUserWord.toLowerCase()).isPresent() && occurrences > 0) {
-            result = chosenUserWord.length()*2;
+        int computerWordlength = slagalicaRepository.findById((long) slagalicaRepository.findAll().size()).get().getComputerLongestWord().length();
+
+        if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 && occurrences > 0) {
+            if(computerWordlength == chosenUserWord.length()) {
+                result = chosenUserWord.length()*2 + 3;
+            } else if(computerWordlength < chosenUserWord.length()) {
+                result = chosenUserWord.length()*2 + 6;
+            } else {
+                result = chosenUserWord.length()*2;
+            }
+
         } else {
             result = 0;
         }
@@ -111,4 +156,6 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         return finalResult;
     }
+
+
 }

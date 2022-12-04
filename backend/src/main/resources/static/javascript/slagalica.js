@@ -1,4 +1,5 @@
 var gameLetters = ""
+var computerWord = ""
 var gameId
 var lastClickedButtons = []
 var timer;
@@ -28,8 +29,10 @@ const handleNewGame = () => {
                 response.json().then((data) => {
 
                     gameLetters = data.lettersForFindingTheWord
+                    computerWord = data.computerLongestWord
                     gameId = data.id
                     console.log(gameLetters)
+                    console.log(computerWord)
                     setLettersToButtons(data)
 
                 });
@@ -78,7 +81,9 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
             const data = await response.json();
             console.log(data)
             //alert("Time out, you earned " + data + " points")
-            document.getElementById('finalGameResult').textContent = 'Igra je završena, osvojili ste ' + data + ' bodova'
+            document.getElementById('finalPoints').textContent = "Igra je završena, osvojili ste " + data + " bodova"
+            document.getElementById('computerWordTxt').textContent += "Racunarova rec je: " + computerWord
+
             disableButtons()
 
         }

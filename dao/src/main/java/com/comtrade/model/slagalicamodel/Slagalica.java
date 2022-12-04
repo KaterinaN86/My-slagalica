@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "slagalica")
 public class Slagalica {
 
     @Id
@@ -20,4 +22,5 @@ public class Slagalica {
     private Long id;
 
     private String lettersForFindingTheWord;
+    private String computerLongestWord;
 }
