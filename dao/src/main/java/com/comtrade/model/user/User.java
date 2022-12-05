@@ -1,4 +1,4 @@
-package com.comtrade.model;
+package com.comtrade.model.user;
 
 import javax.persistence.*;
 
