@@ -1,6 +1,7 @@
 package com.comtrade.model.slagalicamodel;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 @Getter
@@ -9,13 +10,11 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "slagalica")
-public class Slagalica {
+@Table(name = "dictionary_words")
+public class DictionaryWord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String lettersForFindingTheWord;
-    private String computerLongestWord;
+    private String wordFromDictionary;
 }

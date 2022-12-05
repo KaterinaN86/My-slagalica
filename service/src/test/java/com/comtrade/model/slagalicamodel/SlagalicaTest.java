@@ -1,19 +1,18 @@
 package com.comtrade.model.slagalicamodel;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.logging.Logger;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 class SlagalicaTest {
 
     Slagalica slagalica;
 
-    static final Logger log = Logger.getLogger(SlagalicaTest.class.toString());
 
     @BeforeAll
     public static void setup() {
@@ -22,7 +21,7 @@ class SlagalicaTest {
 
     @BeforeEach
     void setUp() {
-        slagalica = new Slagalica(1L, "SAMBOIREMALA");
+        slagalica = new Slagalica(1L, "SAMBOIREMALA", "MALA");
     }
 
     @Test
@@ -59,14 +58,49 @@ class SlagalicaTest {
     @Test
     void testConstructors() {
 
+        // All args constructor
         slagalica = null;
         Long id = 3L;
         String word = "MOEAIRTISABI";
-        slagalica = new Slagalica(id, word);
+        String computerWord = "TISA";
+        slagalica = new Slagalica(id, word, computerWord);
 
         Assertions.assertEquals(id, slagalica.getId());
         Assertions.assertEquals(word, slagalica.getLettersForFindingTheWord());
 
+        // No args constructor
+        Slagalica slagalica2 = new Slagalica();
+        assertEquals(null, slagalica2.getId());
+        assertEquals(null, slagalica2.getLettersForFindingTheWord());
+        assertEquals(null, slagalica2.getComputerLongestWord());
 
+
+
+
+    }
+
+    @Test
+    void setComputerLongestWord() {
+
+        String expectedWord = "MALA";
+        String realWord = slagalica.getComputerLongestWord();
+
+        Assertions.assertEquals(expectedWord, realWord);
+
+        slagalica.setComputerLongestWord("BORE");
+        expectedWord = "BORE";
+        realWord = slagalica.getComputerLongestWord();
+
+        Assertions.assertEquals(expectedWord, realWord);
+    }
+
+    @Test
+    void testBuilder() {
+
+        slagalica = null;
+        slagalica = Slagalica.builder().id(2L).lettersForFindingTheWord("MAROPELSAIMAS").computerLongestWord("OPEL").build();
+
+        assertNotNull(slagalica);
+        assertEquals("OPEL", slagalica.getComputerLongestWord());
     }
 }

@@ -1,19 +1,17 @@
 package com.comtrade.model.slagalicamodel;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.logging.Logger;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 class SlagalicaUserWordSubmitTest {
 
     SlagalicaUserWordSubmit slagalicaUserWordSubmit;
 
-    static final Logger log = Logger.getLogger(SlagalicaTest.class.toString());
 
     @BeforeAll
     public static void setup() {
@@ -84,5 +82,20 @@ class SlagalicaUserWordSubmitTest {
         Assertions.assertEquals(userWord, slagalicaUserWordSubmit.getUserWord());
         Assertions.assertEquals(lettersForUserWord, slagalicaUserWordSubmit.getLettersForFindingTheWord());
 
+        SlagalicaUserWordSubmit slagalicaUserWordSubmit2 = new SlagalicaUserWordSubmit();
+        assertEquals(null, slagalicaUserWordSubmit2.getGameId());
+        assertEquals(null, slagalicaUserWordSubmit2.getLettersForFindingTheWord());
+        assertEquals(null, slagalicaUserWordSubmit2.getUserWord());
+
+    }
+
+    @Test
+    void testBuilder() {
+
+        slagalicaUserWordSubmit = null;
+        slagalicaUserWordSubmit = SlagalicaUserWordSubmit.builder().gameId(2L).lettersForFindingTheWord("MAROPELSAIMAS").userWord("OPEL").build();
+
+        assertNotNull(slagalicaUserWordSubmit);
+        assertEquals("OPEL", slagalicaUserWordSubmit.getUserWord());
     }
 }
