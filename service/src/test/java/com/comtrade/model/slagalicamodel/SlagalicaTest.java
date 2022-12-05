@@ -1,19 +1,18 @@
 package com.comtrade.model.slagalicamodel;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.logging.Logger;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 class SlagalicaTest {
 
     Slagalica slagalica;
 
-    static final Logger log = Logger.getLogger(SlagalicaTest.class.toString());
 
     @BeforeAll
     public static void setup() {
