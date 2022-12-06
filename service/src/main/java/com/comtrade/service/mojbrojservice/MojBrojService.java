@@ -4,14 +4,16 @@ package com.comtrade.service.mojbrojservice;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 
 import javax.script.ScriptException;
+import java.security.Principal;
 import java.util.ArrayList;
 
 public interface MojBrojService {
+    MojBrojGame getGame(Principal principal) throws Exception;
     MojBrojGame createNewGame();
-    MojBrojGame createNewGame(Long id, ArrayList<Integer> nums,Boolean isActive,String solution);
+    MojBrojGame createNewGame(Long id, ArrayList<Integer> nums,Boolean isActive,String solution, Integer numOfPoints);
     boolean validateExpression(String expr, long gameId);
     Integer eval(String expr) throws ScriptException;
-    Integer userSolutionDiff(String expression, long gameId) throws Exception;
-    String getSolution(Long gameid);
+    public Integer userSolutionDiff(String expression, Principal principal) throws Exception;
+    String getSolution(Principal principal) throws Exception;
 
 }

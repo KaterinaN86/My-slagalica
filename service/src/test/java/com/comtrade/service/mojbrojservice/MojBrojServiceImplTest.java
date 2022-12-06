@@ -24,7 +24,7 @@ class MojBrojServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mojBrojService=new MojBrojServiceImpl(mojBrojRepository);
+        mojBrojService=new MojBrojServiceImpl(mojBrojRepository, gamerepository);
     }
 
     @Test

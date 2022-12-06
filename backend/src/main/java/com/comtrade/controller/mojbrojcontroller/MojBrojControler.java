@@ -20,35 +20,19 @@ public class MojBrojControler {
 
     @GetMapping("/Init")
     @CrossOrigin
-    public MojBrojGame getNewGame(){
-        return mojBrojService.createNewGame();
+    public MojBrojGame getNewGame(Principal principal){
+        try {
+            return mojBrojService.getGame(principal);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/Submit")
     @CrossOrigin
-    public ResponseEntity<MojBrojSubmitResponse> submit(@RequestBody MojBrojSubmitRequest submit, Principal principal){
-        Integer diff=null;
-        Integer numOfPoints=0;
-        String expression=submit.getExpression();
-        String user=principal.getName();//for furure use
-        try {
-            diff=mojBrojService.userSolutionDiff(expression,submit.getGameId());
-        } catch (Exception e) {
-            return ResponseEntity.ok().body(new MojBrojSubmitResponse(e.getMessage(),"",0));
-        }
-        switch (diff){
-            case 0:
-                numOfPoints=30;
-                break;
-            case 1:
-                numOfPoints=20;
-                break;
-            case 2:
-                numOfPoints=10;
-                break;
-        }
-        String solution = mojBrojService.getSolution(submit.getGameId());
-        return ResponseEntity.ok().body(new MojBrojSubmitResponse("",solution, numOfPoints));
+    public ResponseEntity<MojBrojSubmitResponse> submit(@RequestBody MojBrojSubmitRequest submit, Principal principal) {
+        String expression = submit.getExpression();
+        return ResponseEntity.ok().body(mojBrojService.submit(submit,principal));
     }
 
 }
