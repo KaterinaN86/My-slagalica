@@ -35,8 +35,10 @@ public class OnePlayerGame {
     //spojnice
     @OneToOne
     AsocijacijaModel asocijacijaModel;
-    OnePlayerGame(){
+    public OnePlayerGame(User user){
+        this.user=user;
         finished=false;
         numOfPoints=0;
     }
+
 }

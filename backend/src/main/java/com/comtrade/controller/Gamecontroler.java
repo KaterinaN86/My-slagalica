@@ -1,23 +1,31 @@
 package com.comtrade.controller;
 
-import org.springframework.stereotype.Controller;
+import com.comtrade.model.OnePlayerGame;
+import com.comtrade.service.gameservice.GameserviceImpl;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@Controller
+@RestController
 @RequestMapping("/OnePlayer")
 public class Gamecontroler {
+    private final GameserviceImpl gameservice;
 
-
-    @GetMapping()
-    public String onePlayer(){
-        return "chooseGameOnePlayer.html";
+    public Gamecontroler(GameserviceImpl gameservice) {
+        this.gameservice = gameservice;
     }
+
     @GetMapping("/init")
-    public String init(Principal principal){
-        System.out.println(principal.getName());
-        return "asdf";
+    @CrossOrigin
+    public OnePlayerGame init(Principal principal){//todo change response type
+
+        try {
+            return gameservice.getGame(principal);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
