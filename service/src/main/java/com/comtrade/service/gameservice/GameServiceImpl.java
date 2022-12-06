@@ -45,6 +45,7 @@ public class GameServiceImpl implements GameService {
         OnePlayerInitResponse response=new OnePlayerInitResponse();
         response.setMsg("");
         response.setNumOfPointsSum(game.getNumOfPoints());
+        //todo sett rest of atributes for response
         return response;
     }
 }
