@@ -1,6 +1,7 @@
 package com.comtrade.service.gameservice;
 
-import com.comtrade.model.OnePlayerGame;
+import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
 import com.comtrade.model.user.User;
 import com.comtrade.repository.UserRepository;
 import com.comtrade.repository.gamerepository.Gamerepository;
@@ -37,5 +38,13 @@ public class GameserviceImpl implements Gameservice {
             return games.get(0);
         }
         return createNewGame(principal);
+    }
+
+    public OnePlayerInitResponse getInitData(Principal principal) throws Exception {
+        OnePlayerGame game=getGame(principal);
+        OnePlayerInitResponse response=new OnePlayerInitResponse();
+        response.setMsg("");
+        response.setNumOfPointsSum(game.getNumOfPoints());
+        return response;
     }
 }

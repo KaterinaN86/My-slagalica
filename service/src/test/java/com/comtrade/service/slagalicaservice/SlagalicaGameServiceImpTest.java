@@ -1,12 +1,11 @@
 package com.comtrade.service.slagalicaservice;
 
 import com.comtrade.model.slagalicamodel.DictionaryWord;
-import com.comtrade.model.slagalicamodel.Slagalica;
+import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,18 +19,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
-class SlagalicaServiceImpTest {
+class SlagalicaGameServiceImpTest {
 
     public static final long GAME_ID = 1L;
     @Mock
@@ -41,14 +35,14 @@ class SlagalicaServiceImpTest {
 
     SlagalicaService slagalicaService;
 
-    Slagalica slagalica;
+    SlagalicaGame slagalicaGame;
     SlagalicaUserWordSubmit slagalicaUserWordSubmit;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         slagalicaService = new SlagalicaServiceImp(slagalicaRepository, dictionaryWordRepository);
-        slagalicaRepository.save(Slagalica.builder()
+        slagalicaRepository.save(SlagalicaGame.builder()
                 .lettersForFindingTheWord("IMAASIRKENKJ")
                 .computerLongestWord("MASKE").build());
         dictionaryWordRepository.save(DictionaryWord.builder().wordFromDictionary("MASKIRANJE").build());
@@ -57,11 +51,11 @@ class SlagalicaServiceImpTest {
     @Test
     void testSaveLetterForFindingWords() {
 
-        Slagalica slagalicaGameToSave = Slagalica.builder().id(GAME_ID).build();
-        Mockito.when(slagalicaRepository.save(ArgumentMatchers.any())).thenReturn(slagalicaGameToSave);
-        Slagalica savedSlagalicaGame = slagalicaService.saveLetterForFindingWords();
+        SlagalicaGame slagalicaGameGameToSave = SlagalicaGame.builder().id(GAME_ID).build();
+        Mockito.when(slagalicaRepository.save(ArgumentMatchers.any())).thenReturn(slagalicaGameGameToSave);
+        SlagalicaGame savedSlagalicaGameGame = slagalicaService.saveLetterForFindingWords();
 
-        Assertions.assertNotNull(savedSlagalicaGame);
+        Assertions.assertNotNull(savedSlagalicaGameGame);
     }
 
 
@@ -81,19 +75,19 @@ class SlagalicaServiceImpTest {
 
         String userWord = "MASKIRANJE";
         String lettersForFindingTheWord = "IMAASIRKENKJ";
-        List<Slagalica> slagalicaList = new ArrayList<>();
-        slagalica = Slagalica.builder()
+        List<SlagalicaGame> slagalicaGameList = new ArrayList<>();
+        slagalicaGame = SlagalicaGame.builder()
                              .id(GAME_ID)
                              .lettersForFindingTheWord(lettersForFindingTheWord)
                              .computerLongestWord("MASKE")
                              .build();
 
-        slagalicaList.add(slagalica);
-        when(slagalicaRepository.findAll()).thenReturn(slagalicaList);
+        slagalicaGameList.add(slagalicaGame);
+        when(slagalicaRepository.findAll()).thenReturn(slagalicaGameList);
         slagalicaUserWordSubmit = SlagalicaUserWordSubmit.builder()
                                                          .gameId(GAME_ID)
                                                          .userWord(userWord)
-                                                         .lettersForFindingTheWord(slagalica.getLettersForFindingTheWord())
+                                                         .lettersForFindingTheWord(slagalicaGame.getLettersForFindingTheWord())
                                                          .build();
 
         assertNotNull(slagalicaService.userWordProcessing(slagalicaUserWordSubmit));

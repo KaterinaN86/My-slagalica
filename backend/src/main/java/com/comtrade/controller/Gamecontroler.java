@@ -1,6 +1,7 @@
 package com.comtrade.controller;
 
-import com.comtrade.model.OnePlayerGame;
+import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
 import com.comtrade.service.gameservice.GameserviceImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +21,10 @@ public class Gamecontroler {
 
     @GetMapping("/init")
     @CrossOrigin
-    public OnePlayerGame init(Principal principal){//todo change response type
+    public OnePlayerInitResponse init(Principal principal){//todo change response type
 
         try {
-            return gameservice.getGame(principal);
+            return gameservice.getInitData(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

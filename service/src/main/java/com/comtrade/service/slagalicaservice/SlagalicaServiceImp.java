@@ -2,7 +2,7 @@ package com.comtrade.service.slagalicaservice;
 
 
 import com.comtrade.model.slagalicamodel.DictionaryWord;
-import com.comtrade.model.slagalicamodel.Slagalica;
+import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
@@ -23,8 +23,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
     }
 
     @Override
-    public Slagalica saveLetterForFindingWords() {
-        Slagalica slagalicaGame = new Slagalica();
+    public SlagalicaGame saveLetterForFindingWords() {
+        SlagalicaGame slagalicaGame = new SlagalicaGame();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         slagalicaRepository.save(slagalicaGame);

@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class SlagalicaTest {
+class SlagalicaGameTest {
 
-    Slagalica slagalica;
+    SlagalicaGame slagalicaGame;
 
 
     @BeforeAll
@@ -21,20 +21,20 @@ class SlagalicaTest {
 
     @BeforeEach
     void setUp() {
-        slagalica = new Slagalica(1L, "SAMBOIREMALA", "MALA");
+        slagalicaGame = new SlagalicaGame(1L, "SAMBOIREMALA", "MALA");
     }
 
     @Test
     void testSetId() {
 
         Long expectedId = 1L;
-        Long realId = slagalica.getId();
+        Long realId = slagalicaGame.getId();
 
         Assertions.assertEquals(expectedId, realId);
 
-        slagalica.setId(5L);
+        slagalicaGame.setId(5L);
         expectedId = 5L;
-        realId = slagalica.getId();
+        realId = slagalicaGame.getId();
 
         Assertions.assertEquals(expectedId, realId);
 
@@ -44,13 +44,13 @@ class SlagalicaTest {
     void testSetLettersForFindingTheWord() {
 
         String expectedWord = "SAMBOIREMALA";
-        String realWord = slagalica.getLettersForFindingTheWord();
+        String realWord = slagalicaGame.getLettersForFindingTheWord();
 
         Assertions.assertEquals(expectedWord, realWord);
 
-        slagalica.setLettersForFindingTheWord("HIMBRIROSAVA");
+        slagalicaGame.setLettersForFindingTheWord("HIMBRIROSAVA");
         expectedWord = "HIMBRIROSAVA";
-        realWord = slagalica.getLettersForFindingTheWord();
+        realWord = slagalicaGame.getLettersForFindingTheWord();
 
         Assertions.assertEquals(expectedWord, realWord);
     }
@@ -59,20 +59,20 @@ class SlagalicaTest {
     void testConstructors() {
 
         // All args constructor
-        slagalica = null;
+        slagalicaGame = null;
         Long id = 3L;
         String word = "MOEAIRTISABI";
         String computerWord = "TISA";
-        slagalica = new Slagalica(id, word, computerWord);
+        slagalicaGame = new SlagalicaGame(id, word, computerWord);
 
-        Assertions.assertEquals(id, slagalica.getId());
-        Assertions.assertEquals(word, slagalica.getLettersForFindingTheWord());
+        Assertions.assertEquals(id, slagalicaGame.getId());
+        Assertions.assertEquals(word, slagalicaGame.getLettersForFindingTheWord());
 
         // No args constructor
-        Slagalica slagalica2 = new Slagalica();
-        assertEquals(null, slagalica2.getId());
-        assertEquals(null, slagalica2.getLettersForFindingTheWord());
-        assertEquals(null, slagalica2.getComputerLongestWord());
+        SlagalicaGame slagalicaGame2 = new SlagalicaGame();
+        assertEquals(null, slagalicaGame2.getId());
+        assertEquals(null, slagalicaGame2.getLettersForFindingTheWord());
+        assertEquals(null, slagalicaGame2.getComputerLongestWord());
 
 
 
@@ -83,13 +83,13 @@ class SlagalicaTest {
     void setComputerLongestWord() {
 
         String expectedWord = "MALA";
-        String realWord = slagalica.getComputerLongestWord();
+        String realWord = slagalicaGame.getComputerLongestWord();
 
         Assertions.assertEquals(expectedWord, realWord);
 
-        slagalica.setComputerLongestWord("BORE");
+        slagalicaGame.setComputerLongestWord("BORE");
         expectedWord = "BORE";
-        realWord = slagalica.getComputerLongestWord();
+        realWord = slagalicaGame.getComputerLongestWord();
 
         Assertions.assertEquals(expectedWord, realWord);
     }
@@ -97,10 +97,10 @@ class SlagalicaTest {
     @Test
     void testBuilder() {
 
-        slagalica = null;
-        slagalica = Slagalica.builder().id(2L).lettersForFindingTheWord("MAROPELSAIMAS").computerLongestWord("OPEL").build();
+        slagalicaGame = null;
+        slagalicaGame = SlagalicaGame.builder().id(2L).lettersForFindingTheWord("MAROPELSAIMAS").computerLongestWord("OPEL").build();
 
-        assertNotNull(slagalica);
-        assertEquals("OPEL", slagalica.getComputerLongestWord());
+        assertNotNull(slagalicaGame);
+        assertEquals("OPEL", slagalicaGame.getComputerLongestWord());
     }
 }

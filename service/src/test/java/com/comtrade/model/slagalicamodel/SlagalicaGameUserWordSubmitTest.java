@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class SlagalicaUserWordSubmitTest {
+class SlagalicaGameUserWordSubmitTest {
 
     SlagalicaUserWordSubmit slagalicaUserWordSubmit;
 

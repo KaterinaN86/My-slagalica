@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded",()=>{init()})
-
+var data=null
 function init(){
     fetch('http://localhost:8080/OnePlayer/init')
             .then(
@@ -10,6 +10,8 @@ function init(){
                     }
 
                     response.json().then((data) => {
+                    data=data
+                    document.getElementById("numOfPoints").innerText=data.numOfPointsSum
                     console.log(data)
                     });
                 }
