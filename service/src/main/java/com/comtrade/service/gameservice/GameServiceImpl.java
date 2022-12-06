@@ -11,12 +11,12 @@ import java.security.Principal;
 import java.util.*;
 
 @Service
-public class GameserviceImpl implements Gameservice {
+public class GameServiceImpl implements GameService {
 
     private final Gamerepository gamerepository;
     private final UserRepository userRepository;
 
-    public GameserviceImpl(Gamerepository gamerepository, UserRepository userRepository) {
+    public GameServiceImpl(Gamerepository gamerepository, UserRepository userRepository) {
         this.gamerepository = gamerepository;
         this.userRepository = userRepository;
     }

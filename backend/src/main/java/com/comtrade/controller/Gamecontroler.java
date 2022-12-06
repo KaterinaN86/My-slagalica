@@ -1,8 +1,7 @@
 package com.comtrade.controller;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
-import com.comtrade.service.gameservice.GameserviceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,16 +12,15 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/OnePlayer")
 public class Gamecontroler {
-    private final GameserviceImpl gameservice;
+    private final GameServiceImpl gameservice;
 
-    public Gamecontroler(GameserviceImpl gameservice) {
+    public Gamecontroler(GameServiceImpl gameservice) {
         this.gameservice = gameservice;
     }
 
     @GetMapping("/init")
     @CrossOrigin
-    public OnePlayerInitResponse init(Principal principal){//todo change response type
-
+    public OnePlayerInitResponse init(Principal principal){
         try {
             return gameservice.getInitData(principal);
         } catch (Exception e) {
