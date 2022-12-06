@@ -6,6 +6,7 @@ import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptException;

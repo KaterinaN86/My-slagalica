@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 public class IndexController {
     @Autowired
     MyUserDetailService myUserDetailService;
-
 
     @GetMapping ("/login")
     public String login(){
@@ -24,6 +25,19 @@ public class IndexController {
     @GetMapping("/register")
     public String register(){
         return "register.html";
+    }
+    @GetMapping({"","/","/home"})
+    public String homePage(){
+        return "homePage.html";
+    }
+
+    @GetMapping("OnePlayer")
+    public String onePlayer(){
+        return "chooseGameOnePlayer.html";
+    }
+    @GetMapping("TwoPlayers")
+    public String TwoPlayers(){
+        return "chooseGameTwoPlayers.html";
     }
     @RequestMapping("/skocko")
     public String SkockoIndex(){
@@ -37,7 +51,6 @@ public class IndexController {
     public String mojBrojIndex(){
         return "mojbroj.html";
     }
-
     @RequestMapping("/asocijacija")
     public String asocijacijaIndex() {
         return "asocijacija.html";

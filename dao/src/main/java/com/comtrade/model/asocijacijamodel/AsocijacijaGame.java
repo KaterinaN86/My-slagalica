@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AsocijacijaModel {
+public class AsocijacijaGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,12 +22,12 @@ public class AsocijacijaModel {
     private boolean isActive;
     private Double points;
 
-    public AsocijacijaModel(){
+    public AsocijacijaGame(){
         this.isActive = true;
         this.points = 4.0;
     }
 
-    public AsocijacijaModel(Long id, WordModel wordModel) {
+    public AsocijacijaGame(Long id, WordModel wordModel) {
         this.id = id;
         this.wordModel = wordModel;
         this.isActive = true;

@@ -38,9 +38,9 @@ public class AsocijacijaServiceImpl {
     public ResponseEntity<Response> createNewAsocijacijaGame(){
         try{
             log.info("Creating new Asocijacija game instance");
-            AsocijacijaModel asocijacijaGame = new AsocijacijaModel();
+            AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
-            AsocijacijaModel savedAsocijacijaGame = asocijacijaRepository.save(asocijacijaGame);
+            AsocijacijaGame savedAsocijacijaGame = asocijacijaRepository.save(asocijacijaGame);
             log.info("Asocijacija game instance with id: " + savedAsocijacijaGame.getId() + " created.");
             return ResponseEntity.ok()
                     .body(new ResponseWithGameId(savedAsocijacijaGame.getId()));
@@ -52,9 +52,9 @@ public class AsocijacijaServiceImpl {
     }
 
     //getting optional asocijacija game
-    private AsocijacijaModel findSpecificGame(Long gameId) throws NoSuchElementException{
+    private AsocijacijaGame findSpecificGame(Long gameId) throws NoSuchElementException{
         log.info("Searching asocijacija game instance with id: " + gameId);
-        Optional<AsocijacijaModel> optionalAsocijacijaGame = asocijacijaRepository.findById(gameId);
+        Optional<AsocijacijaGame> optionalAsocijacijaGame = asocijacijaRepository.findById(gameId);
         if(optionalAsocijacijaGame.isEmpty()){
             //todo handling - done
             //todo logging - done
@@ -69,7 +69,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getValueOfSpecificField(Long gameId, String fieldName){
         try{
-            AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
+            AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
             boolean isGameActive = asocijacijaGame.isActive();
             String fieldNameUpperCase = fieldName.toUpperCase();
 
@@ -90,7 +90,7 @@ public class AsocijacijaServiceImpl {
         }
     }
 
-    private String findValueOfSpecificField(AsocijacijaModel asocijacijaGame, String fieldName){
+    private String findValueOfSpecificField(AsocijacijaGame asocijacijaGame, String fieldName){
         if(fieldName.contains("final")){
             return findFinalWord(asocijacijaGame);
         }else{
@@ -98,7 +98,7 @@ public class AsocijacijaServiceImpl {
         }
     }
 
-    private String findSpecificColumn(AsocijacijaModel asocijacijaGame, String fieldName){
+    private String findSpecificColumn(AsocijacijaGame asocijacijaGame, String fieldName){
         if(fieldName.contains("A")){
             return asocijacijaGame.getWordModel().getColumna();
         } else if (fieldName.contains("B")) {
@@ -128,13 +128,13 @@ public class AsocijacijaServiceImpl {
         }
     }
 
-    private String findFinalWord(AsocijacijaModel asocijacijaGame){
+    private String findFinalWord(AsocijacijaGame asocijacijaGame){
         return asocijacijaGame.getWordModel().getFinalWord();
     }
 
     public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord){
         try{
-            AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
+            AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
             String submittedWordUpperCase = submittedWord.toUpperCase();
             String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
             log.info("Checking submit for game id: " + gameId);
@@ -159,14 +159,14 @@ public class AsocijacijaServiceImpl {
     }
 
     public void change(Long gameId){
-        AsocijacijaModel asocijacijaGame = findSpecificGame(gameId);
+        AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
         asocijacijaGame.setActive(false);
         asocijacijaRepository.save(asocijacijaGame);
     }
 
     public ResponseEntity<Response> getNumberOfPoints(SubmitNumberOfFields submit){
         try{
-            AsocijacijaModel asocijacijaGame = findSpecificGame(submit.getGameId());
+            AsocijacijaGame asocijacijaGame = findSpecificGame(submit.getGameId());
             if(!asocijacijaGame.isActive()){
                 return ResponseEntity.ok()
                         .body(new ResponseWithNumberOfPoints(asocijacijaGame.getPoints()));

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "slagalica")
-public class Slagalica {
+public class SlagalicaGame {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

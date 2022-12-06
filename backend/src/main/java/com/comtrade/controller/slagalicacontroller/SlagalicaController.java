@@ -1,11 +1,9 @@
 package com.comtrade.controller.slagalicacontroller;
 
-import com.comtrade.model.slagalicamodel.Slagalica;
+import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.service.slagalicaservice.SlagalicaService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/slagalica")
@@ -20,7 +18,7 @@ public class SlagalicaController {
 
     @RequestMapping("/play")
     @CrossOrigin
-    public Slagalica getNewGame(){
+    public SlagalicaGame getNewGame(){
         return slagalicaService.saveLetterForFindingWords();
     }
 
