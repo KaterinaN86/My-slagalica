@@ -1,4 +1,5 @@
 var gameLetters = ""
+var computerWord = ""
 var gameId
 var lastClickedButtons = []
 var timer;
@@ -28,8 +29,10 @@ const handleNewGame = () => {
                 response.json().then((data) => {
 
                     gameLetters = data.lettersForFindingTheWord
+                    computerWord = data.computerLongestWord
                     gameId = data.id
                     console.log(gameLetters)
+                    console.log(computerWord)
                     setLettersToButtons(data)
 
                 });
@@ -77,7 +80,12 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
 
             const data = await response.json();
             console.log(data)
-            alert("Time out, you earned " + data + " points")
+            //alert("Time out, you earned " + data + " points")
+            document.getElementById('finalPoints').textContent = "Igra je završena, osvojili ste " + data + " bodova"
+            document.getElementById('computerWordTxt').textContent += "Racunarova rec je: " + computerWord
+
+            disableButtons()
+
         }
 
     } catch (error) {
@@ -129,7 +137,7 @@ function parseButtonText(elem) {
             btnWord.textContent += buttonLetter.textContent
             buttonLetter.setAttribute("disabled", "disabled")
             lastClickedButtons.push(buttonLetter)
-            console.log(lastClickedButtons)
+            //console.log(lastClickedButtons)
 
 
         }
@@ -164,7 +172,19 @@ function fastAlphabetSwitch() {
 
 }
 
+function disableButtons() {
+
+    const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
+
+    buttons.forEach(buttonLetter => {
+
+        document.getElementById(buttonLetter).setAttribute("disabled", "disabled")
 
 
+    });
 
+    document.getElementById('submitButton').setAttribute("disabled", "disabled")
+    document.getElementById('deleteLetter').setAttribute("disabled", "disabled")
+    document.getElementById('stopButton').setAttribute("disabled", "disabled")
 
+}
