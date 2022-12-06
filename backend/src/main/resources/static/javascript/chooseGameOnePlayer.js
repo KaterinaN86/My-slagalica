@@ -9,8 +9,8 @@ function init(){
                         return;
                     }
 
-                    response.json().then((data) => {
-                    data=data
+                    response.json().then((responseData) => {
+                    data=responseData
                     document.getElementById("numOfPoints").innerText=data.numOfPointsSum
                     console.log(data)
                     });
