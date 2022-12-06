@@ -12,7 +12,13 @@ function init(){
                     response.json().then((responseData) => {
                     data=responseData
                     document.getElementById("numOfPoints").innerText=data.numOfPointsSum
-                    console.log(data)
+                        document.getElementById("numOfPointsSlagalica").innerText=data.numOfPointsSlagalica
+                        document.getElementById("numOfPointsMojBroj").innerText=data.numOfPointsMojBroj
+                        document.getElementById("numOfPointsSkocko").innerText=data.numOfPointsSkocko
+                        document.getElementById("numOfPointsKoZnaZna").innerText=data.numOfPointsKoZnaZna
+                        document.getElementById("numOfPointsSpojnice").innerText=data.numOfPointsSpojnice
+                        document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacije
+                        console.log(data)
                     });
                 }
             )
