@@ -2,6 +2,8 @@ package com.comtrade.service.mojbrojservice;
 
 
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
+import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
+import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
 
 import javax.script.ScriptException;
 import java.security.Principal;
@@ -15,5 +17,6 @@ public interface MojBrojService {
     Integer eval(String expr) throws ScriptException;
     public Integer userSolutionDiff(String expression, Principal principal) throws Exception;
     String getSolution(Principal principal) throws Exception;
+    MojBrojSubmitResponse submit(MojBrojSubmitRequest request, Principal principal);
 
 }

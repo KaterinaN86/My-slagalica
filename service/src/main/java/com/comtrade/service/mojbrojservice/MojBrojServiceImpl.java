@@ -42,7 +42,8 @@ public class MojBrojServiceImpl implements MojBrojService{
             return game.getMojBrojGame();
         }else{
             MojBrojGame MBgame=createNewGame();
-            game.setMojBrojGame(MBgame);gamerepository.save(game);
+            game.setMojBrojGame(MBgame);
+            gamerepository.save(game);
             return MBgame;
         }
     }
@@ -141,7 +142,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         return MBgame.getSolution();
     }
 
-
+    @Override
     public MojBrojSubmitResponse submit(MojBrojSubmitRequest request, Principal principal){
         int diff;
         try {

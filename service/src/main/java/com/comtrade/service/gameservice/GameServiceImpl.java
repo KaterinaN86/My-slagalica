@@ -39,7 +39,7 @@ public class GameServiceImpl implements GameService {
         }
         return createNewGame(principal);
     }
-
+    @Override
     public OnePlayerInitResponse getInitData(Principal principal) throws Exception {
         OnePlayerGame game=getGame(principal);
         OnePlayerInitResponse response=new OnePlayerInitResponse();
@@ -47,6 +47,9 @@ public class GameServiceImpl implements GameService {
         response.setNumOfPointsSum(game.getNumOfPoints());
         if (game.getMojBrojGame()!=null){
             response.setNumOfPointsMojBroj(game.getMojBrojGame().getNumOfPoints());
+        }
+        if (game.getSlagalicaGame()!=null){
+            response.setNumOfPointsSlagalica(game.getSlagalicaGame().getNumOfPoints());
         }
         return response;
     }

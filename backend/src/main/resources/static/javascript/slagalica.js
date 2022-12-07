@@ -1,4 +1,4 @@
-var gameLetters = ""
+  var gameLetters = ""
 var computerWord = ""
 var gameId
 var lastClickedButtons = []
@@ -79,10 +79,14 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
         if (response.status == 200) {
 
             const data = await response.json();
-            console.log(data)
-            //alert("Time out, you earned " + data + " points")
-            document.getElementById('finalPoints').textContent = "Igra je završena, osvojili ste " + data + " bodova"
-            document.getElementById('computerWordTxt').textContent += "Racunarova rec je: " + computerWord
+            if(data!=-1){
+                //alert("Time out, you earned " + data + " points")
+                document.getElementById('finalPoints').textContent = "You earned " + data + " points."
+                document.getElementById('computerWordTxt').textContent += "Computer word is: " + computerWord
+            }else{
+                document.getElementById('finalPoints').textContent = "You can only submit once."
+                document.getElementById('computerWordTxt').textContent += ""
+            }
 
             disableButtons()
 

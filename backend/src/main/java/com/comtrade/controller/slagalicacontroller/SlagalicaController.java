@@ -5,6 +5,11 @@ import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.service.slagalicaservice.SlagalicaService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/slagalica")
 public class SlagalicaController {
@@ -18,14 +23,14 @@ public class SlagalicaController {
 
     @RequestMapping("/play")
     @CrossOrigin
-    public SlagalicaGame getNewGame(){
-        return slagalicaService.saveLetterForFindingWords();
+    public SlagalicaGame getNewGame(Principal principal){
+        return slagalicaService.saveLetterForFindingWords(principal);
     }
 
     @PostMapping("/wordSubmit")
     @CrossOrigin
-    public Integer slagalicaGame(@RequestBody SlagalicaUserWordSubmit slagalicaUserWordSubmit) {
-        return slagalicaService.userWordProcessing(slagalicaUserWordSubmit);
+    public Integer slagalicaGame(@RequestBody SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) {
+        return slagalicaService.userWordProcessing(slagalicaUserWordSubmit, principal);
     }
 
 }

@@ -1,33 +1,55 @@
 package com.comtrade.service.slagalicaservice;
 
 
+import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.slagalicamodel.DictionaryWord;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
+import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
+import com.comtrade.service.gameservice.GameServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.*;
 
 @Service
 public class SlagalicaServiceImp implements SlagalicaService {
 
+    private final Gamerepository gamerepository;
     private final SlagalicaRepository slagalicaRepository;
     private final DictionaryWordRepository dictionaryWordRepository;
 
-    public SlagalicaServiceImp(SlagalicaRepository slagalicaRepository,
+    @Autowired
+    private GameServiceImpl gameService;
+
+    public SlagalicaServiceImp(Gamerepository gamerepository, SlagalicaRepository slagalicaRepository,
                                DictionaryWordRepository dictionaryWordRepository) {
+        this.gamerepository = gamerepository;
         this.slagalicaRepository = slagalicaRepository;
         this.dictionaryWordRepository = dictionaryWordRepository;
     }
 
     @Override
-    public SlagalicaGame saveLetterForFindingWords() {
+    public SlagalicaGame saveLetterForFindingWords(Principal principal) {
+        OnePlayerGame game=null;
+        try {
+            game=gameService.getGame(principal);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if (game.getSlagalicaGame()!=null){
+            return game.getSlagalicaGame();
+        }
         SlagalicaGame slagalicaGame = new SlagalicaGame();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
+        slagalicaGame.setIsActive(true);
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
-        slagalicaRepository.save(slagalicaGame);
+        SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
+        game.setSlagalicaGame(Sgame);
+        gamerepository.save(game);
         return slagalicaGame;
     }
 
@@ -96,8 +118,16 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
 
     @Override
-    public Integer userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit) {
-
+    public Integer userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit,Principal principal) {
+        OnePlayerGame game=null;
+        try {
+            game=gameService.getGame(principal);
+            if(!game.getSlagalicaGame().getIsActive()){
+                return -1;
+            }
+        } catch (Exception e) {
+            return -1;
+        }
         int finalResult = 0;
         String lettersForUserWord = slagalicaUserWordSubmit.getLettersForFindingTheWord();
         String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
@@ -150,6 +180,10 @@ public class SlagalicaServiceImp implements SlagalicaService {
         }
 
         finalResult = result;
+        game.getSlagalicaGame().setNumOfPoints(finalResult);
+        game.setNumOfPoints(game.getNumOfPoints()+finalResult);
+        game.getSlagalicaGame().setIsActive(false);
+        gamerepository.save(game);
 
 
         return finalResult;
