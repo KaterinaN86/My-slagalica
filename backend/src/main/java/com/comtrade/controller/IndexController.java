@@ -55,6 +55,10 @@ public class IndexController {
     public String asocijacijaIndex() {
         return "asocijacija.html";
     }
+    @RequestMapping("/koZnaZna")
+    public String koZnaZnaIndex() {
+        return "koznazna.html";
+    }
     
     @PostMapping("/NewUser")
     public ResponseEntity<RegistrationResponse> addUser(@RequestBody UserToRegister userToRegister){
