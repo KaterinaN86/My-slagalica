@@ -41,7 +41,7 @@ class SlagalicaGameServiceImpTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        slagalicaService = new SlagalicaServiceImp(slagalicaRepository, dictionaryWordRepository);
+        slagalicaService = new SlagalicaServiceImp(gamerepository, slagalicaRepository, dictionaryWordRepository);
         slagalicaRepository.save(SlagalicaGame.builder()
                 .lettersForFindingTheWord("IMAASIRKENKJ")
                 .computerLongestWord("MASKE").build());
@@ -53,7 +53,7 @@ class SlagalicaGameServiceImpTest {
 
         SlagalicaGame slagalicaGameGameToSave = SlagalicaGame.builder().id(GAME_ID).build();
         Mockito.when(slagalicaRepository.save(ArgumentMatchers.any())).thenReturn(slagalicaGameGameToSave);
-        SlagalicaGame savedSlagalicaGameGame = slagalicaService.saveLetterForFindingWords();
+        SlagalicaGame savedSlagalicaGameGame = slagalicaService.saveLetterForFindingWords(principal);
 
         Assertions.assertNotNull(savedSlagalicaGameGame);
     }

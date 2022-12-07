@@ -12,6 +12,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <start-class>com.comtrade.backend</start-class>
     </properties>
     <dependencies>
 

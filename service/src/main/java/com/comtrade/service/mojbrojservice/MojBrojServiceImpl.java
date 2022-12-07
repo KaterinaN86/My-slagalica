@@ -1,15 +1,22 @@
 package com.comtrade.service.mojbrojservice;
 
 
+import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
+import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
+import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
+import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import org.springframework.data.domain.Example;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +26,26 @@ import java.util.Optional;
 
 public class MojBrojServiceImpl implements MojBrojService{
     private final MojBrojRepository mojBrojRepository;
+    private final Gamerepository gamerepository;
 
-    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository) {
+    @Autowired
+    private GameServiceImpl gameService;
+    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, Gamerepository gamerepository) {
         this.mojBrojRepository = mojBrojRepository;
+        this.gamerepository = gamerepository;
+    }
+
+    @Override
+    public MojBrojGame getGame(Principal principal) throws Exception {
+        OnePlayerGame game=gameService.getGame(principal);
+        if(game.getMojBrojGame()!=null){
+            return game.getMojBrojGame();
+        }else{
+            MojBrojGame MBgame=createNewGame();
+            game.setMojBrojGame(MBgame);
+            gamerepository.save(game);
+            return MBgame;
+        }
     }
 
     @Override
@@ -31,7 +55,6 @@ public class MojBrojServiceImpl implements MojBrojService{
         try {
             int target=eval(game.getSolution());
             while(target>999 || target<=0){
-                System.out.println(target);
                 game.initializeRandom();
                 target=eval(game.getSolution());
             }
@@ -45,8 +68,8 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public MojBrojGame createNewGame(Long id, ArrayList<Integer> nums, Boolean isActive, String solution){
-        MojBrojGame game=new MojBrojGame(id,nums,isActive, solution);
+    public MojBrojGame createNewGame(Long id, ArrayList<Integer> nums, Boolean isActive, String solution,Integer numOfPoints){
+        MojBrojGame game=new MojBrojGame(id,nums,isActive, solution,numOfPoints);
         mojBrojRepository.save(game);
         return game;
     }
@@ -75,6 +98,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         for(Integer i:gameNums){
             gameNumsCopy.add(i);
         }
+        gameNumsCopy.remove(0);
         for(String num:exprNums){
             try {
                 if(!gameNumsCopy.contains(Integer.parseInt(num))){
@@ -96,28 +120,62 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public Integer userSolutionDiff(String expression, long gameId) throws Exception {
-        Optional<MojBrojGame> game= mojBrojRepository.findById(gameId);
-        if(game.isEmpty()){
-            throw new Exception("Wrong game id");
-        }
-        MojBrojGame existingGame=game.get();
-        if(existingGame.isActive()==false){
+    public Integer userSolutionDiff(String expression, Principal principal) throws Exception {
+        OnePlayerGame game= gameService.getGame(principal);
+        MojBrojGame MBgame=game.getMojBrojGame();
+        Long gameId=MBgame.getId();
+        if(MBgame.isActive()==false){
             throw new Exception("You can submit only once");
         }
         if(!validateExpression(expression,gameId)){
             throw new Exception("Bad expression");
         }
-        existingGame.setActive(false);
-        mojBrojRepository.save(existingGame);
-        int target=existingGame.getNumbers().get(0);
+        MBgame.setActive(false);
+        mojBrojRepository.save(MBgame);
+        int target=MBgame.getNumbers().get(0);
         return Math.abs(eval(expression)-target);
     }
 
     @Override
-    public String getSolution(Long gameid) {
-        Optional<MojBrojGame> game=mojBrojRepository.findById(gameid);
-        if (game.isEmpty()){return "";}
-        return game.get().getSolution();
+    public String getSolution(Principal principal) throws Exception {
+        OnePlayerGame game=gameService.getGame(principal);
+        MojBrojGame MBgame=game.getMojBrojGame();
+        return MBgame.getSolution();
+    }
+
+    @Override
+    public MojBrojSubmitResponse submit(MojBrojSubmitRequest request, Principal principal){
+        int diff;
+        try {
+            diff = userSolutionDiff(request.getExpression(), principal);
+        } catch (Exception e) {
+            return new MojBrojSubmitResponse(e.getMessage(), "", 0);
+        }
+
+        Integer numOfPoints=0;
+        switch (diff){
+            case 0:
+                numOfPoints= 30;
+                break;
+            case 1:
+                numOfPoints= 20;
+                break;
+            case 2:
+                numOfPoints=10;
+                break;
+        }
+        String solution = null;
+        OnePlayerGame game=null;
+        try {
+            solution = getSolution(principal);
+            game=gameService.getGame(principal);
+        } catch (Exception e) {
+            new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints);
+        }
+        game.setNumOfPoints(game.getNumOfPoints()+numOfPoints);
+        game.getMojBrojGame().setNumOfPoints(numOfPoints);
+        gamerepository.save(game);
+
+        return new MojBrojSubmitResponse("", solution, numOfPoints);
     }
 }
