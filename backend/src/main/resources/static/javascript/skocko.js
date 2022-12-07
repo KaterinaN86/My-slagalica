@@ -54,7 +54,7 @@ function displaySymbol(object) {
         }
     } else if (text == " ↺ ") {
         //timer("stop");
-        window.location.reload(true);
+        window.location.href="OnePlayer";
     } else if (text == " ⚐ ") {
         handleLosingGame();
     } else {
