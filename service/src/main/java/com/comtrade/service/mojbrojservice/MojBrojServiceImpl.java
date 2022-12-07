@@ -98,6 +98,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         for(Integer i:gameNums){
             gameNumsCopy.add(i);
         }
+        gameNumsCopy.remove(0);
         for(String num:exprNums){
             try {
                 if(!gameNumsCopy.contains(Integer.parseInt(num))){
@@ -147,7 +148,6 @@ public class MojBrojServiceImpl implements MojBrojService{
         int diff;
         try {
             diff = userSolutionDiff(request.getExpression(), principal);
-            System.out.println(diff);
         } catch (Exception e) {
             return new MojBrojSubmitResponse(e.getMessage(), "", 0);
         }

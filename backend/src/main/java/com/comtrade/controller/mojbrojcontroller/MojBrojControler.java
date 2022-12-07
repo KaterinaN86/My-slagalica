@@ -31,7 +31,6 @@ public class MojBrojControler {
     @PostMapping("/Submit")
     @CrossOrigin
     public ResponseEntity<MojBrojSubmitResponse> submit(@RequestBody MojBrojSubmitRequest submit, Principal principal) {
-        String expression = submit.getExpression();
         return ResponseEntity.ok().body(mojBrojService.submit(submit,principal));
     }
 
