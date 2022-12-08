@@ -1,23 +1,53 @@
 package com.comtrade.service.skockoservice;
 
+import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.skockomodel.*;
+import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class SkockoGameServiceImpl implements SkockoGameService{
 
     private final SkockoGameRepository skockoGameRepository;
+    private final Gamerepository gamerepository;
 
-    public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository) {
+    @Autowired
+    private GameServiceImpl gameService;
+
+    public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository, Gamerepository gamerepository) {
         this.skockoGameRepository = skockoGameRepository;
+        this.gamerepository = gamerepository;
     }
+
+    @Override
+    public SkockoGame getGame(Principal principal) {
+        OnePlayerGame game=null;
+        try {
+            game=gameService.getGame(principal);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (game.getSkockoGame()!=null){
+            return game.getSkockoGame();
+        }
+        else{
+            SkockoGame Sgame=createNewGame();
+            game.setSkockoGame(Sgame);
+            gamerepository.save(game);
+            return game.getSkockoGame();
+        }
+
+    }
+
     @Override
     public SkockoGame createNewGame(){
         log.info("Creating new instance of Skocko game");
@@ -27,29 +57,38 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         return newGame;
     }
     @Override
-    public ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit) {
+    public ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit,Principal principal) {
         boolean isWinningCombination;
         SkockoResponse skockoResponse;
+        OnePlayerGame game=null;
+        try {
+            game=gameService.getGame(principal);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        SkockoGame Sgame=game.getSkockoGame();
 
         log.info("Processing submit for game: " + submit.getGameId() +". Submitted combination: " + submit.getCombination());
-        Optional<SkockoGame> existingGame = skockoGameRepository.findById(submit.getGameId());
-        if (existingGame.isEmpty()) {
-            log.info("Game with id: " + submit.getGameId() + " not found !");
-            return ResponseEntity.notFound()
-                    .build();
-        }
 
-        isWinningCombination = isWinningCombination(existingGame.get().getCombination(), submit.getCombination());
+        isWinningCombination = isWinningCombination(Sgame.getCombination(), submit.getCombination());
 
         if(isWinningCombination){
-            skockoResponse = new SkockoResponseWithNumberOfPoints(isWinningCombination,numberOfPoints(submit.getAttempt()), existingGame.get().getCombination());
-            log.info("Returning object" + skockoResponse + "as response for submitting winning combination" + " for game id: " + existingGame.get().getId());
+            int numOfPoints=numberOfPoints(submit.getAttempt());
+            if (Sgame.isActive()){
+                Sgame.setNumOfPoints(numOfPoints);
+                Sgame.setActive(false);
+                game.setNumOfPoints(game.getNumOfPoints()+numOfPoints);
+                gamerepository.save(game);
+            }
+
+            skockoResponse = new SkockoResponseWithNumberOfPoints(isWinningCombination,numOfPoints, Sgame.getCombination());
+            log.info("Returning object" + skockoResponse + "as response for submitting winning combination" + " for game id: " + Sgame.getId());
             return ResponseEntity.ok()
                     .body(skockoResponse);
         }
 
-        skockoResponse = new SkockoResponseWithPositions(isWinningCombination, getNumberOfCorrectlyPlacedSymbolsInCombination(existingGame.get().getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolsInCombination(existingGame.get().getCombination(), submit.getCombination()));
-        log.info("Returning object" + skockoResponse + "as response for submitting non-winning combination" + " for game id: " + existingGame.get().getId());
+        skockoResponse = new SkockoResponseWithPositions(isWinningCombination, getNumberOfCorrectlyPlacedSymbolsInCombination(Sgame.getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolsInCombination(Sgame.getCombination(), submit.getCombination()));
+        log.info("Returning object" + skockoResponse + "as response for submitting non-winning combination" + " for game id: " + Sgame.getId());
         return ResponseEntity.ok()
                 .body(skockoResponse);
     }
@@ -101,17 +140,18 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         }
     }
     @Override
-    public ResponseEntity<List<Integer>> getCombination(Long id){
-        log.info("Getting combination for game id: " + id);
-        Optional<SkockoGame> existingGame = skockoGameRepository.findById(id);
-        if (existingGame.isEmpty()) {
-            log.info("Game with id: " + id + " not found !");
-            return ResponseEntity.notFound()
-                    .build();
-        }else{
-            log.info("Returning combination for game id: " + existingGame.get().getId());
-            return ResponseEntity.ok()
-                    .body(existingGame.get().getCombination());
+    public ResponseEntity<List<Integer>> getCombination(Principal principal){
+        OnePlayerGame game=null;
+        try {
+            game=gameService.getGame(principal);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        SkockoGame Sgame=game.getSkockoGame();
+        Sgame.setActive(false);
+
+        log.info("Returning combination for game id: " + Sgame.getId());
+        return ResponseEntity.ok().body(Sgame.getCombination());
+
     }
 }
