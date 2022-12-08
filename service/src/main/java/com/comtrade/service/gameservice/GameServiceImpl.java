@@ -66,4 +66,12 @@ public class GameServiceImpl implements GameService {
         ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) gamerepository.findByFinishedTrueOrderByNumOfPointsDesc();
         return  lisOfGames;
     }
+
+    public void finishedGame(Principal principal) throws Exception {
+
+        OnePlayerGame game = getGame(principal);
+        game.setFinished(true);
+        gamerepository.save(game);
+
+    }
 }

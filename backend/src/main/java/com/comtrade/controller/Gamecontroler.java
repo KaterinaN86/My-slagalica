@@ -41,4 +41,11 @@ public class Gamecontroler {
         }
         return ResponseEntity.ok().body(listOfGamesCopy);
     }
+
+    @GetMapping("/newGame")
+    public String newGame(Principal principal) throws Exception {
+        gameservice.finishedGame(principal);
+        return "chooseGameOnePlayer.html";
+    }
+
 }
