@@ -51,4 +51,8 @@ public class KoZnaZnaGameController {
     public ResponseEntity<Response> updateQuestionNumber(@RequestBody NextQuestion nextQuestion){
         return koZnaZnaService.updateQuestionNumber(nextQuestion);
     }
+    @PutMapping("/finishGame")
+    public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
+        return koZnaZnaService.finishGame(principal);
+    }
 }
