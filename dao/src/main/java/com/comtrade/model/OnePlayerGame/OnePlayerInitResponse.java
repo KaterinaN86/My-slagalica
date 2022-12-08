@@ -14,7 +14,7 @@ public class OnePlayerInitResponse {
     int numOfPointsSkocko;
     int numOfPointsSpojnice;
     int numOfPointsKoZnaZna;
-    int numOfPointsAsocijacije;
+    int numOfPointsAsocijacija;
     public OnePlayerInitResponse(){
         msg="";
         numOfPointsSum=0;
@@ -23,6 +23,8 @@ public class OnePlayerInitResponse {
         numOfPointsSkocko=0;
         numOfPointsSpojnice=0;
         numOfPointsKoZnaZna=0;
-        numOfPointsAsocijacije=0;
+        numOfPointsAsocijacija=0;
     }
+
+
 }

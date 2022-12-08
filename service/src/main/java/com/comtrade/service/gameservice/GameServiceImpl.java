@@ -57,6 +57,10 @@ public class GameServiceImpl implements GameService {
         if(game.getKoZnaZnaGame() != null){
             response.setNumOfPointsKoZnaZna(game.getKoZnaZnaGame().getNumOfPoints());
         }
+        if(game.getAsocijacijaGame() != null){
+            System.out.println(game.getAsocijacijaGame());
+            response.setNumOfPointsAsocijacija((int) game.getAsocijacijaGame().getNumOfPoints());
+        }
         return response;
     }
 }
