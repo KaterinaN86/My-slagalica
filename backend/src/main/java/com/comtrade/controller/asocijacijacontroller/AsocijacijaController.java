@@ -8,6 +8,8 @@ import com.comtrade.service.asocijacijaservice.AsocijacijaServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 public class AsocijacijaController {
     private final AsocijacijaServiceImpl asocijacijaService;
@@ -18,8 +20,8 @@ public class AsocijacijaController {
 
     @GetMapping("/asocijacija/play")
     @CrossOrigin
-    public ResponseEntity<Response> createNewAsocijacijaGame(){
-        return asocijacijaService.createNewAsocijacijaGame();
+    public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
+        return asocijacijaService.createNewAsocijacijaGame(principal);
     }
 
     @GetMapping("/asocijacija/{gameId}/getField/{fieldName}")
@@ -30,8 +32,8 @@ public class AsocijacijaController {
 
     @PostMapping("/asocijacija/submitWord")
     @CrossOrigin
-    public ResponseEntity<Response> submitWord(@RequestBody SubmitFieldValue submit){
-        return asocijacijaService.checkSubmittedWord(submit.getGameId(), submit.getFieldName(), submit.getWord());
+    public ResponseEntity<Response> submitWord(@RequestBody SubmitFieldValue submit, Principal principal){
+        return asocijacijaService.checkSubmittedWord(submit.getGameId(), submit.getFieldName(), submit.getWord(),principal);
     }
 
     //Only for testing purpose

@@ -17,7 +17,7 @@ function init(){
                         document.getElementById("numOfPointsSkocko").innerText=data.numOfPointsSkocko
                         document.getElementById("numOfPointsKoZnaZna").innerText=data.numOfPointsKoZnaZna
                         document.getElementById("numOfPointsSpojnice").innerText=data.numOfPointsSpojnice
-                        document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacije
+                        document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacija
                         console.log(data)
                     });
                 }

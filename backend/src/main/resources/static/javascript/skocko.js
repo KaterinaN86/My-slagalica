@@ -181,7 +181,7 @@ const handleNotWinningCombination = (data) => {
 }
 
 const handleLosingGame = async () => {
-    fetch('http://localhost:8080/skocko/getCombination/' + gameId)
+    fetch('http://localhost:8080/skocko/getCombination')
         .then(
             (response) => {
                 if (response.status !== 200) {
