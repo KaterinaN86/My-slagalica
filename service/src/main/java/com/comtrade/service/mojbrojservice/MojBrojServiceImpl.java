@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptException;
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-
 public class MojBrojServiceImpl implements MojBrojService{
     private final MojBrojRepository mojBrojRepository;
     private final Gamerepository gamerepository;

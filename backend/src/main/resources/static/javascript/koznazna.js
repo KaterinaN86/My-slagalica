@@ -102,8 +102,8 @@ async function submitSelect(){
 
 function nextQuestionSelect(e){
     defaultOptionColors();
+    updateQuestionNumber();
     selectedOptionIndex=0;
-    console.log(selectedOptionIndex);
     if(questionCount==9){
        getNumberOfPoints();
     }
@@ -115,6 +115,22 @@ function nextQuestionSelect(e){
     else{
         questionCount++;
         setQuestion(questionCount);
+    }
+}
+async function updateQuestionNumber(){
+    var submitQuestionNUmber={
+        gameId : gameId,
+    }
+    const response = await fetch('http://localhost:8080/koZnaZna/nextQuestion', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(submitQuestionNUmber)
+    });
+    if (response.status !== 200) {
+        console.log('Error: ' + response.status);
+        return;
     }
 }
 function getNumberOfPoints(){
