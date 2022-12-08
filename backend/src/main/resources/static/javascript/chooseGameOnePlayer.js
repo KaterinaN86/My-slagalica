@@ -26,3 +26,12 @@ function init(){
                 console.log('Fetch error: ', error);
             })
 }
+
+function newGame() {
+    fetch("http://localhost:8080/OnePlayer/newGame").then(r => {
+        console.log(r);
+        window.location.reload();
+    }).catch((error) => {
+        console.log(error);
+    })
+}
