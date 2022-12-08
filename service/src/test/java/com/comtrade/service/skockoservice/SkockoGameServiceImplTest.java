@@ -24,7 +24,7 @@ class SkockoGameServiceImplTest {
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        skockoGameService=new SkockoGameServiceImpl(skockoGameRepository);
+        skockoGameService=new SkockoGameServiceImpl(skockoGameRepository, gamerepository);
     }
 
     @Test
