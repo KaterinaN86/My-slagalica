@@ -11,4 +11,6 @@ import java.util.List;
 public interface Gamerepository extends JpaRepository<OnePlayerGame,Long> {
 
     List<OnePlayerGame> findAllByUserUserNameAndFinishedFalse(String userName);
+    List<OnePlayerGame> findByFinishedTrueOrderByNumOfPointsDesc();
 }
+
