@@ -51,6 +51,9 @@ public class GameServiceImpl implements GameService {
         if (game.getSlagalicaGame()!=null){
             response.setNumOfPointsSlagalica(game.getSlagalicaGame().getNumOfPoints());
         }
+        if(game.getKoZnaZnaGame() != null){
+            response.setNumOfPointsKoZnaZna(game.getKoZnaZnaGame().getNumOfPoints());
+        }
         return response;
     }
 }

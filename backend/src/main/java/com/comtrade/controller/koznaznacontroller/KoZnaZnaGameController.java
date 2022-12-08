@@ -1,13 +1,15 @@
 package com.comtrade.controller.koznaznacontroller;
 
+import com.comtrade.model.koznaznamodel.NextQuestion;
 import com.comtrade.model.koznaznamodel.SubmitQuestion;
 import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.model.koznaznamodel.responses.ResponseGameWithoutAnswers;
 import com.comtrade.model.koznaznamodel.responses.ResponseQuestionsWithoutAnswer;
-import com.comtrade.repository.koznaznarepository.KoZnaZnaRepository;
 import com.comtrade.service.koznaznaservice.KoZnaZnaServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/koZnaZna")
@@ -19,9 +21,9 @@ public class KoZnaZnaGameController {
     }
     @GetMapping("/play")
     @CrossOrigin
-    public ResponseEntity<Response> getNewGame(){
+    public ResponseEntity<Response> getNewGame(Principal principal) throws Exception {
         return ResponseEntity.ok()
-                .body(new ResponseGameWithoutAnswers(koZnaZnaService.createNewGame()));
+                .body(new ResponseGameWithoutAnswers(koZnaZnaService.getGame(principal)));
     }
 
     @GetMapping("/getCurrentQuestion/{gameId}")
@@ -45,4 +47,8 @@ public class KoZnaZnaGameController {
         return koZnaZnaService.getNumberOfPoints(gameId);
     }
 
+    @PutMapping("/nextQuestion")
+    public ResponseEntity<Response> updateQuestionNumber(@RequestBody NextQuestion nextQuestion){
+        return koZnaZnaService.updateQuestionNumber(nextQuestion);
+    }
 }
