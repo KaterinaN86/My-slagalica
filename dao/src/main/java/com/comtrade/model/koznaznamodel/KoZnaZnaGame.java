@@ -24,5 +24,7 @@ public class KoZnaZnaGame {
 
     private boolean isActiveGame;
 
+    private boolean isFinishedGame;
+
     private int indexOfTheCurrentQuestion;
 }

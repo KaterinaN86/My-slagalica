@@ -44,7 +44,11 @@ public class KoZnaZnaServiceImpl {
     }
 
     public KoZnaZnaGame createNewGame(){
-            KoZnaZnaGame koZnaZnaGame=new KoZnaZnaGame((long) (koZnaZnaRepository.findAll().size()+1), getRandomQuestions(), 0, true, 0);
+            KoZnaZnaGame koZnaZnaGame=new KoZnaZnaGame();
+            koZnaZnaGame.setQuestions(getRandomQuestions());
+            koZnaZnaGame.setActiveGame(true);
+            koZnaZnaGame.setIndexOfTheCurrentQuestion(0);
+            koZnaZnaGame.setFinishedGame(false);
             koZnaZnaRepository.save(koZnaZnaGame);
             return koZnaZnaGame;
     }
@@ -107,8 +111,6 @@ public class KoZnaZnaServiceImpl {
 
     public Integer getNumberOfPoints(Long gameId) {
         KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
-        koZnaZnaGame.setActiveGame(false);
-        koZnaZnaRepository.save(koZnaZnaGame);
         return koZnaZnaGame.getNumOfPoints();
     }
 
@@ -124,5 +126,17 @@ public class KoZnaZnaServiceImpl {
             return ResponseEntity.ok().build();
         }
 
+    }
+
+    public ResponseEntity<Response> finishGame( Principal principal) throws Exception {
+        OnePlayerGame game=null;
+        game=gameService.getGame(principal);
+        KoZnaZnaGame koZnaZnaGame=game.getKoZnaZnaGame();
+        koZnaZnaGame.setFinishedGame(true);
+        koZnaZnaGame.setActiveGame(false);
+        game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());
+        gamerepository.save(game);
+        koZnaZnaRepository.save(koZnaZnaGame);
+        return ResponseEntity.ok().build();
     }
 }
