@@ -35,6 +35,8 @@ public class IndexController {
     public String onePlayer(){
         return "chooseGameOnePlayer.html";
     }
+
+
     @GetMapping("TwoPlayers")
     public String TwoPlayers(){
         return "chooseGameTwoPlayers.html";

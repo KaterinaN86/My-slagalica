@@ -60,4 +60,10 @@ public class GameServiceImpl implements GameService {
         }
         return response;
     }
+
+    @Override
+    public List<OnePlayerGame> getTopTen() {
+        ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) gamerepository.findByFinishedTrueOrderByNumOfPointsDesc();
+        return  lisOfGames;
+    }
 }
