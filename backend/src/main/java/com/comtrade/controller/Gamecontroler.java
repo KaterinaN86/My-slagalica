@@ -37,7 +37,12 @@ public class Gamecontroler {
         List<OnePlayerGame> listOfGames=gameservice.getTopTen();
         List<OnePlayerGame> listOfGamesCopy=new ArrayList<>();
         for (int i=0;i<10;i++){
-            listOfGamesCopy.add(listOfGames.get(i));
+            try {
+                listOfGamesCopy.add(listOfGames.get(i));
+            }catch (Exception e){
+                System.out.println("there is less than 10 finished games.");
+                break;
+            }
         }
         return ResponseEntity.ok().body(listOfGamesCopy);
     }
