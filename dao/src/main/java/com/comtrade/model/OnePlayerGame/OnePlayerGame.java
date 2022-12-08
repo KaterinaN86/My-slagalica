@@ -1,6 +1,7 @@
 package com.comtrade.model.OnePlayerGame;
 
 import com.comtrade.model.asocijacijamodel.AsocijacijaGame;
+import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.skockomodel.SkockoGame;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
@@ -33,7 +34,10 @@ public class OnePlayerGame {
 
     @OneToOne
     SkockoGame skockoGame;
-    //ko zna zna
+
+    @OneToOne
+    KoZnaZnaGame koZnaZnaGame;
+
     //spojnice
     @OneToOne
     AsocijacijaGame asocijacijaGame;

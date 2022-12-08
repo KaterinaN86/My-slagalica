@@ -7,6 +7,7 @@ import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.service.koznaznaservice.QuestionServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @SpringBootApplication
 public class BackendApplication implements CommandLineRunner {
 
@@ -46,7 +48,7 @@ public class BackendApplication implements CommandLineRunner {
 		dictionaryWordRepository.flush();
 
 		dictionaryWordRepository.saveAll(dictionaryWords);
-
+		log.info("Dictionary words saved");
 		/*for (String word : wordDictionary.subList(1,wordDictionary.size())) {
 			dictionaryWordRepository.save(DictionaryWord.builder().wordFromDictionary(word).build());
 		}*/
@@ -61,9 +63,9 @@ public class BackendApplication implements CommandLineRunner {
 			try {
 				List<Question> questions = mapper.readValue(inputStream,typeReference);
 				questionService.save(questions);
-				System.out.println("Questions Saved!");
+				log.info("Questions Saved!");
 			} catch (IOException e){
-				System.out.println("Unable to save question: " + e.getMessage());
+				log.info("Unable to save question: " + e.getMessage());
 			}
 		};
 	}
