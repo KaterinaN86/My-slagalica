@@ -17,7 +17,7 @@ public class SpojniceGame {
         private Long id;
 
         @OneToOne
-        @JoinColumn(name = "")
+        @JoinColumn(name = "pairs_model_id")
         private PairsModel pairsModel;
         private int points;
         private boolean isActive;

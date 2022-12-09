@@ -1,10 +1,13 @@
 package com.comtrade.service.spojniceservice;
 
+import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.asocijacijamodel.ResponseWithGameId;
 import com.comtrade.model.spojnicemodel.PairsModel;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
+import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.spojnicerepository.PairsRepository;
 import com.comtrade.repository.spojnicerepository.SpojniceRepository;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,13 @@ public class SpojniceServiceImpl {
 
     private final SpojniceRepository spojniceRepository;
     private final PairsRepository pairsRepository;
+    private final Gamerepository gamerepository;
+    private GameServiceImpl gameService;
 
-    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository) {
+    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, Gamerepository gamerepository) {
         this.spojniceRepository = spojniceRepository;
         this.pairsRepository = pairsRepository;
+        this.gamerepository = gamerepository;
     }
 
 
@@ -39,23 +45,23 @@ public class SpojniceServiceImpl {
         return randomPairsModel.get();
     }
 
-    public ResponseEntity<Object> createNewSpojniceGame(Principal principal) {
+    public SpojniceGame createNewSpojniceGame(Principal principal) {
 
-        try{
+        SpojniceGame spojniceGame = null;
+        try {
             log.info("Create new Spojnice game.");
-            SpojniceGame spojniceGame = new SpojniceGame();
+            spojniceGame = new SpojniceGame();
             spojniceGame.setPairsModel(getRandomPairsModel());
             SpojniceGame savedSpojniceGame = spojniceRepository.save(spojniceGame);
             log.info("Created game with id: " + savedSpojniceGame.getId());
-            return ResponseEntity.ok().body(new ResponseWithGameId(savedSpojniceGame.getId()));
-        }
-        catch (NoSuchElementException nEx) {
+            return savedSpojniceGame;
+        } catch (NoSuchElementException nEx) {
             log.info("This game is not successfully created!");
-            return ResponseEntity.notFound().build();
+            return spojniceGame;
         }
     }
 
-    private SpojniceGame chooseOptionalGame(Long gameId) throws NoSuchElementException {
+    /*private SpojniceGame chooseOptionalGame(Long gameId) throws NoSuchElementException {
         log.info("Search for game with id:" + gameId);
         Optional<SpojniceGame> optionalSpojniceGame = spojniceRepository.findById(gameId);
         if(optionalSpojniceGame.isEmpty()) {
@@ -64,6 +70,37 @@ public class SpojniceServiceImpl {
         }
         log.info("Found and return spojnice game with id: " + gameId);
         return optionalSpojniceGame.get();
+    }*/
+    private PairsModel getRandomPairsGame(Long gameId) throws NoSuchElementException {
+        log.info("Search for game with id:" + gameId);
+        Optional<PairsModel> randomPairsModel = pairsRepository.findById(gameId);
+        if(randomPairsModel.isEmpty()) {
+            log.info("The game with id: " + gameId + "can not be found...");
+            throw new NoSuchElementException();
+        }
+        log.info("Found and return spojnice game with id: " + gameId);
+        return randomPairsModel.get();
     }
 
+    public SpojniceGame getGame(Principal principal) throws Exception {
+        OnePlayerGame game=gameService.getGame(principal);
+        if(game.getSpojniceGame()!=null){
+            return game.getSpojniceGame();
+        }else{
+            SpojniceGame spojniceGame= createNewSpojniceGame(principal);
+            game.setSpojniceGame(spojniceGame);
+            gamerepository.save(game);
+            return spojniceGame;
+        }
+    }
+
+    public Integer getNumberOfPoints(Principal principal) throws Exception {
+        SpojniceGame spojniceGame =this.getGame(principal);
+        spojniceGame.setActive(false);
+        spojniceRepository.save(spojniceGame);
+        return spojniceGame.getPoints();
+    }
+
+
 }
+
