@@ -3,6 +3,7 @@ package com.comtrade.service.slagalicaservice;
 import com.comtrade.model.slagalicamodel.DictionaryWord;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
+import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +34,8 @@ class SlagalicaGameServiceImpTest {
     @Mock
     DictionaryWordRepository dictionaryWordRepository;
 
+    @Mock
+    Gamerepository gamerepository;
     SlagalicaService slagalicaService;
 
     SlagalicaGame slagalicaGame;
@@ -53,7 +56,7 @@ class SlagalicaGameServiceImpTest {
 
         SlagalicaGame slagalicaGameGameToSave = SlagalicaGame.builder().id(GAME_ID).build();
         Mockito.when(slagalicaRepository.save(ArgumentMatchers.any())).thenReturn(slagalicaGameGameToSave);
-        SlagalicaGame savedSlagalicaGameGame = slagalicaService.saveLetterForFindingWords(principal);
+        SlagalicaGame savedSlagalicaGameGame = slagalicaService.saveLetterForFindingWords(any());
 
         Assertions.assertNotNull(savedSlagalicaGameGame);
     }
@@ -90,7 +93,7 @@ class SlagalicaGameServiceImpTest {
                                                          .lettersForFindingTheWord(slagalicaGame.getLettersForFindingTheWord())
                                                          .build();
 
-        assertNotNull(slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
+        assertNotNull(slagalicaService.userWordProcessing(slagalicaUserWordSubmit,any()));
         //assertEquals(userWord.length()*2, slagalicaService.userWordProcessing(slagalicaUserWordSubmit));
     }
 

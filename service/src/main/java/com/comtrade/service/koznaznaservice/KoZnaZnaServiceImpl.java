@@ -10,6 +10,7 @@ import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.koznaznarepository.KoZnaZnaRepository;
 import com.comtrade.repository.koznaznarepository.QuestionRepository;
 import com.comtrade.service.gameservice.GameServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ import java.security.Principal;
 import java.util.*;
 
 @Service
-public class KoZnaZnaServiceImpl {
+@Slf4j
+public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         private final QuestionRepository questionRepository;
         private final KoZnaZnaRepository koZnaZnaRepository;
         private final Gamerepository gamerepository;
@@ -31,6 +33,7 @@ public class KoZnaZnaServiceImpl {
         this.gamerepository = gamerepository;
     }
 
+    @Override
     public KoZnaZnaGame getGame(Principal principal) throws Exception {
         OnePlayerGame game=gameService.getGame(principal);
         if(game.getKoZnaZnaGame()!=null){
@@ -43,6 +46,7 @@ public class KoZnaZnaServiceImpl {
         }
     }
 
+    @Override
     public KoZnaZnaGame createNewGame(){
             KoZnaZnaGame koZnaZnaGame=new KoZnaZnaGame();
             koZnaZnaGame.setQuestions(getRandomQuestions());
@@ -50,17 +54,18 @@ public class KoZnaZnaServiceImpl {
             koZnaZnaGame.setIndexOfTheCurrentQuestion(0);
             koZnaZnaGame.setFinishedGame(false);
             koZnaZnaRepository.save(koZnaZnaGame);
+            log.info("A new Ko zna zna game has been created!");
             return koZnaZnaGame;
-    }
+        }
+        @Override
         public List<Question> getRandomQuestions(){
             List<Question> questions=new ArrayList<>();
             for (long i: getRandomQuestionIds()) {
-                if(questionRepository.getReferenceById(i)!=null){
-                    questions.add(questionRepository.getReferenceById(i));
-                }
+                questions.add(questionRepository.getReferenceById(i));
             }
             return questions;
         }
+        @Override
         public Set<Integer> getRandomQuestionIds(){
             Set<Integer> ids=new TreeSet<>();
             int numberOfQuestions=questionRepository.findAll().size();
@@ -71,49 +76,53 @@ public class KoZnaZnaServiceImpl {
             while (ids.size()!=10);
             return ids;
         }
+        @Override
         public Integer getCurrentQuestionIndex(Long id){
             Optional<KoZnaZnaGame> existingGame=koZnaZnaRepository.findById(id);
-            return  existingGame.get().getIndexOfTheCurrentQuestion();
+            return existingGame.isPresent() ? existingGame.get().getIndexOfTheCurrentQuestion() : 0;
         }
         public List<Question> getListOfQuestionsById(Long id){
             Optional<KoZnaZnaGame> existingGame=koZnaZnaRepository.findById(id);
-            return  existingGame.get().getQuestions();
+            return existingGame.isPresent() ? existingGame.get().getQuestions() : null;
         }
-
+        @Override
         public KoZnaZnaGame getGame(Long id){
             Optional<KoZnaZnaGame> existingGame=koZnaZnaRepository.findById(id);
-            return  existingGame.get();
+            return existingGame.isPresent() ? existingGame.get() : null;
         }
 
-    public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion) {
-        KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
+        public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion) {
+            KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
 
-        Optional<Question> existingQuestion = questionRepository.findById(questionId);
-        if (existingQuestion.isEmpty()) {
-            return ResponseEntity.notFound()
-                    .build();
-        }
-        else if(!koZnaZnaGame.isActiveGame() || koZnaZnaGame.getIndexOfTheCurrentQuestion()!=questionIndex){
-            return ResponseEntity.ok()
-                    .body(new AnswerResponse(0));
-        }
-        else {
-            if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
-                koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()+3);
-            } else if (!selectedQuestion.equals(0)) {
-                koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()-1);
+            Optional<Question> existingQuestion = questionRepository.findById(questionId);
+            if (existingQuestion.isEmpty()) {
+                return ResponseEntity.notFound()
+                        .build();
             }
-            koZnaZnaRepository.save(koZnaZnaGame);
-            return ResponseEntity.ok()
-                    .body(new AnswerResponse(existingQuestion.get().getCorrectAnswer()));
-        }
+            else if(!koZnaZnaGame.isActiveGame() || koZnaZnaGame.getIndexOfTheCurrentQuestion()!=questionIndex){
+                return ResponseEntity.ok()
+                        .body(new AnswerResponse(0));
+            }
+            else {
+                if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
+                    koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()+3);
+                } else if (!selectedQuestion.equals(0)) {
+                    koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()-1);
+                }
+                koZnaZnaRepository.save(koZnaZnaGame);
+                log.info("The submit button is clicked and the correct answer is displayed!");
+                return ResponseEntity.ok()
+                        .body(new AnswerResponse(existingQuestion.get().getCorrectAnswer()));
+            }
     }
 
+    @Override
     public Integer getNumberOfPoints(Long gameId) {
         KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
         return koZnaZnaGame.getNumOfPoints();
     }
 
+    @Override
     public ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion) {
         KoZnaZnaGame koZnaZnaGame=this.getGame(nextQuestion.getGameId());
         if (!koZnaZnaGame.isActiveGame()) {
@@ -128,6 +137,7 @@ public class KoZnaZnaServiceImpl {
 
     }
 
+    @Override
     public ResponseEntity<Response> finishGame( Principal principal) throws Exception {
         OnePlayerGame game=null;
         game=gameService.getGame(principal);
