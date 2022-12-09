@@ -46,7 +46,7 @@ public class Gamecontroler {
             return ResponseEntity.ok().body(rangListResponses.subList(0,10));
         }
     }
-    @GetMapping("/newGame")
+    @GetMapping("OnePlayer/newGame")
     public String newGame(Principal principal) throws Exception {
         gameservice.finishedGame(principal);
         return "chooseGameOnePlayer.html";
