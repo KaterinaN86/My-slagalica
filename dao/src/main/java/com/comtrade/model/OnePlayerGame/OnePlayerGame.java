@@ -5,11 +5,13 @@ import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.skockomodel.SkockoGame;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
+import com.comtrade.model.spojnicemodel.SpojniceGame;
 import com.comtrade.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
 
 import javax.persistence.*;
 
@@ -39,6 +41,9 @@ public class OnePlayerGame {
     KoZnaZnaGame koZnaZnaGame;
 
     //spojnice
+    @OneToOne
+    SpojniceGame spojniceGame;
+
     @OneToOne
     AsocijacijaGame asocijacijaGame;
     public OnePlayerGame(User user){

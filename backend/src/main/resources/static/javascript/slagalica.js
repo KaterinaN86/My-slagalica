@@ -1,4 +1,4 @@
-  var gameLetters = ""
+var gameLetters = ""
 var computerWord = ""
 var gameId
 var lastClickedButtons = []

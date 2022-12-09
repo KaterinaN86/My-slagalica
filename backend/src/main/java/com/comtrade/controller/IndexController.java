@@ -67,8 +67,10 @@ public class IndexController {
     public String koZnaZnaIndex() {
         return "koznazna.html";
     }
-
-
+    @GetMapping("/spojnice")
+    public String spojniceIndex() {
+        return "spojnice.html";
+    }
     
     @PostMapping("/NewUser")
     public ResponseEntity<RegistrationResponse> addUser(@RequestBody UserToRegister userToRegister){
