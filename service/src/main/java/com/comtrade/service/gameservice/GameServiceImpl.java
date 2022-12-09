@@ -54,9 +54,27 @@ public class GameServiceImpl implements GameService {
         if(game.getKoZnaZnaGame() != null) {
             response.setNumOfPointsKoZnaZna(game.getKoZnaZnaGame().getNumOfPoints());
         }
-            if(game.getSpojniceGame()!= null) {
+        if(game.getSpojniceGame()!= null) {
             response.setNumOfPointsSpojnice(game.getSpojniceGame().getPoints());
+				}
+        if(game.getAsocijacijaGame() != null){
+            System.out.println(game.getAsocijacijaGame());
+            response.setNumOfPointsAsocijacija((int) game.getAsocijacijaGame().getNumOfPoints());
         }
         return response;
+    }
+
+    @Override
+    public List<OnePlayerGame> getTopTen() {
+        ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) gamerepository.findByFinishedTrueOrderByNumOfPointsDesc();
+        return  lisOfGames;
+    }
+
+    public void finishedGame(Principal principal) throws Exception {
+
+        OnePlayerGame game = getGame(principal);
+        game.setFinished(true);
+        gamerepository.save(game);
+
     }
 }

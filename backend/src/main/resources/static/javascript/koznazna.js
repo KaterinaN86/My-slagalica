@@ -106,6 +106,7 @@ function nextQuestionSelect(e){
     selectedOptionIndex=0;
     if(questionCount==9){
        getNumberOfPoints();
+       finishGame();
     }
     else if(questionCount==8){
         questionCount++;
@@ -117,6 +118,16 @@ function nextQuestionSelect(e){
         setQuestion(questionCount);
     }
 }
+async function finishGame(){
+    const response = await fetch('http://localhost:8080/koZnaZna/finishGame', {
+            method: 'PUT'
+        });
+        if (response.status !== 200) {
+            console.log('Error: ' + response.status);
+            return;
+        }
+}
+
 async function updateQuestionNumber(){
     var submitQuestionNUmber={
         gameId : gameId,
@@ -177,6 +188,7 @@ const startTimer=function(){
         if(time === 0){
             clearInterval(timerInterval);
             getNumberOfPoints();
+            finishGame();
         }
         time--;
     },1000)

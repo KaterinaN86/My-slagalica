@@ -1,6 +1,7 @@
 package com.comtrade.service.skockoservice;//package com.comtrade.service.skockoservice;
 
 import com.comtrade.model.skockomodel.SkockoGame;
+import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,18 +20,21 @@ class SkockoGameServiceImplTest {
 
     @Mock
     SkockoGameRepository skockoGameRepository;
+    @Mock
+    Gamerepository gamerepository;
+
     SkockoGameService skockoGameService;
 
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        skockoGameService=new SkockoGameServiceImpl(skockoGameRepository);
+        skockoGameService=new SkockoGameServiceImpl(skockoGameRepository, gamerepository);
     }
 
     @Test
     void createNewGame() throws NoSuchAlgorithmException {
         SkockoGame skockoGame=skockoGameService.createNewGame();
-        Assertions.assertFalse(skockoGame.isActive());
+        Assertions.assertTrue(skockoGame.isActive());
     }
 
     @Test

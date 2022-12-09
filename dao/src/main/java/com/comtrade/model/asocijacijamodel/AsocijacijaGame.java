@@ -20,17 +20,17 @@ public class AsocijacijaGame {
     @JoinColumn(name = "rijeci_id")
     private WordModel wordModel;
     private boolean isActive;
-    private Double points;
+    private double numOfPoints;
 
     public AsocijacijaGame(){
         this.isActive = true;
-        this.points = 4.0;
+        this.numOfPoints = 4;
     }
 
     public AsocijacijaGame(Long id, WordModel wordModel) {
         this.id = id;
         this.wordModel = wordModel;
         this.isActive = true;
-        this.points = 4.0;
+        this.numOfPoints = 4;
     }
 }

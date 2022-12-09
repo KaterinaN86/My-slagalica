@@ -35,10 +35,18 @@ public class IndexController {
     public String onePlayer(){
         return "chooseGameOnePlayer.html";
     }
+
+
     @GetMapping("TwoPlayers")
     public String TwoPlayers(){
         return "chooseGameTwoPlayers.html";
     }
+
+    @GetMapping("RangList")
+    public String RangList(){
+        return "ranglist.html";
+    }
+
     @RequestMapping("/skocko")
     public String SkockoIndex(){
         return "skocko.html";

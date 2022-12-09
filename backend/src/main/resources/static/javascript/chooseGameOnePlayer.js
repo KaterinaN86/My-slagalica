@@ -17,7 +17,7 @@ function init(){
                         document.getElementById("numOfPointsSkocko").innerText=data.numOfPointsSkocko
                         document.getElementById("numOfPointsKoZnaZna").innerText=data.numOfPointsKoZnaZna
                         document.getElementById("numOfPointsSpojnice").innerText=data.numOfPointsSpojnice
-                        document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacije
+                        document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacija
                         console.log(data)
                     });
                 }
@@ -25,4 +25,13 @@ function init(){
             .catch((error) => {
                 console.log('Fetch error: ', error);
             })
+}
+
+function newGame() {
+    fetch("http://localhost:8080/OnePlayer/newGame").then(r => {
+        console.log(r);
+        window.location.reload();
+    }).catch((error) => {
+        console.log(error);
+    })
 }

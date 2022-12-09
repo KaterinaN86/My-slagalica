@@ -7,12 +7,15 @@ import com.comtrade.model.skockomodel.SkockoSubmit;
 import org.springframework.http.ResponseEntity;
 
 
+import java.security.Principal;
 import java.util.List;
 
 public interface SkockoGameService {
+
+    SkockoGame getGame(Principal principal);
     SkockoGame createNewGame();
-    ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit);
-    ResponseEntity<List<Integer>> getCombination(Long id);
+    ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit,Principal principal);
+    ResponseEntity<List<Integer>> getCombination(Principal principal);
     boolean isWinningCombination(List<Integer> winningCombination, List<Integer> submittedCombination);
     int getNumberOfCorrectlyPlacedSymbolsInCombination(List<Integer> winningCombination, List<Integer> submittedCombination);
 
