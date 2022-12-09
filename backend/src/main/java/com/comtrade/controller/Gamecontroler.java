@@ -2,6 +2,7 @@ package com.comtrade.controller;
 
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
+import com.comtrade.model.OnePlayerGame.RangListResponse;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/OnePlayer")
 public class Gamecontroler {
     private final GameServiceImpl gameservice;
 
@@ -22,7 +22,7 @@ public class Gamecontroler {
         this.gameservice = gameservice;
     }
 
-    @GetMapping("/init")
+    @GetMapping("/OnePlayer/init")
     @CrossOrigin
     public OnePlayerInitResponse init(Principal principal){
         try {
@@ -33,24 +33,17 @@ public class Gamecontroler {
     }
     @GetMapping("/GetRangList")
     @CrossOrigin
-    public ResponseEntity<List<OnePlayerGame>> getRangList(){
+    public ResponseEntity<List<RangListResponse>> getRangList(){
         List<OnePlayerGame> listOfGames=gameservice.getTopTen();
-        List<OnePlayerGame> listOfGamesCopy=new ArrayList<>();
-        for (int i=0;i<10;i++){
-            try {
-                listOfGamesCopy.add(listOfGames.get(i));
-            }catch (Exception e){
-                System.out.println("there is less than 10 finished games.");
-                break;
-            }
+        List<RangListResponse> rangListResponses=new ArrayList<>();
+        for (OnePlayerGame game:   listOfGames) {
+            rangListResponses.add(new RangListResponse(game));
         }
-        return ResponseEntity.ok().body(listOfGamesCopy);
+        if (rangListResponses.size()<=10){
+            return ResponseEntity.ok().body(rangListResponses);
+        }
+        else {
+            return ResponseEntity.ok().body(rangListResponses.subList(0,10));
+        }
     }
-
-    @GetMapping("/newGame")
-    public String newGame(Principal principal) throws Exception {
-        gameservice.finishedGame(principal);
-        return "chooseGameOnePlayer.html";
-    }
-
 }
