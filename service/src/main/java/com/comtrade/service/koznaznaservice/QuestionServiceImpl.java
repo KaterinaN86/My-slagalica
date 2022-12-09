@@ -11,17 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class QuestionServiceImpl {
+public class QuestionServiceImpl implements QuestionService{
     private final QuestionRepository questionRepository;
 
     public QuestionServiceImpl(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
     }
 
+    @Override
     public void save(List<Question> questions) {
         questionRepository.saveAll(questions);
     }
 
+    @Override
     public ResponseEntity<List<String>> getOptions(Long gameId) {
         Optional<Question> existingQuestion = questionRepository.findById(gameId);
         if (existingQuestion.isEmpty()) {
@@ -34,6 +36,7 @@ public class QuestionServiceImpl {
         }
     }
 
+    @Override
     public ResponseEntity<Response> getContent(Long gameId){
         Optional<Question> existingQuestion = questionRepository.findById(gameId);
         if (existingQuestion.isEmpty()) {
@@ -48,6 +51,7 @@ public class QuestionServiceImpl {
         }
     }
 
+    @Override
     public ResponseEntity<Response> getAnswer(Long questionId){
         Optional<Question> existingQuestion = questionRepository.findById(questionId);
         if (existingQuestion.isEmpty()) {
