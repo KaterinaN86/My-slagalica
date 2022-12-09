@@ -46,4 +46,9 @@ public class Gamecontroler {
             return ResponseEntity.ok().body(rangListResponses.subList(0,10));
         }
     }
+    @GetMapping("/newGame")
+    public String newGame(Principal principal) throws Exception {
+        gameservice.finishedGame(principal);
+        return "chooseGameOnePlayer.html";
+    }
 }
