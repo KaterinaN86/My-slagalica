@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SlagalicaServiceImp implements SlagalicaService {
@@ -58,33 +59,123 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         List<DictionaryWord> wordsDictionary = dictionaryWordRepository.findAll();
         String longestWord = "";
-
+        HashMap<String,Integer> lettersForWordMap=convertStringToHashMap(lettersForWord);
+        HashMap<String, Integer> temp=new HashMap<>();
+        wordsDictionary=wordsDictionary.stream().filter((word)-> word.getWordFromDictionary().length()<=lettersForWord.length()).sorted().collect(Collectors.toList());
         for (DictionaryWord dictionaryWord : wordsDictionary) {
-
             String word = dictionaryWord.getWordFromDictionary();
-
             if (word.length() < longestWord.length()) {
                 continue;
             }
-            if (word.length() > lettersForWord.length()) {
-                continue;
-            }
 
-            int wordIndex = 0;
-            int inputIndex = 0;
-
-            while (inputIndex < lettersForWord.length() && wordIndex < word.length()) {
-                if (word.charAt(wordIndex) == lettersForWord.charAt(inputIndex)) {
-                    wordIndex++;
+            temp.clear();
+            temp.putAll(lettersForWordMap);
+            int letterCount=0;
+            String stringCharacter="";
+            while(word.contains("nj") || word.contains("Nj")){
+                if(temp.containsKey("Nj") && temp.get("Nj")!=0){
+                    temp.put("Nj",temp.get("Nj")-1);
+                    letterCount++;
+                    if(word.replace("nj","").equals(word)){
+                        word=word.replace("Nj","");
+                    }
+                    else word=word.replace("nj","");
                 }
-                inputIndex++;
+                else break;
             }
-            if (wordIndex >= word.length()) {
-                longestWord = word;
+            while(word.contains("lj") || word.contains("Lj")){
+                if(temp.containsKey("Lj") && temp.get("Lj")!=0){
+                    temp.put("Lj",temp.get("Lj")-1);
+                    letterCount++;
+                    if(word.replace("lj","").equals(word)){
+                        word=word.replace("Lj","");
+                    }
+                    else word=word.replace("lj","");
+                }
+                else break;
+            }
+
+            while(word.contains("dž") || word.contains("Dž")){
+                if(temp.containsKey("Dž") && temp.get("Dž")!=0){
+                    temp.put("Dž",temp.get("Dž")-1);
+                    letterCount++;
+                    if(word.replace("dž","").equals(word)){
+                        word=word.replace("Dž","");
+                    }
+                    else word=word.replace("dž","");
+                }
+                else break;
+            }
+
+            for (Character c:  word.toCharArray()) {
+                //convert char to uppercase
+                if(c >= 'a' && c <= 'z') {
+                    c = (char) ((int)c - 32);
+                }
+                else if(c == 'đ'){
+                    c='Đ';
+                } else if (c=='š' || c=='ž') {
+                    c = (char) ((int)c-16);
+                } else if(c=='č') {
+                    c='Č';
+                } else if (c=='ć') {
+                    c='Ć';
+                }
+                stringCharacter=c.toString();
+                if (temp.containsKey(stringCharacter) && temp.get(stringCharacter)!=0){
+                    temp.put(stringCharacter,temp.get(stringCharacter)-1);
+                    letterCount++;
+                }
+                else {
+                    letterCount=0;
+                    break;
+                }
+            }
+            if (letterCount > longestWord.length()) {
+                longestWord = dictionaryWord.getWordFromDictionary();
             }
         }
 
         return longestWord;
+    }
+
+    public static HashMap<String,Integer> convertStringToHashMap(String letters){
+        HashMap<String,Integer> tmpHashMap=new HashMap<>();
+        while (letters.contains("Dž")){
+            if(tmpHashMap.containsKey("Dž")){
+                tmpHashMap.put("Dž",tmpHashMap.get("Dž")+1);
+            }
+            else{
+                tmpHashMap.putIfAbsent("Dž",1);
+            }
+            letters=letters.replace("Dž","");
+        }
+        while (letters.contains("Nj")){
+            if(tmpHashMap.containsKey("Nj")){
+                tmpHashMap.put("Nj",tmpHashMap.get("Nj")+1);
+            }
+            else{
+                tmpHashMap.putIfAbsent("Nj",1);
+            }
+            letters=letters.replace("Nj","");
+        }
+        while (letters.contains("Lj")){
+            if(tmpHashMap.containsKey("Lj")){
+                tmpHashMap.put("Lj",tmpHashMap.get("Lj")+1);
+            }
+            else{
+                tmpHashMap.putIfAbsent("Lj",1);
+            }
+            letters=letters.replace("Lj","");
+        }
+
+        for (Character c:  letters.toCharArray()) {
+            if(tmpHashMap.containsKey(c.toString())){
+                tmpHashMap.put(c.toString(),tmpHashMap.get(c.toString())+1);
+            }
+            tmpHashMap.putIfAbsent(c.toString(),1);
+        }
+        return tmpHashMap;
     }
 
     @Override
@@ -106,12 +197,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
             } else {
                 s += consonants[random.nextInt(consonants.length)];
             }
-
-            numOfLetters = s.length();
-
+            numOfLetters = numOfVowels+numofConsonants;
         }
-
-
 
         return s;
     }
@@ -129,44 +216,12 @@ public class SlagalicaServiceImp implements SlagalicaService {
             return -1;
         }
         int finalResult = 0;
-        String lettersForUserWord = slagalicaUserWordSubmit.getLettersForFindingTheWord();
         String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
 
         int result = 0;
-
-        Map<Character, Integer> lettersOfUserWordMap = new HashMap<>();
-
-        for (char letter : chosenUserWord.toUpperCase().toCharArray()) {
-            if (!lettersOfUserWordMap.containsKey(letter)) {
-                lettersOfUserWordMap.put(letter, 0);
-            }
-            int currentCounter = lettersOfUserWordMap.get(letter);
-            lettersOfUserWordMap.put(letter, currentCounter + 1);
-        }
-
-        int occurrences = 0;
-
-        Map<Character, Integer> numberOfUsedCharacters = new HashMap<>(lettersOfUserWordMap);
-
-        for (char availableChar : lettersForUserWord.toCharArray()) {
-            if (numberOfUsedCharacters.containsKey(availableChar)) {
-                int currentCounter = numberOfUsedCharacters.get(availableChar);
-                currentCounter--;
-                if (currentCounter == 0) {
-                    numberOfUsedCharacters.remove(availableChar);
-                } else {
-                    numberOfUsedCharacters.put(availableChar, currentCounter);
-                }
-                if (numberOfUsedCharacters.isEmpty()) {
-                    occurrences++;
-                    numberOfUsedCharacters = new HashMap<>(lettersOfUserWordMap);
-                }
-            }
-        }
-
         int computerWordlength = Optional.of(slagalicaRepository.findAll().get(0).getComputerLongestWord().length()).orElse(0);
-
-        if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 && occurrences > 0) {
+        String modifiedChosenWord= String.valueOf(chosenUserWord.charAt(0))+chosenUserWord.substring(1,chosenUserWord.length()).toLowerCase();
+        if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 || dictionaryWordRepository.findAllByWord(modifiedChosenWord) >= 1) {
             if(computerWordlength == chosenUserWord.length()) {
                 result = chosenUserWord.length()*2 + 3;
             } else if(computerWordlength < chosenUserWord.length()) {
