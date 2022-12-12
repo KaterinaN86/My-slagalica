@@ -19,8 +19,8 @@ public class PairsModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
     private String column1;
     private String column2;
 
