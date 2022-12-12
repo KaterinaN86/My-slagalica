@@ -2,6 +2,7 @@ package com.comtrade.model.spojnicemodel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class SpojniceGame {
 
         @Id
@@ -19,9 +21,9 @@ public class SpojniceGame {
         @OneToOne
         @JoinColumn(name = "pairs_model_id")
         private PairsModel pairsModel;
+
         private int points;
         private boolean isActive;
 
-    public SpojniceGame() {}
 }
 

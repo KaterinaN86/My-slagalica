@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/spojnice")
-
 public class SpojniceController {
     private final SpojniceServiceImpl spojniceServiceImpl;
 
@@ -23,9 +23,10 @@ public class SpojniceController {
 
     @GetMapping("/start")
     @CrossOrigin
-    public SpojniceGame createNewSpojniceGame(Principal principal) throws Exception {
-        return createNewSpojniceGame(principal);
+    public List<String> getWords(Principal principal) throws Exception {
+        return spojniceServiceImpl.getWords(principal);
     }
+
     @GetMapping("/points")
     @CrossOrigin
     public int numberofPoints(Principal principal) throws Exception{

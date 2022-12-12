@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -44,12 +46,23 @@ public class SpojniceServiceImpl implements SpojniceService{
         return randomPairsModel.get();
     }
 
-    @Override
-    public PairsModel getWords() {
+    public List<String> getWords(Principal principal) throws Exception {
 
-        pairsRepository.getColumn1();
+        SpojniceGame game = getGame(principal);
+        List<String> column1 = List.of(game.getPairsModel().getColumn1().split(", "));
+        List<String> column2 = List.of(game.getPairsModel().getColumn2().split(", "));
+        List<String> words = new ArrayList<>();
 
-        return null;
+        for (String word : column1) {
+            words.add(word.split(":")[1]);
+        }
+
+        for (String word : column2) {
+            words.add(word.split(":")[1]);
+        }
+
+        return words;
+
     }
 
     @Override
@@ -67,28 +80,6 @@ public class SpojniceServiceImpl implements SpojniceService{
             log.info("This game is not successfully created!");
             return spojniceGame;
         }
-    }
-
-    /*private SpojniceGame chooseOptionalGame(Long gameId) throws NoSuchElementException {
-        log.info("Search for game with id:" + gameId);
-        Optional<SpojniceGame> optionalSpojniceGame = spojniceRepository.findById(gameId);
-        if(optionalSpojniceGame.isEmpty()) {
-            log.info("The game with id: " + gameId + "can not be found...");
-            throw new NoSuchElementException();
-        }
-        log.info("Found and return spojnice game with id: " + gameId);
-        return optionalSpojniceGame.get();
-    }*/
-
-    private PairsModel getRandomPairsGame(Long gameId) throws NoSuchElementException {
-        log.info("Search for game with id:" + gameId);
-        Optional<PairsModel> randomPairsModel = pairsRepository.findById(gameId);
-        if(randomPairsModel.isEmpty()) {
-            log.info("The game with id: " + gameId + "can not be found...");
-            throw new NoSuchElementException();
-        }
-        log.info("Found and return spojnice game with id: " + gameId);
-        return randomPairsModel.get();
     }
 
     @Override
