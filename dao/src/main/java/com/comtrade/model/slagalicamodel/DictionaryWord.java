@@ -1,6 +1,7 @@
 package com.comtrade.model.slagalicamodel;
 
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
@@ -11,10 +12,15 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "dictionary_words")
-public class DictionaryWord {
+public class DictionaryWord implements Comparable<DictionaryWord>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String wordFromDictionary;
+
+    @Override
+    public int compareTo(@NotNull DictionaryWord o) {
+        return Integer.compare(o.getWordFromDictionary().length(),getWordFromDictionary().length());
+    }
 }
