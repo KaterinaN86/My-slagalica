@@ -9,8 +9,7 @@
 	</parent>
 
 	<artifactId>backend</artifactId>
-	<packaging>jar</packaging>
-
+	<version>0.0.1-SNAPSHOT</version>
 	<description>Backend for Slagalica project</description>
 
 	<properties>
@@ -51,12 +50,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.comtrade</groupId>
-			<artifactId>dao</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
