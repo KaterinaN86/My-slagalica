@@ -67,7 +67,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         }
         @Override
         public Set<Integer> getRandomQuestionIds(){
-            Set<Integer> ids=new TreeSet<>();
+            Set<Integer> ids=new HashSet<>();
             int numberOfQuestions=questionRepository.findAll().size();
             do{
                 int random = (int)(Math.random()*numberOfQuestions+1);
