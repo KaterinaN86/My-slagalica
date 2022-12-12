@@ -26,7 +26,6 @@ public class SpojniceController {
     public SpojniceGame createNewSpojniceGame(Principal principal) throws Exception {
         return createNewSpojniceGame(principal);
     }
-
     @GetMapping("/points")
     @CrossOrigin
     public int numberofPoints(Principal principal) throws Exception{
