@@ -30,14 +30,15 @@ var button16 = $("btn16");
 var timer=$("timer");
 
 
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", ()=> {
     createNewGame();
+})
 
     function getSpojnicePairs() {
     fetch(('http://localhost:8080/spojnice/start').then(
         (response) => {
             if (response.status !== 200) {
-            console.log('Error: ' response.status);
+            console.log('Error: ' + response.status);
             return;
             }
 
@@ -47,14 +48,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
             console.log(gameId);
             console.log(matchedPairsCount);
             });
-        }
-    }
-    )
-
-    .catch((error) => {
-    console.log('Error fetch:' error)
+        })).catch((error) => {
+        console.log('Error fetch:' + error)
     })
-}
+    }
+
 
 function setGame(gameObject) {
     gameId = gameObject.id
@@ -62,7 +60,7 @@ function setGame(gameObject) {
     numberOfPoints = gameObject.numberOfPoints;
     currentPairsModel = gameObject.currentPairsModel;
  }
-}
+
 
 
 function getNumberOfPoints(){
@@ -80,26 +78,27 @@ function getNumberOfPoints(){
         )
 }
 
+/*
 const startTheTimer = function(){
-    let time = 90;
+    var time = 90;
     const timerInterval = setInterval (function() {
-        const sec=String(time%60).padStart(2,0);
-        timer.textContent = ` ${sec} `;
+        timer.textContent = ` ${time--} `;
         if(time === 0){
             clearInterval(timerInterval);
             getNumberOfPoints();
         }
-        time--;
     },1000)
     getQuizSet(0);
 }
+*/
 
 window.onload = startTheTimer();
 
-const finishGame = () =>{
+const finishGame = () => {
     closeModal();
     let buttons = document.getElementsByClassName('disable');
-    for(let button of buttons){
-        button.disabled=true;
+    for (let button of buttons) {
+        button.disabled = true;
         showPairs(button);
     }
+}

@@ -1,7 +1,6 @@
 package com.comtrade.service.spojniceservice;
 
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.asocijacijamodel.ResponseWithGameId;
 import com.comtrade.model.spojnicemodel.PairsModel;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
 import com.comtrade.repository.gamerepository.Gamerepository;
@@ -9,7 +8,6 @@ import com.comtrade.repository.spojnicerepository.PairsRepository;
 import com.comtrade.repository.spojnicerepository.SpojniceRepository;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -18,25 +16,26 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class SpojniceServiceImpl {
+public class SpojniceServiceImpl implements SpojniceService{
 
     private final SpojniceRepository spojniceRepository;
     private final PairsRepository pairsRepository;
     private final Gamerepository gamerepository;
-    private GameServiceImpl gameService;
+    private final GameServiceImpl gameService;
 
-    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, Gamerepository gamerepository) {
+    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, Gamerepository gamerepository, GameServiceImpl gameService) {
         this.spojniceRepository = spojniceRepository;
         this.pairsRepository = pairsRepository;
         this.gamerepository = gamerepository;
+        this.gameService = gameService;
     }
 
-
-    private PairsModel getRandomPairsModel() throws NoSuchElementException {
+    @Override
+    public PairsModel getRandomPairsModel() throws NoSuchElementException {
 
         int randomId = (int)(Math.floor((Math.random()*pairsRepository.count() + 1)));
         log.info("Find a pairs model with id: " + randomId);
-        Optional<PairsModel> randomPairsModel = pairsRepository.findById(Long.valueOf(randomId));
+        Optional<PairsModel> randomPairsModel = pairsRepository.findById((long) randomId);
         if(randomPairsModel.isEmpty()){
             log.info("The model with: " + randomId + " id, does not exist!");
             throw new NoSuchElementException();
@@ -45,6 +44,15 @@ public class SpojniceServiceImpl {
         return randomPairsModel.get();
     }
 
+    @Override
+    public PairsModel getWords() {
+
+        pairsRepository.getColumn1();
+
+        return null;
+    }
+
+    @Override
     public SpojniceGame createNewSpojniceGame(Principal principal) {
 
         SpojniceGame spojniceGame = null;
@@ -71,6 +79,7 @@ public class SpojniceServiceImpl {
         log.info("Found and return spojnice game with id: " + gameId);
         return optionalSpojniceGame.get();
     }*/
+
     private PairsModel getRandomPairsGame(Long gameId) throws NoSuchElementException {
         log.info("Search for game with id:" + gameId);
         Optional<PairsModel> randomPairsModel = pairsRepository.findById(gameId);
@@ -82,8 +91,9 @@ public class SpojniceServiceImpl {
         return randomPairsModel.get();
     }
 
+    @Override
     public SpojniceGame getGame(Principal principal) throws Exception {
-        OnePlayerGame game=gameService.getGame(principal);
+        OnePlayerGame game = gameService.getGame(principal);
         if(game.getSpojniceGame()!=null){
             return game.getSpojniceGame();
         }else{
@@ -95,7 +105,7 @@ public class SpojniceServiceImpl {
     }
 
     public Integer getNumberOfPoints(Principal principal) throws Exception {
-        SpojniceGame spojniceGame =this.getGame(principal);
+        SpojniceGame spojniceGame = this.getGame(principal);
         spojniceGame.setActive(false);
         spojniceRepository.save(spojniceGame);
         return spojniceGame.getPoints();
