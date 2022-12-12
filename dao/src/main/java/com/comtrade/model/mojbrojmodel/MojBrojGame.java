@@ -29,7 +29,7 @@ public class MojBrojGame {
 
     public MojBrojGame() {
         isActive=true;
-        this.numOfPoints=numOfPoints;
+        this.numOfPoints=0;
         initializeRandom();
     }
 

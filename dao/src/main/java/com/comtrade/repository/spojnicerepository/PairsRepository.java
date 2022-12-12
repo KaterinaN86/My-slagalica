@@ -4,5 +4,8 @@ import com.comtrade.model.spojnicemodel.PairsModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PairsRepository extends JpaRepository<PairsModel, Long> {
+
+    String getColumn1();
+
 }
 
