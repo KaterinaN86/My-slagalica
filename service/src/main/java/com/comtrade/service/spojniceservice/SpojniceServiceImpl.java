@@ -8,13 +8,12 @@ import com.comtrade.repository.spojnicerepository.PairsRepository;
 import com.comtrade.repository.spojnicerepository.SpojniceRepository;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -72,6 +71,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         try {
             log.info("Create new Spojnice game.");
             spojniceGame = new SpojniceGame();
+            spojniceGame.setActive(true);
             spojniceGame.setPairsModel(getRandomPairsModel());
             SpojniceGame savedSpojniceGame = spojniceRepository.save(spojniceGame);
             log.info("Created game with id: " + savedSpojniceGame.getId());
@@ -95,10 +95,49 @@ public class SpojniceServiceImpl implements SpojniceService{
         }
     }
 
-    public Integer getNumberOfPoints(Principal principal) throws Exception {
-        SpojniceGame spojniceGame = this.getGame(principal);
+
+    private Integer calcPoints(SpojniceGame spojniceGame, String json){
+        Integer numOfPoints=0;
+        JSONObject jsonObject=new JSONObject(json);
+
+        List<String> col1= List.of(spojniceGame.getPairsModel().getColumn1().split(", "));
+        List<String> col2= List.of(spojniceGame.getPairsModel().getColumn2().split(", "));
+
+        HashMap<String, String> col2Map = new HashMap<>();
+        for(String word:col2){
+            col2Map.put(word.split(":")[0],word.split(":")[1]);
+        }
+
+        HashMap<String,String> pairs=new HashMap<>();
+        for(int i=0;i<col1.size();i++){
+            pairs.put(col1.get(i).split(":")[1],col2Map.get(col1.get(i).split(":")[0]));
+        }
+        for(String word:col1){
+            String key=word.split(":")[1];
+            try {
+                if (jsonObject.get(key).equals(pairs.get(key))){
+                    numOfPoints+=3;
+                }
+            }catch (Exception e){
+                //do nothing when user didn't connect all words
+            }
+        }
+        return numOfPoints;
+    }
+
+    public Integer getNumberOfPoints(Principal principal, String json) throws Exception {
+
+        SpojniceGame spojniceGame = getGame(principal);
+        if (!spojniceGame.isActive()){
+            return spojniceGame.getPoints();
+        }
+        Integer points=calcPoints(spojniceGame, json);
+        spojniceGame.setPoints(points);
+        OnePlayerGame game=gameService.getGame(principal);
+        game.setNumOfPoints(game.getNumOfPoints()+points);
         spojniceGame.setActive(false);
         spojniceRepository.save(spojniceGame);
+
         return spojniceGame.getPoints();
     }
 

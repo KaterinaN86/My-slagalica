@@ -4,7 +4,9 @@ let dataForSubmit = {}
 let selectedLeftBtn = null;
 
 function init() {
-
+    document.getElementById("exitBtn").addEventListener("click",()=>{
+        window.location.href="/OnePlayer"
+    })
     fetch("http://localhost:8080/spojnice/start").then((response) => {
         response.json().then((data) => {
             document.getElementById("submitBtn").addEventListener("click", submitData)
@@ -20,7 +22,6 @@ function init() {
                     if (selectedLeftBtn != null){
                         selectedLeftBtn.classList.remove("selected")
                     }
-                    console.log("click")
                     selectedLeftBtn=event.target
                     event.target.classList.add("selected")
                 })
@@ -50,8 +51,12 @@ function init() {
     })
 }
 
-function submitData(){
-    console.log("asdf")
+function submitData(event){
+    event.target.disabled=true;
+    let buttons=document.getElementsByTagName("button")
+    for(let i=0 ; i<buttons.length-1;i++){
+        buttons[i].disabled=true
+    }
     fetch("http://localhost:8080/spojnice/submit", {
         method: 'POST',
         headers: {

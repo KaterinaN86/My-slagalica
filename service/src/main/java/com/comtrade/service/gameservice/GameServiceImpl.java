@@ -50,6 +50,8 @@ public class GameServiceImpl implements GameService {
         }
         if (game.getSlagalicaGame()!=null){
             response.setNumOfPointsSlagalica(game.getSlagalicaGame().getNumOfPoints());
+        }if(game.getSpojniceGame() != null){
+            response.setNumOfPointsSpojnice((int) game.getSpojniceGame().getPoints());
         }
         if(game.getSkockoGame() != null) {
             response.setNumOfPointsSkocko(game.getSkockoGame().getNumOfPoints());
@@ -61,7 +63,6 @@ public class GameServiceImpl implements GameService {
             response.setNumOfPointsSpojnice(game.getSpojniceGame().getPoints());
 				}
         if(game.getAsocijacijaGame() != null){
-            System.out.println(game.getAsocijacijaGame());
             response.setNumOfPointsAsocijacija((int) game.getAsocijacijaGame().getNumOfPoints());
         }
         return response;

@@ -25,8 +25,7 @@ public class SpojniceController {
     }
 
     @PostMapping("/submit")
-    public int numberofPoints(Principal principal,@RequestBody String json) throws Exception{
-        System.out.println(json);
-        return spojniceServiceImpl.getNumberOfPoints(principal);
+    public int getNumOfPoints(Principal principal,@RequestBody String json) throws Exception{
+        return spojniceServiceImpl.getNumberOfPoints(principal, json);
     }
 }
