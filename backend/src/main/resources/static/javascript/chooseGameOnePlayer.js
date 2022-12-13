@@ -18,7 +18,6 @@ function init(){
                         document.getElementById("numOfPointsKoZnaZna").innerText=data.numOfPointsKoZnaZna
                         document.getElementById("numOfPointsSpojnice").innerText=data.numOfPointsSpojnice
                         document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacija
-                        console.log(data)
                     });
                 }
             )
