@@ -15,6 +15,4 @@ public interface SpojniceService {
 
     PairsModel getRandomPairsModel();
 
-    PairsModel getWords();
-
 }
