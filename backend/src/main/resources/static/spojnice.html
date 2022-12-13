@@ -4,102 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Slagalica</title>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/spojnice.css">
     <script src="javascript/spojnice.js"></script>
 </head>
 
 <body>
 <h1>Spojnice</h1>
-<table class="full" cellpadding="10" cellspacing="5">
-    <tr>
-        <td>
-
-            <p style="text-align: center;margin-left: 100px ; color: #ccccff; margin-top: 10px">
-                <button class="playbutton"
-                        onClick="this.innerHTML='Ucitavam...'; document.startform.submit();" style="margin-left: 100px">START</button>
-            </p>
-            <script type="text/javascript">
-            </script>
-
-            <div id="colbig">
-                <div id="col1_content" class="clearfix">
-                    <br>
-                    <br>
-                    <a name="igraj"></a>
-                    <table class="full" cellpadding="10" cellspacing="0" style="margin-right: 60px">
-                        <tbody><tr>
-                            <td class="clickable" id="poljeA0"><div class="tride blokwide manji" id="poljeBA0">1</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA0">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC0">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC0"><div class="tride blokwide manji" id="poljeBC0">a</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA1"><div class="tride blokwide manji" id="poljeBA1">2</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA1">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC1">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC1"><div class="tride blokwide manji" id="poljeBC1">b</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA2"><div class="tride blokwide manji" id="poljeBA2">3</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA2">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC2">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC2"><div class="tride blokwide manji" id="poljeBC2">c</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA3"><div class="tride blokwide manji" id="poljeBA3">4</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA3">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC3">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC3"><div class="tride blokwide manji" id="poljeBC3">d</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA4"><div class="tride blokwide manji" id="poljeBA4">5</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA4">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC4">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC4"><div class="tride blokwide manji" id="poljeBC4">e</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA5"><div class="tride blokwide manji" id="poljeBA5">6</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA5">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC5">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC5"><div class="tride blokwide manji" id="poljeBC5">f</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA6"><div class="tride blokwide manji" id="poljeBA6">7</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA6">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC6">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC6"><div class="tride blokwide manji" id="poljeBC6">g</div></td>
-                        </tr>        <tr>
-                            <td class="clickable" id="poljeA7"><div class="tride blokwide manji" id="poljeBA7">8</div></td>
-                            <td><div class="tride blokwide spoj" id="markerA7">&nbsp;</div></td>
-                            <td><div class="tride blokwide spoj" id="markerC7">&nbsp;</div></td>
-                            <td class="clickable" id="poljeC7"><div class="tride blokwide manji" id="poljeBC7">h</div></td>
-                        </tr></tbody></table>
-
-                    <div class="spacer">
-                        <div id="poruka" class="ui-corner-all" style="
-    border: 1px solid white; padding: 10px; cursor: pointer; display: none;
-    background-color: #ffa; color: black; margin: 5px;
-    ">
-                            <div class="ui-icon ui-icon-circle-close" style="float: right"></div>
-                            <b id="tekst-poruke"></b>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="spacer">
-                    <div class="blok tride clickable ui-corner-all" id="kraj">KRAJ</div>
-                </div>
-            </div>
-        </td>
-        <td valign="top">
-            <div style="text-align: right; width: 20%" class="spacer">
-                <p class="minititle">Preostalo vreme:</p>
-                <div class="blok timer" style="float: right;" id="tajmer">90</div>
-            </div>    </td>
-    </tr>
-</table>
-
-
+<br>
+<div>
+    <table class="table-style">
+        <tbody id="tbody">
+        </tbody>
+    </table>
+    <br>
+    <div class="submit">
+        <button id="submitBtn">Submit</button>
+    </div>
+</div>
 </body>

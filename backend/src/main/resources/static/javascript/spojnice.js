@@ -1,104 +1,68 @@
-var matchedPairsCount = 0;
+document.addEventListener("DOMContentLoaded",()=>{init()})
 
-var addedSendButton = false;
-var clickedButton;
-var gameId;
+let dataForSubmit = {}
+let selectedLeftBtn = null;
 
-var SpojnicePairs = [];
+function init() {
 
-function $(id) {
-	return document.getElementById(id);
-}
+    fetch("http://localhost:8080/spojnice/start").then((response) => {
+        response.json().then((data) => {
+            document.getElementById("submitBtn").addEventListener("click", submitData)
 
-var start = $()
-var button1 = $("btn1");
-var button2 = $("btn2");
-var button3 = $("btn3");
-var button4 = $("btn4");
-var button5 = $("btn5");
-var button6 = $("btn6");
-var button7 = $("btn7");
-var button8 = $("btn8");
-var button9 = $("btn9");
-var button12 = $("btn10");
-var button11 = $("btn11");
-var button12 = $("btn12");
-var button13 = $("btn13");
-var button14 = $("btn14");
-var button15 = $("btn15");
-var button16 = $("btn16");
-var timer=$("timer");
+            let tbody = document.getElementById("tbody");
 
+            for (let i = 0 ; i < 8; i++) {
+                let tr = document.createElement("tr")
+                let td1 = document.createElement("td")
 
-document.addEventListener("DOMContentLoaded", ()=> {
-    createNewGame();
-})
+                let btn1 = document.createElement("button")
+                btn1.addEventListener("click",(event) => {
+                    if (selectedLeftBtn != null){
+                        selectedLeftBtn.classList.remove("selected")
+                    }
+                    console.log("click")
+                    selectedLeftBtn=event.target
+                    event.target.classList.add("selected")
+                })
+                btn1.innerText=data[i]
 
-    function getSpojnicePairs() {
-    fetch(('http://localhost:8080/spojnice/start').then(
-        (response) => {
-            if (response.status !== 200) {
-            console.log('Error: ' + response.status);
-            return;
+                td1.appendChild(btn1)
+                let td2 = document.createElement("td")
+                let btn2 = document.createElement("button")
+                btn2.addEventListener("click", (event) =>{
+                    if (selectedLeftBtn == null){
+                        return
+                    }
+                    selectedLeftBtn.disabled=true
+                    event.target.disabled=true
+                    dataForSubmit[selectedLeftBtn.innerText] = event.target.innerText
+                    event.target.classList.add("selected")
+                    selectedLeftBtn=null
+                })
+                btn2.innerText=data[i+8]
+
+                td2.appendChild(btn2)
+                tr.appendChild(td1)
+                tr.appendChild(td2)
+                tbody.appendChild(tr)
             }
-
-            response.json().then((data) => {
-            gameId = data.id;
-            matchedPairsCount = data.matchedPairsCount;
-            console.log(gameId);
-            console.log(matchedPairsCount);
-            });
-        })).catch((error) => {
-        console.log('Error fetch:' + error)
+        });
     })
-    }
-
-
-function setGame(gameObject) {
-    gameId = gameObject.id
-    isActiveGame = gameObject.isActiveGame;
-    numberOfPoints = gameObject.numberOfPoints;
-    currentPairsModel = gameObject.currentPairsModel;
- }
-
-
-
-function getNumberOfPoints(){
-     fetch('http://localhost:8080/spojnice/points'+gameId).then(
-        (response) => {
-                if (response.status !== 200) {
-                    console.log('Error: ' + response.status);
-                    return;
-                }
-
-                response.json().then((data) => {
-                    alert("Score : " + data);
-                });
-            }
-        )
 }
 
-/*
-const startTheTimer = function(){
-    var time = 90;
-    const timerInterval = setInterval (function() {
-        timer.textContent = ` ${time--} `;
-        if(time === 0){
-            clearInterval(timerInterval);
-            getNumberOfPoints();
-        }
-    },1000)
-    getQuizSet(0);
-}
-*/
-
-window.onload = startTheTimer();
-
-const finishGame = () => {
-    closeModal();
-    let buttons = document.getElementsByClassName('disable');
-    for (let button of buttons) {
-        button.disabled = true;
-        showPairs(button);
-    }
+function submitData(){
+    console.log("asdf")
+    fetch("http://localhost:8080/spojnice/submit", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataForSubmit)
+    }).then((response) => {
+       response.json().then((data) => {
+           console.log(data)
+       });
+    }).catch((error) => {
+        console.log(error)
+    });
 }

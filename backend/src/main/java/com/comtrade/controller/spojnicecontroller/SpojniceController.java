@@ -1,20 +1,18 @@
 package com.comtrade.controller.spojnicecontroller;
 
-import com.comtrade.model.asocijacijamodel.ResponseWithGameId;
-import com.comtrade.model.spojnicemodel.SpojniceGame;
 import com.comtrade.service.spojniceservice.SpojniceServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/spojnice")
+@CrossOrigin
 public class SpojniceController {
+
     private final SpojniceServiceImpl spojniceServiceImpl;
 
     public SpojniceController(SpojniceServiceImpl spojniceServiceImpl) {
@@ -22,14 +20,13 @@ public class SpojniceController {
     }
 
     @GetMapping("/start")
-    @CrossOrigin
-    public List<String> getWords(Principal principal) throws Exception {
-        return spojniceServiceImpl.getWords(principal);
+    public ResponseEntity<List<String>> getWords(Principal principal) throws Exception {
+        return new ResponseEntity<>(spojniceServiceImpl.getWords(principal), HttpStatus.OK);
     }
 
-    @GetMapping("/points")
-    @CrossOrigin
-    public int numberofPoints(Principal principal) throws Exception{
+    @PostMapping("/submit")
+    public int numberofPoints(Principal principal,@RequestBody String json) throws Exception{
+        System.out.println(json);
         return spojniceServiceImpl.getNumberOfPoints(principal);
     }
 }
