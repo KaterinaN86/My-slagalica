@@ -3,6 +3,7 @@ package com.comtrade.service.slagalicaservice;
 
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.slagalicamodel.DictionaryWord;
+import com.comtrade.model.slagalicamodel.LettersResponse;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.repository.gamerepository.Gamerepository;
@@ -34,7 +35,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     }
 
     @Override
-    public SlagalicaGame saveLetterForFindingWords(Principal principal) {
+    public LettersResponse saveLetterForFindingWords(Principal principal) {
         OnePlayerGame game=null;
         try {
             game=gameService.getGame(principal);
@@ -42,7 +43,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
             System.out.println(e.getMessage());
         }
         if (game.getSlagalicaGame()!=null){
-            return game.getSlagalicaGame();
+            return new LettersResponse(game.getSlagalicaGame().getLettersForFindingTheWord());
         }
         SlagalicaGame slagalicaGame = new SlagalicaGame();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
@@ -51,7 +52,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
         game.setSlagalicaGame(Sgame);
         gamerepository.save(game);
-        return slagalicaGame;
+        return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
     }
 
     @Override
@@ -62,7 +63,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         HashMap<String,Integer> lettersForWordMap=convertStringToHashMap(lettersForWord);
         HashMap<String, Integer> temp=new HashMap<>();
         wordsDictionary=wordsDictionary.stream().filter((word)-> word.getWordFromDictionary().length()<=lettersForWord.length()).sorted().collect(Collectors.toList());
-        for (DictionaryWord dictionaryWord : wordsDictionary) {
+       for (DictionaryWord dictionaryWord : wordsDictionary) {
             String word = dictionaryWord.getWordFromDictionary();
             if (word.length() < longestWord.length()) {
                 continue;
@@ -73,36 +74,36 @@ public class SlagalicaServiceImp implements SlagalicaService {
             int letterCount=0;
             String stringCharacter="";
             while(word.contains("nj") || word.contains("Nj")){
-                if(temp.containsKey("Nj") && temp.get("Nj")!=0){
+                if(temp.containsKey("Nj") && temp.get("Nj")>0){
                     temp.put("Nj",temp.get("Nj")-1);
                     letterCount++;
                     if(word.replace("nj","").equals(word)){
                         word=word.replace("Nj","");
                     }
-                    else word=word.replace("nj","");
+                    else word=word.replaceFirst("nj","");
                 }
                 else break;
             }
             while(word.contains("lj") || word.contains("Lj")){
-                if(temp.containsKey("Lj") && temp.get("Lj")!=0){
+                if(temp.containsKey("Lj") && temp.get("Lj")>0){
                     temp.put("Lj",temp.get("Lj")-1);
                     letterCount++;
                     if(word.replace("lj","").equals(word)){
                         word=word.replace("Lj","");
                     }
-                    else word=word.replace("lj","");
+                    else word=word.replaceFirst("lj","");
                 }
                 else break;
             }
 
             while(word.contains("dž") || word.contains("Dž")){
-                if(temp.containsKey("Dž") && temp.get("Dž")!=0){
+                if(temp.containsKey("Dž") && temp.get("Dž")>0){
                     temp.put("Dž",temp.get("Dž")-1);
                     letterCount++;
                     if(word.replace("dž","").equals(word)){
                         word=word.replace("Dž","");
                     }
-                    else word=word.replace("dž","");
+                    else word=word.replaceFirst("dž","");
                 }
                 else break;
             }
@@ -148,7 +149,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
             else{
                 tmpHashMap.putIfAbsent("Dž",1);
             }
-            letters=letters.replace("Dž","");
+            letters=letters.replaceFirst("Dž","");
         }
         while (letters.contains("Nj")){
             if(tmpHashMap.containsKey("Nj")){
@@ -157,7 +158,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
             else{
                 tmpHashMap.putIfAbsent("Nj",1);
             }
-            letters=letters.replace("Nj","");
+            letters=letters.replaceFirst("Nj","");
         }
         while (letters.contains("Lj")){
             if(tmpHashMap.containsKey("Lj")){
@@ -166,7 +167,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
             else{
                 tmpHashMap.putIfAbsent("Lj",1);
             }
-            letters=letters.replace("Lj","");
+            letters=letters.replaceFirst("Lj","");
         }
 
         for (Character c:  letters.toCharArray()) {
@@ -180,7 +181,6 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
     @Override
     public String lettersForFindingTheWord() {
-
         Random random = new Random();
         String[] vowels = {"A", "E", "I", "O", "U"};
         String[] consonants = {"B", "C", "Č", "Ć", "D", "Dž", "Đ", "F", "G", "H", "J", "K", "L", "Lj", "M", "N", "Nj", "P", "R", "S", "Š", "T", "Z", "Ž", "V"};
@@ -220,7 +220,10 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         int result = 0;
         int computerWordlength = Optional.of(slagalicaRepository.findAll().get(0).getComputerLongestWord().length()).orElse(0);
-        String modifiedChosenWord= String.valueOf(chosenUserWord.charAt(0))+chosenUserWord.substring(1,chosenUserWord.length()).toLowerCase();
+        String modifiedChosenWord="";
+        if(chosenUserWord.length()>0){
+            modifiedChosenWord= String.valueOf(chosenUserWord.charAt(0))+chosenUserWord.substring(1,chosenUserWord.length()).toLowerCase();
+        }
         if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 || dictionaryWordRepository.findAllByWord(modifiedChosenWord) >= 1) {
             if(computerWordlength == chosenUserWord.length()) {
                 result = chosenUserWord.length()*2 + 3;

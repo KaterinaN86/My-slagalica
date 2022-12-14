@@ -29,10 +29,7 @@ const handleNewGame = () => {
                 response.json().then((data) => {
 
                     gameLetters = data.lettersForFindingTheWord
-                    computerWord = data.computerLongestWord
-                    gameId = data.id
                     console.log(gameLetters)
-                    console.log(computerWord)
                     setLettersToButtons(data)
 
                 });
@@ -119,11 +116,8 @@ const setLettersToButtons = (data) => {
         const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
         let m=0;
         for (let i = 0; i < data.lettersForFindingTheWord.length; i++) {
-           if(i != data.lettersForFindingTheWord.length-1 && (data.lettersForFindingTheWord[i+1] == 'j' || data.lettersForFindingTheWord[i+1] == 'ž')){
-            document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[i]+data.lettersForFindingTheWord[i+1]
-            m=i+2;
-           }
-           else if(m!=0 && m < data.lettersForFindingTheWord.length){
+
+            if(m!=0 && m < data.lettersForFindingTheWord.length){
                 if(m != data.lettersForFindingTheWord.length-1 && (data.lettersForFindingTheWord[m+1] == 'j' || data.lettersForFindingTheWord[m+1] == 'ž')){
                         document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[m]+data.lettersForFindingTheWord[m+1]
                         m=m+2
@@ -132,6 +126,10 @@ const setLettersToButtons = (data) => {
                     document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[m]
                     m++;
                 }
+           }
+           else if(i != data.lettersForFindingTheWord.length-1 && (data.lettersForFindingTheWord[i+1] == 'j' || data.lettersForFindingTheWord[i+1] == 'ž')){
+               document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[i]+data.lettersForFindingTheWord[i+1]
+               m=i+2;
            }
            else if(m==0){
                document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[i]

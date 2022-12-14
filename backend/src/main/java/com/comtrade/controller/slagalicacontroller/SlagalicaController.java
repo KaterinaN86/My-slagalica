@@ -1,5 +1,6 @@
 package com.comtrade.controller.slagalicacontroller;
 
+import com.comtrade.model.slagalicamodel.LettersResponse;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.service.slagalicaservice.SlagalicaService;
@@ -23,7 +24,7 @@ public class SlagalicaController {
 
     @RequestMapping("/play")
     @CrossOrigin
-    public SlagalicaGame getNewGame(Principal principal){
+    public LettersResponse getNewGame(Principal principal){
         return slagalicaService.saveLetterForFindingWords(principal);
     }
 
