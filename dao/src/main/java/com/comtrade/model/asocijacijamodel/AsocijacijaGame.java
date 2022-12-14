@@ -24,13 +24,13 @@ public class AsocijacijaGame {
 
     public AsocijacijaGame(){
         this.isActive = true;
-        this.numOfPoints = 4;
+        this.numOfPoints = 0;
     }
 
     public AsocijacijaGame(Long id, WordModel wordModel) {
         this.id = id;
         this.wordModel = wordModel;
         this.isActive = true;
-        this.numOfPoints = 4;
+        this.numOfPoints = 0;
     }
 }

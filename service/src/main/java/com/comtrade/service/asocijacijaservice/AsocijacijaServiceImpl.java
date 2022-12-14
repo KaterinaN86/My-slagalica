@@ -191,7 +191,12 @@ public class AsocijacijaServiceImpl {
 
             AsocijacijaGame asocijacijaGame = findSpecificGame(submit.getGameId());
             if(!asocijacijaGame.isActive()){
-
+                if(asocijacijaGame.getNumOfPoints()<0){
+                    asocijacijaGame.setNumOfPoints(0);
+                }
+                else {
+                    asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
+                }
                 return ResponseEntity.ok()
                         .body(new ResponseWithNumberOfPoints(asocijacijaGame.getNumOfPoints()));
             }else{
