@@ -1,7 +1,8 @@
-com\comtrade\BackendApplication$1.class
 com\comtrade\controller\mojbrojcontroller\MojBrojControler.class
+com\comtrade\bootstrap\DataInitializer$1.class
 com\comtrade\BackendApplication.class
 com\comtrade\controller\skockocontroller\SkockoGameController.class
+com\comtrade\bootstrap\DataInitializer.class
 com\comtrade\controller\asocijacijacontroller\AsocijacijaController.class
 com\comtrade\security\SecurityConfiguration.class
 com\comtrade\controller\koznaznacontroller\KoZnaZnaGameController.class

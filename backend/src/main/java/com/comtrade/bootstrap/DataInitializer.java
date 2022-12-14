@@ -35,9 +35,13 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        File file = ResourceUtils.getFile("classpath:static/serbian-latin.txt");
-        List<String> wordDictionary = Files.readAllLines(file.toPath());
+        List<String> wordDictionary=new ArrayList<>();
+        try {
+            File file = ResourceUtils.getFile("src\\main\\resources\\static\\serbian-latin.txt");
+            wordDictionary = Files.readAllLines(file.toPath());
+        }catch (Exception e){
+            System.out.println("asdf");
+        }
         List<DictionaryWord> dictionaryWords = new ArrayList<>();
 
         for(int i = 1; i < wordDictionary.size(); i++) {
