@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Slagalica</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/chooseGameOnePlayer.css">
+</head>
+<body>
+<div class="container p-5">
+
+    <h1 class="text-center text-white naslov col-md-12" >SLAGALICA</h1>
+
+
+    <div class="row d-block text-center">
+        <div class="col-md-12 p-3 m-3 ">
+            <button id="numOfPoints" type="button" class="btn  w-20 p-4">0</button>
+        </div>
+        <div class="col-md-12 p-3 m-3 ">
+            <a href="slagalica"><button type="button" class="btn btn-outline-light w-50 p-4">Slagalica</button></a>
+            <p id="numOfPointsSlagalica" class="points">0</p>
+        </div>
+        <div class="col-md-12 p-3 m-3">
+            <a href="MojBroj"><button type="button" class="btn btn-outline-light w-50 p-4">Moj broj</button></a>
+            <p id="numOfPointsMojBroj" class="points">0</p>
+        </div>
+        <div class="col-md-12 p-3 m-3">
+            <a href="skocko"><button type="button" class="btn btn-outline-light w-50 p-4">Skočko</button></a>
+            <p id="numOfPointsSkocko" class="points">0</p>
+        </div>
+        <div class="col-md-12 p-3 m-3">
+            <a href="spojnice"><button type="button" class="btn btn-outline-light w-50 p-4">Spojnice</button></a>
+            <p id="numOfPointsSpojnice" class="points">0</p>
+        </div>
+        <div class="col-md-12 p-3 m-3">
+            <a href="koZnaZna"><button type="button" class="btn btn-outline-light w-50 p-4">Ko zna zna</button></a>
+            <p id="numOfPointsKoZnaZna" class="points">0</p>
+        </div>
+        <div class="col-md-12 p-3 m-3">
+            <a href="asocijacija"><button type="button" class="btn btn-outline-light w-50 p-4">Asocijacije</button></a>
+            <p id="numOfPointsAsocijacije" class="points">0</p>
+        </div>
+        <div>
+            <button type="button" class="newGame btn btn-warning" onclick="newGame()">New Game</button>
+        </div>
+        <div class="text-center">
+            <a href="/"><button type="button" class="btn btn-secondary btn-lg w-25 mt-5" ><img src="images/arrow-81-32.png" alt=""></button></a>
+        </div>
+    </div>
+</div>
+
+<script src="javascript/chooseGameOnePlayer.js"></script>
+</body>
+</html>

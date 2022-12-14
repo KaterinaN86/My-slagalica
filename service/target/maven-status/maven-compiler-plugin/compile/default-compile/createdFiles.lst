@@ -1,0 +1,15 @@
+com\comtrade\service\mojbrojservice\MojBrojService.class
+com\comtrade\service\skockoservice\SkockoGameServiceImpl.class
+com\comtrade\service\gameservice\GameService.class
+com\comtrade\service\skockoservice\SkockoGameService.class
+com\comtrade\service\gameservice\GameServiceImpl.class
+com\comtrade\service\koznaznaservice\KoZnaZnaGameService.class
+com\comtrade\service\slagalicaservice\SlagalicaService.class
+com\comtrade\service\spojniceservice\SpojniceServiceImpl.class
+com\comtrade\service\koznaznaservice\KoZnaZnaServiceImpl.class
+com\comtrade\service\slagalicaservice\SlagalicaServiceImp.class
+com\comtrade\service\koznaznaservice\QuestionService.class
+com\comtrade\service\mojbrojservice\MojBrojServiceImpl.class
+com\comtrade\service\spojniceservice\SpojniceService.class
+com\comtrade\service\asocijacijaservice\AsocijacijaServiceImpl.class
+com\comtrade\service\koznaznaservice\QuestionServiceImpl.class

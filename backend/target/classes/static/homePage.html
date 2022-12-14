@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Slagalica</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="http://localhost:8080/css/homePage.css">
+</head>
+<body>
+<div class="container p-5">
+    <h1 class="text-center text-white" th:text="'This is main menu'">Slagalica</h1>
+
+    <div class="row d-block text-center">
+        <div class="col-md-12 p-3">
+            <a href="http://localhost:8080/OnePlayer"><button type="button" class="btn btn-outline-light" >Jedan igrac</button></a>
+        </div>
+        <div class="col-md-12 p-3">
+            <a href="http://localhost:8080/"><button type="button" class="btn btn-outline-light">Dva igraca</button></a>
+        </div>
+        <div class="col-md-12 p-3">
+            <a href="http://localhost:8080/"><button type="button" class="btn btn-outline-light">Podesavanja</button></a>
+        </div>
+        <div class="col-md-12 p-3">
+            <a href="http://localhost:8080/RangList"><button type="button" class="btn btn-outline-light">Rang Lista</button></a>
+        </div>
+        <div class="col-md-12 p-3">
+            <a href="http://localhost:8080/logout"><button type="button" class="btn btn-outline-light">Log out</button></a>
+        </div>
+    </div>
+
+</div>
+
+<script src="http://localhost:8080/javascript/homePage.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/skocko.css" />
+</head>
+
+<body>
+    <div id="container">
+        <div id="tables">
+            <div id="leftTable">
+                <div id="guessTable">
+                    <div class="tableRow">
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                    </div>
+                    <div class="tableRow">
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                    </div>
+                    <div class="tableRow">
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                    </div>
+                    <div class="tableRow">
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                    </div>
+                    <div class="tableRow">
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                    </div>
+                    <div class="tableRow">
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                        <div class="tableCell"></div>
+                    </div>
+                    <div id="messagePlaceholder">
+                        <h3 id="message">BODOVI</h3>
+                    </div>
+                    <div id="finalTable">
+                        <div class="tableRow">
+                            <div class="tableCell"></div>
+                            <div class="tableCell"></div>
+                            <div class="tableCell"></div>
+                            <div class="tableCell"></div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div id="buttons">
+                <div class="tableRow">
+                    <div onclick="displaySymbol(this)" class="tableCell buttons red"> ♥ </div>
+                    <div onclick="displaySymbol(this)" class="tableCell buttons"> ♠ </div>
+                    <div onclick="displaySymbol(this)" class="tableCell buttons yellow"> ★ </div>
+                </div>
+                <div class="tableRow">
+                    <div class="tableCell buttons red" onclick="displaySymbol(this)"> ♦ </div>
+                    <div class="tableCell buttons" onclick="displaySymbol(this)"> ♣ </div>
+                    <div class="tableCell buttons yellow" onclick="displaySymbol(this)"> ☻ </div>
+                </div>
+                <div class="tableRow">
+                    <div class="tableCell buttons commands" title="Backspace" onclick="displaySymbol(this)"> ⇐ </div>
+                    <div class="resistant" title="Restart" onclick="displaySymbol(this)"> ↺ </div>
+                    <div class="resistant" title="Give up" onclick="displaySymbol(this)" id="giveupbutton"> ⚐ </div>
+                </div>
+                <div id="display"></div>
+            </div>
+        </div>
+        <div id="resultPlaceholder">
+            <h2 id="result">BODOVI</h2>
+        </div>
+    </div>
+
+    <script src="javascript/skocko.js"></script>
+</body>
+
+</html>
