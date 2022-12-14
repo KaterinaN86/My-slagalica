@@ -18,3 +18,4 @@
 Link pointing to Trello board: https://trello.com/b/xbRP5zBs/beta-team-slagalica-trello
 
 
+cisto da aleksa vidi da je na dobrom branchu
