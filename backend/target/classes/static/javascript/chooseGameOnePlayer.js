@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded",()=>{init()})
 var data=null
 function init(){
-    fetch('http://localhost:8080/OnePlayer/init')
+    fetch('http://20.50.57.69:8080/OnePlayer/init')
             .then(
                 (response) => {
                     if (response.status !== 200) {
@@ -27,7 +27,7 @@ function init(){
 }
 
 function newGame() {
-    fetch("http://localhost:8080/OnePlayer/newGame").then(r => {
+    fetch("http://20.50.57.69:8080/OnePlayer/newGame").then(r => {
         console.log(r);
         window.location.reload();
     }).catch((error) => {
