@@ -36,16 +36,23 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         String currentPath = new java.io.File(".").getCanonicalPath();
         System.out.println("Current dir:" + currentPath);
+        File file=null;
+        List<DictionaryWord> dictionaryWords=new ArrayList<>();
+        try {
+            file=new File("serbian-latin.txt");
+            Scanner reader = new Scanner(file);
+            dictionaryWords = new ArrayList<>();
 
-        Scanner reader = new Scanner(new File("serbian-latin.txt"));
-        List<DictionaryWord> dictionaryWords = new ArrayList<>();
-
-        while (reader.hasNextLine()) {
-            DictionaryWord word=new DictionaryWord();
-            word.setWordFromDictionary(reader.nextLine());
-            dictionaryWords.add(word);
+            while (reader.hasNextLine()) {
+                DictionaryWord word=new DictionaryWord();
+                word.setWordFromDictionary(reader.nextLine());
+                dictionaryWords.add(word);
+            }
+            reader.close();
+        }catch (FileNotFoundException e){
+            System.out.println("nece da ucita");
         }
-        reader.close();
+
 
         dictionaryWordRepository.saveAll(dictionaryWords);
         log.info("Dictionary words saved");
