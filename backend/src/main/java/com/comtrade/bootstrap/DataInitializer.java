@@ -39,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
         File file=null;
         List<DictionaryWord> dictionaryWords=new ArrayList<>();
         try {
-            file=new File("serbian-latin.txt");
+            file=new File("/backend/src/main/resources/static/serbian-latin.txt");
             Scanner reader = new Scanner(file);
             dictionaryWords = new ArrayList<>();
 
