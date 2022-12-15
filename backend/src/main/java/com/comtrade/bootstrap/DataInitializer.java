@@ -13,12 +13,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Slf4j
 @Component
@@ -35,21 +34,18 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<String> wordDictionary=new ArrayList<>();
-        try {
-            File file = ResourceUtils.getFile("src\\main\\resources\\static\\serbian-latin.txt");
-            wordDictionary = Files.readAllLines(file.toPath());
-        }catch (Exception e){
-            System.out.println("asdf");
-        }
+        String currentPath = new java.io.File(".").getCanonicalPath();
+        System.out.println("Current dir:" + currentPath);
+
+        Scanner reader = new Scanner(new File("backend\\src\\main\\resources\\static\\serbian-latin.txt"));
         List<DictionaryWord> dictionaryWords = new ArrayList<>();
 
-        for(int i = 1; i < wordDictionary.size(); i++) {
-            dictionaryWords.add(DictionaryWord.builder().wordFromDictionary(wordDictionary.get(i)).build());
+        while (reader.hasNextLine()) {
+            DictionaryWord word=new DictionaryWord();
+            word.setWordFromDictionary(reader.nextLine());
+            dictionaryWords.add(word);
         }
-
-        dictionaryWordRepository.deleteAll();
-        dictionaryWordRepository.flush();
+        reader.close();
 
         dictionaryWordRepository.saveAll(dictionaryWords);
         log.info("Dictionary words saved");
