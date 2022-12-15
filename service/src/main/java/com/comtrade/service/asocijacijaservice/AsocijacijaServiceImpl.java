@@ -160,11 +160,8 @@ public class AsocijacijaServiceImpl {
             if(submittedWordUpperCase.equals(referenceWordUpperCase)){
                 if(fieldName.contains("final")){
                     asocijacijaGame.setActive(false);
-                    OnePlayerGame game=gameService.getGame(principal);
                     asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() + 10);
-                    game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
                     asocijacijaRepository.save(asocijacijaGame);
-                    gamerepository.save(game);
                 }else{
                     asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() + 5);
                     asocijacijaRepository.save(asocijacijaGame);
@@ -186,21 +183,24 @@ public class AsocijacijaServiceImpl {
         asocijacijaRepository.save(asocijacijaGame);
     }
 
-    public ResponseEntity<Response> getNumberOfPoints(SubmitNumberOfFields submit){
+    public ResponseEntity<Response> getNumberOfPoints(Long gameId, Principal principal){
         try{
-
-            AsocijacijaGame asocijacijaGame = findSpecificGame(submit.getGameId());
+            AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
+            OnePlayerGame game=gameService.getGame(principal);
+            if(asocijacijaGame.getNumOfPoints()<0){
+                asocijacijaGame.setNumOfPoints(0);
+            }
+            else {
+                asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
+            }
+            asocijacijaRepository.save(asocijacijaGame);
+            game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
+            gamerepository.save(game);
             if(!asocijacijaGame.isActive()){
-                if(asocijacijaGame.getNumOfPoints()<0){
-                    asocijacijaGame.setNumOfPoints(0);
-                }
-                else {
-                    asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
-                }
                 return ResponseEntity.ok()
                         .body(new ResponseWithNumberOfPoints(asocijacijaGame.getNumOfPoints()));
             }else{
-                log.info("Forbidden request for number of points:" + "- game with id: " + submit.getGameId() + " still active.");
+                log.info("Forbidden request for number of points:" + "- game with id: " + gameId+ " still active.");
                 return ResponseEntity.status(403).build();
             }
         }catch (NoSuchElementException ex){
@@ -208,5 +208,22 @@ public class AsocijacijaServiceImpl {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
+        OnePlayerGame game=gameService.getGame(principal);
+        AsocijacijaGame asocijacijaGame=game.getAsocijacijaGame();
+        asocijacijaGame.setActive(false);
+        if(asocijacijaGame.getNumOfPoints()<=0){
+            asocijacijaGame.setNumOfPoints(0);
+        }
+        else {
+            asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
+        }
+        log.info("Number of points for Asocijacije game: "+asocijacijaGame.getNumOfPoints());
+        game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
+        gamerepository.save(game);
+        asocijacijaRepository.save(asocijacijaGame);
+        return ResponseEntity.ok().build();
     }
 }

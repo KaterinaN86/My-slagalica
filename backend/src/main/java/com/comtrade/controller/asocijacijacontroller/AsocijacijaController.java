@@ -43,9 +43,13 @@ public class AsocijacijaController {
         asocijacijaService.change(gameId);
     }
 
-    @PostMapping("/asocijacija/getNumberOfPoints")
-    public ResponseEntity<Response> getNumberOfPoints(@RequestBody SubmitNumberOfFields submit){
-        return asocijacijaService.getNumberOfPoints(submit);
+    @GetMapping("/asocijacija/getNumberOfPoints/{gameId}")
+    public ResponseEntity<Response> getNumberOfPoints(@PathVariable Long gameId, Principal principal){
+        return asocijacijaService.getNumberOfPoints(gameId,principal);
+    }
+    @PutMapping("/asocijacija/finishGame")
+    public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
+        return asocijacijaService.finishGame(principal);
     }
 
 }
