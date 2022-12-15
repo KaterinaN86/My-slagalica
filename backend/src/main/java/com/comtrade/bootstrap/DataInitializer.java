@@ -37,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
         String currentPath = new java.io.File(".").getCanonicalPath();
         System.out.println("Current dir:" + currentPath);
 
-        Scanner reader = new Scanner(new File("backend\\src\\main\\resources\\static\\serbian-latin.txt"));
+        Scanner reader = new Scanner(new File("serbian-latin.txt"));
         List<DictionaryWord> dictionaryWords = new ArrayList<>();
 
         while (reader.hasNextLine()) {
