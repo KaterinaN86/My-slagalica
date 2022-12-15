@@ -1,5 +1,6 @@
 FROM openjdk:17
 
-COPY . .
+COPY backend/target/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY backend/target/classes/static/serbian-latin.txt serbian-latin.txt
 
-ENTRYPOINT ["java", "-jar", "backend/target/backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
