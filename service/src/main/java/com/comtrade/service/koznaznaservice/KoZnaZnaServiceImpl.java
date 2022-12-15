@@ -134,7 +134,6 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
             koZnaZnaRepository.save(koZnaZnaGame);
             return ResponseEntity.ok().build();
         }
-
     }
 
     @Override

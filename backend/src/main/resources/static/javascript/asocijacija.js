@@ -111,7 +111,7 @@ const sendSubmit = async () =>{
                 document.getElementById(pressedButtonId).innerHTML = enteredWord;
                 document.getElementById(pressedButtonId).disabled = true; //ovo iskombinovati sa onim dole disable
                 if(pressedButtonId=='final'){
-                    finishGame();
+                    showAll();
                 }
             }
         }
@@ -124,13 +124,23 @@ const sendSubmit = async () =>{
     }
 }
 
-const finishGame = () =>{
-    closeModal();
+function showAll(){
     let buttons = document.getElementsByClassName('disable');
     for(let button of buttons){
         button.disabled=true;
         showWord(button);
     }
+}
+
+async function finishGame(){
+    const response = await fetch('http://localhost:8080/asocijacija/finishGame', {
+            method: 'PUT'
+    });
+    if (response.status !== 200) {
+        console.log('Error: ' + response.status);
+        return;
+    }
+    closeModal();
 }
 
 
