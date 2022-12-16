@@ -6,7 +6,7 @@ function checkError(){
     if(window.location.search=="?error"){
         alert("wrong username or password")
     }
-    else if(window.location.search=="?logot"){
+    else if(window.location.search=="?logout"){
     window.location.href='http://' + window.location.host + '/login'
     }
 }
