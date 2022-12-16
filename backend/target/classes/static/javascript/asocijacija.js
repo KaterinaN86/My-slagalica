@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 const handleNewGame = () =>{
-    fetch('http://'+window.location.host+'/asocijacija/play')
+    fetch('http://' + window.location.host + '/asocijacija/play')
     .then(
         (response) => {
             if (response.status !== 200) {
@@ -66,7 +66,7 @@ const showWord = async (pressedButton)=>{
         gameId:gameId,
         fieldName:pressedButton.id
     }
-    fetch('http://'+window.location.host+'/asocijacija/' + sendObject.gameId + '/getField/' + sendObject.fieldName)
+    fetch('http://' + window.location.host + '/asocijacija/' + sendObject.gameId + '/getField/' + sendObject.fieldName)
     .then(
         (response) => {
             if (response.status !== 200) {
@@ -97,7 +97,7 @@ const sendSubmit = async () =>{
     }
 
     try {
-        const response = await fetch('http://'+window.location.host+'/asocijacija/submitWord', {
+        const response = await fetch('http://' + window.location.host + '/asocijacija/submitWord', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -133,7 +133,7 @@ function showAll(){
 }
 
 async function finishGame(){
-    const response = await fetch('http://'+window.location.host+'/asocijacija/finishGame', {
+    const response = await fetch('http://' + window.location.host + '/asocijacija/finishGame', {
             method: 'PUT'
     });
     if (response.status !== 200) {
