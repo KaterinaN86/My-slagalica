@@ -25,7 +25,7 @@ var numberOfPoints=0;
 
 
 function getQuestions(){
-    fetch('http://localhost:8080/koZnaZna/play').then(
+    fetch('http://'+window.location.host+'/koZnaZna/play').then(
         (response) => {
                     if (response.status !== 200) {
                         console.log('Error: ' + response.status);
@@ -76,7 +76,7 @@ async function submitSelect(){
             questionId : questionList[questionCount].id,
             selectedQuestion : selectedOptionIndex
         }
-        const response = await fetch('http://localhost:8080/koZnaZna/submitQuestion', {
+        const response = await fetch('http://'+window.location.host+'/koZnaZna/submitQuestion', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ function nextQuestionSelect(e){
     }
 }
 async function finishGame(){
-    const response = await fetch('http://localhost:8080/koZnaZna/finishGame', {
+    const response = await fetch('http://'+window.location.host+'/koZnaZna/finishGame', {
             method: 'PUT'
         });
         if (response.status !== 200) {
@@ -132,7 +132,7 @@ async function updateQuestionNumber(){
     var submitQuestionNUmber={
         gameId : gameId,
     }
-    const response = await fetch('http://localhost:8080/koZnaZna/nextQuestion', {
+    const response = await fetch('http://'+window.location.host+'/koZnaZna/nextQuestion', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ async function updateQuestionNumber(){
     }
 }
 function getNumberOfPoints(){
-     fetch('http://localhost:8080/koZnaZna/numberOfPoints/'+gameId).then(
+     fetch('http://'+window.location.host+'/koZnaZna/numberOfPoints/'+gameId).then(
         (response) => {
                 if (response.status !== 200) {
                     console.log('Error: ' + response.status);

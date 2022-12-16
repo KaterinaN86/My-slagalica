@@ -74,7 +74,7 @@ class SlagalicaGameServiceImpTest {
     }
 
     @Test
-    void testUserWordProcessing() throws IOException {
+    void testUserWordProcessing() throws Exception {
 
         String userWord = "MASKIRANJE";
         String lettersForFindingTheWord = "IMAASIRKENKJ";

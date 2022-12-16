@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 const handleNewGame = () =>{
-    fetch('http://localhost:8080/asocijacija/play')
+    fetch('http://'+window.location.host+'/asocijacija/play')
     .then(
         (response) => {
             if (response.status !== 200) {
@@ -66,7 +66,7 @@ const showWord = async (pressedButton)=>{
         gameId:gameId,
         fieldName:pressedButton.id
     }
-    fetch('http://localhost:8080/asocijacija/' + sendObject.gameId + '/getField/' + sendObject.fieldName)
+    fetch('http://'+window.location.host+'/asocijacija/' + sendObject.gameId + '/getField/' + sendObject.fieldName)
     .then(
         (response) => {
             if (response.status !== 200) {
@@ -97,7 +97,7 @@ const sendSubmit = async () =>{
     }
 
     try {
-        const response = await fetch('http://localhost:8080/asocijacija/submitWord', {
+        const response = await fetch('http://'+window.location.host+'/asocijacija/submitWord', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ const sendSubmit = async () =>{
                 document.getElementById(pressedButtonId).innerHTML = enteredWord;
                 document.getElementById(pressedButtonId).disabled = true; //ovo iskombinovati sa onim dole disable
                 if(pressedButtonId=='final'){
-                    finishGame();
+                    showAll();
                 }
             }
         }
@@ -124,13 +124,23 @@ const sendSubmit = async () =>{
     }
 }
 
-const finishGame = () =>{
-    closeModal();
+function showAll(){
     let buttons = document.getElementsByClassName('disable');
     for(let button of buttons){
         button.disabled=true;
         showWord(button);
     }
+}
+
+async function finishGame(){
+    const response = await fetch('http://'+window.location.host+'/asocijacija/finishGame', {
+            method: 'PUT'
+    });
+    if (response.status !== 200) {
+        console.log('Error: ' + response.status);
+        return;
+    }
+    closeModal();
 }
 
 

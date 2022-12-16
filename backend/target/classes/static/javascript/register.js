@@ -1,11 +1,11 @@
 logbtn=document.getElementById("loginBtn")
-logbtn.onclick=()=>{window.location.href="http://localhost:8080/login"}
+logbtn.onclick=()=>{window.location.href="http://'+window.location.host+'/login"}
 async function addUser(){
     var requestBody = {
                 userName: document.getElementById("inputUserName").value,
                 password: document.getElementById("inputPassword").value}
     console.log(requestBody)
-    const response = await fetch('http://localhost:8080/NewUser', {
+    const response = await fetch('http://'+window.location.host+'/NewUser', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -14,7 +14,7 @@ async function addUser(){
                 });
     data=await response.json()
     if(data.msg=="Uspesno ste se registrovali"){
-        window.location.href="http://localhost:8080/login"
+        window.location.href="http://'+window.location.host+'/login"
     }
     alert(data.msg)
 
