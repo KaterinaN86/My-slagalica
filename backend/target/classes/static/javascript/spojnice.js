@@ -7,7 +7,7 @@ function init() {
     document.getElementById("exitBtn").addEventListener("click",()=>{
         window.location.href="/OnePlayer"
     })
-    fetch("http://localhost:8080/spojnice/start").then((response) => {
+    fetch('http://' + window.location.host + '/spojnice/start').then((response) => {
         response.json().then((data) => {
             document.getElementById("submitBtn").addEventListener("click", submitData)
 
@@ -57,7 +57,7 @@ function submitData(event){
     for(let i=0 ; i<buttons.length-1;i++){
         buttons[i].disabled=true
     }
-    fetch("http://localhost:8080/spojnice/submit", {
+    fetch('http://' + window.location.host + '/spojnice/submit', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

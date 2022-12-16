@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const handleNewGame = () => {
 
-    fetch('http://localhost:8080/slagalica/play')
+    fetch('http://' + window.location.host + '/slagalica/play')
 
         .then(
 
@@ -59,7 +59,7 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
 
     try {
 
-        const response = await fetch('http://localhost:8080/slagalica/wordSubmit', {
+        const response = await fetch('http://' + window.location.host + '/slagalica/wordSubmit', {
 
             method: 'POST',
 
@@ -78,8 +78,8 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
             const data = await response.json();
             if(data!=-1){
                 //alert("Time out, you earned " + data + " points")
-                document.getElementById('finalPoints').textContent = "You earned " + data + " points."
-                document.getElementById('computerWordTxt').textContent += "Computer word is: " + computerWord
+                document.getElementById('finalPoints').textContent = "You earned " + data.points + " points."
+                document.getElementById('computerWordTxt').textContent += "Computer word is: " + data.longestWord
             }else{
                 document.getElementById('finalPoints').textContent = "You can only submit once."
                 document.getElementById('computerWordTxt').textContent += ""
@@ -108,7 +108,6 @@ function handleResponse() {
 
 
 const setLettersToButtons = (data) => {
-
 
     document.getElementById('stopButton').onclick = function () {
 

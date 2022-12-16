@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const handleNewGame = () => {
 
-    fetch('http://localhost:8080/slagalica/play')
+    fetch('http://' + window.location.host + '/slagalica/play')
 
         .then(
 
@@ -59,7 +59,7 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
 
     try {
 
-        const response = await fetch('http://localhost:8080/slagalica/wordSubmit', {
+        const response = await fetch('http://' + window.location.host + '/slagalica/wordSubmit', {
 
             method: 'POST',
 
