@@ -3,6 +3,7 @@ package com.comtrade.controller.slagalicacontroller;
 import com.comtrade.model.slagalicamodel.LettersResponse;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
+import com.comtrade.model.slagalicamodel.SubmitResponse;
 import com.comtrade.service.slagalicaservice.SlagalicaService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class SlagalicaController {
 
     @PostMapping("/wordSubmit")
     @CrossOrigin
-    public Integer slagalicaGame(@RequestBody SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) {
+    public SubmitResponse slagalicaGame(@RequestBody SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
         return slagalicaService.userWordProcessing(slagalicaUserWordSubmit, principal);
     }
 

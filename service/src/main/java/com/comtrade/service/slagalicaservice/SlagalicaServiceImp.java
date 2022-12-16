@@ -2,10 +2,7 @@ package com.comtrade.service.slagalicaservice;
 
 
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.slagalicamodel.DictionaryWord;
-import com.comtrade.model.slagalicamodel.LettersResponse;
-import com.comtrade.model.slagalicamodel.SlagalicaGame;
-import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
+import com.comtrade.model.slagalicamodel.*;
 import com.comtrade.repository.gamerepository.Gamerepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
@@ -205,15 +202,10 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
 
     @Override
-    public Integer userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit,Principal principal) {
-        OnePlayerGame game=null;
-        try {
-            game=gameService.getGame(principal);
-            if(!game.getSlagalicaGame().getIsActive()){
-                return -1;
-            }
-        } catch (Exception e) {
-            return -1;
+    public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
+        OnePlayerGame game=gameService.getGame(principal);
+        if(!game.getSlagalicaGame().getIsActive()){
+            return new SubmitResponse("",0);
         }
         int finalResult = 0;
         String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
@@ -244,7 +236,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         gamerepository.save(game);
 
 
-        return finalResult;
+        return new SubmitResponse(game.getSlagalicaGame().getComputerLongestWord(),finalResult);
     }
 
 

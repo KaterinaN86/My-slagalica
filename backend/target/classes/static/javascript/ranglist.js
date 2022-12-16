@@ -3,7 +3,7 @@ function $(id) {
 }
 
 function getRangList(){
-    fetch('http://20.50.57.69:8080/GetRangList').then(
+    fetch('http://' + window.location.host + '/GetRangList').then(
         (response) => {
                     if (response.status !== 200) {
                         console.log('Error: ' + response.status);

@@ -49,6 +49,7 @@ C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com
 C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\model\spojnicemodel\GameIdResponse.java
 C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\model\mojbrojmodel\MojBrojSubmitRequest.java
 C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\repository\mojbrojrepository\MojBrojRepository.java
+C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\model\slagalicamodel\SubmitResponse.java
 C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\repository\koznaznarepository\QuestionRepository.java
 C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\model\koznaznamodel\SubmitQuestion.java
 C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\dao\src\main\java\com\comtrade\model\OnePlayerGame\OnePlayerGame.java

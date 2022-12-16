@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded",()=>{handleNewGame()})
 var gameId;
 var numbers;
 function handleNewGame(){
-    fetch('http://20.50.57.69:8080/MojBroj/Init')
+    fetch('http://' + window.location.host + '/MojBroj/Init')
         .then(
             (response) => {
                 if (response.status !== 200) {
@@ -45,7 +45,7 @@ async function submit(){
         }
 
         try {
-            const response = await fetch('http://20.50.57.69:8080/MojBroj/Submit', {
+            const response = await fetch('http://' + window.location.host + '/MojBroj/Submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 const handleNewGame = () =>{
-    fetch('http://20.50.57.69:8080/skocko/play')
+    fetch('http://' + window.location.host + '/skocko/play')
     .then(
         (response) => {
             if (response.status !== 200) {
@@ -129,7 +129,7 @@ const submitCombination = async (submittedCombination) => {
     }
 
     try {
-        const response = await fetch('http://20.50.57.69:8080/skocko/submit', {
+        const response = await fetch('http://' + window.location.host + '/skocko/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ const handleNotWinningCombination = (data) => {
 }
 
 const handleLosingGame = async () => {
-    fetch('http://20.50.57.69:8080/skocko/getCombination')
+    fetch('http://' + window.location.host + '/skocko/getCombination')
         .then(
             (response) => {
                 if (response.status !== 200) {

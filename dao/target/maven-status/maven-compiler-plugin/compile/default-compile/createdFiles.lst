@@ -8,6 +8,7 @@ com\comtrade\model\spojnicemodel\PairsModel.class
 com\comtrade\model\asocijacijamodel\ResponseWithFieldValue.class
 com\comtrade\repository\asocijacijarepository\AsocijacijaRepository.class
 com\comtrade\model\skockomodel\SkockoResponse.class
+com\comtrade\model\slagalicamodel\SubmitResponse.class
 com\comtrade\model\asocijacijamodel\SubmitFieldValue.class
 com\comtrade\model\asocijacijamodel\WordModel.class
 com\comtrade\model\asocijacijamodel\ResponseWithGameId.class
