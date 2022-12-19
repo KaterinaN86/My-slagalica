@@ -4,8 +4,8 @@ import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.asocijacijamodel.*;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
-import com.comtrade.repository.gamerepository.Gamerepository;
-import com.comtrade.service.gameservice.GameServiceImpl;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
+import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +22,13 @@ public class AsocijacijaServiceImpl {
     private final WordRepository wordRepository;
 
     @Autowired
-    private GameServiceImpl gameService;
+    private OnePlayerOnePlayerGameServiceImpl gameService;
 
-    private final Gamerepository gamerepository;
-    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, Gamerepository gamerepository) {
+    private final OnePlayerGameRepository onePlayerGameRepository;
+    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, OnePlayerGameRepository onePlayerGameRepository) {
         this.asocijacijaRepository = asocijacijaRepository;
         this.wordRepository = wordRepository;
-        this.gamerepository = gamerepository;
+        this.onePlayerGameRepository = onePlayerGameRepository;
     }
     private WordModel getRandomWordModel() throws NoSuchElementException{
         int randomId = (int)(Math.floor((Math.random()*wordRepository.count()+1)));
@@ -52,11 +52,11 @@ public class AsocijacijaServiceImpl {
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
             asocijacijaRepository.save(asocijacijaGame);
-            if (game.getAsocijacijaGame()==null){
-                game.setAsocijacijaGame(asocijacijaGame);
-                gamerepository.save(game);
+            if (game.getGames().getAsocijacijaGame()==null){
+                game.getGames().setAsocijacijaGame(asocijacijaGame);
+                onePlayerGameRepository.save(game);
             }
-            AsocijacijaGame savedAsocijacijaGame = game.getAsocijacijaGame();
+            AsocijacijaGame savedAsocijacijaGame = game.getGames().getAsocijacijaGame();
             log.info("Asocijacija game instance with id: " + savedAsocijacijaGame.getId() + " created.");
             return ResponseEntity.ok()
                     .body(new ResponseWithGameId(savedAsocijacijaGame.getId()));
@@ -195,7 +195,7 @@ public class AsocijacijaServiceImpl {
             }
             asocijacijaRepository.save(asocijacijaGame);
             game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
-            gamerepository.save(game);
+            onePlayerGameRepository.save(game);
             if(!asocijacijaGame.isActive()){
                 return ResponseEntity.ok()
                         .body(new ResponseWithNumberOfPoints(asocijacijaGame.getNumOfPoints()));
@@ -212,7 +212,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
         OnePlayerGame game=gameService.getGame(principal);
-        AsocijacijaGame asocijacijaGame=game.getAsocijacijaGame();
+        AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
         asocijacijaGame.setActive(false);
         if(asocijacijaGame.getNumOfPoints()<=0){
             asocijacijaGame.setNumOfPoints(0);
@@ -222,7 +222,7 @@ public class AsocijacijaServiceImpl {
         }
         log.info("Number of points for Asocijacije game: "+asocijacijaGame.getNumOfPoints());
         game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
-        gamerepository.save(game);
+        onePlayerGameRepository.save(game);
         asocijacijaRepository.save(asocijacijaGame);
         return ResponseEntity.ok().build();
     }

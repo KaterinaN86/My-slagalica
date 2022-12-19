@@ -3,11 +3,10 @@ package com.comtrade.controller;
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
 import com.comtrade.model.OnePlayerGame.RangListResponse;
-import com.comtrade.service.gameservice.GameServiceImpl;
+import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -18,9 +17,9 @@ import java.util.List;
 @CrossOrigin
 public class Gamecontroler {
 
-    private final GameServiceImpl gameservice;
+    private final OnePlayerOnePlayerGameServiceImpl gameservice;
 
-    public Gamecontroler(GameServiceImpl gameservice) {
+    public Gamecontroler(OnePlayerOnePlayerGameServiceImpl gameservice) {
         this.gameservice = gameservice;
     }
 

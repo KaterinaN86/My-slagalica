@@ -1,46 +1,43 @@
-package com.comtrade.model.OnePlayerGame;
+package com.comtrade.model;
 
-import com.comtrade.model.Games;
 import com.comtrade.model.asocijacijamodel.AsocijacijaGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.skockomodel.SkockoGame;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
-import com.comtrade.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @ToString
 @NoArgsConstructor
-public class OnePlayerGame {
+public class Games {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean finished;
-
-    private Integer numOfPoints;
+    @OneToOne
+    SlagalicaGame slagalicaGame;
 
     @OneToOne
-    User user;
+    MojBrojGame mojBrojGame;
 
     @OneToOne
-    Games games;
+    SkockoGame skockoGame;
 
-    public OnePlayerGame(User user,Games games){
-        this.user=user;
-        this.games=games;
-        finished=false;
-        numOfPoints=0;
-    }
+    @OneToOne
+    KoZnaZnaGame koZnaZnaGame;
 
+    @OneToOne
+    SpojniceGame spojniceGame;
+
+    @OneToOne
+    AsocijacijaGame asocijacijaGame;
 }

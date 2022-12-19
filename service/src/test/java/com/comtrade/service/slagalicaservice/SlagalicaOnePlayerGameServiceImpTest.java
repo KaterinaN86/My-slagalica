@@ -3,22 +3,18 @@ package com.comtrade.service.slagalicaservice;
 import com.comtrade.model.slagalicamodel.DictionaryWord;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
-import com.comtrade.repository.gamerepository.Gamerepository;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class})
-class SlagalicaGameServiceImpTest {
+class SlagalicaOnePlayerGameServiceImpTest {
 
     public static final long GAME_ID = 1L;
     @Mock
@@ -36,7 +32,7 @@ class SlagalicaGameServiceImpTest {
     DictionaryWordRepository dictionaryWordRepository;
 
     @Mock
-    Gamerepository gamerepository;
+    OnePlayerGameRepository onePlayerGameRepository;
     SlagalicaService slagalicaService;
 
     SlagalicaGame slagalicaGame;
@@ -45,7 +41,7 @@ class SlagalicaGameServiceImpTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        slagalicaService = new SlagalicaServiceImp(gamerepository, slagalicaRepository, dictionaryWordRepository);
+        slagalicaService = new SlagalicaServiceImp(onePlayerGameRepository, slagalicaRepository, dictionaryWordRepository);
         slagalicaRepository.save(SlagalicaGame.builder()
                 .lettersForFindingTheWord("IMAASIRKENKJ")
                 .computerLongestWord("MASKE").build());

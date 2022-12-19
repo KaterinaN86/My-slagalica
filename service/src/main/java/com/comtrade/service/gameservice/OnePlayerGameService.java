@@ -6,7 +6,7 @@ import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
 import java.security.Principal;
 import java.util.List;
 
-public interface GameService {
+public interface OnePlayerGameService {
     OnePlayerGame createNewGame(Principal principal) throws Exception;
     OnePlayerGame getGame(Principal principal) throws Exception;
     OnePlayerInitResponse getInitData(Principal principal) throws Exception;

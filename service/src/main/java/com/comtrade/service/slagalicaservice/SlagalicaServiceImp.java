@@ -3,10 +3,10 @@ package com.comtrade.service.slagalicaservice;
 
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.slagalicamodel.*;
-import com.comtrade.repository.gamerepository.Gamerepository;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
-import com.comtrade.service.gameservice.GameServiceImpl;
+import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 @Service
 public class SlagalicaServiceImp implements SlagalicaService {
 
-    private final Gamerepository gamerepository;
+    private final OnePlayerGameRepository onePlayerGameRepository;
     private final SlagalicaRepository slagalicaRepository;
     private final DictionaryWordRepository dictionaryWordRepository;
 
     @Autowired
-    private GameServiceImpl gameService;
+    private OnePlayerOnePlayerGameServiceImpl gameService;
 
-    public SlagalicaServiceImp(Gamerepository gamerepository, SlagalicaRepository slagalicaRepository,
+    public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, SlagalicaRepository slagalicaRepository,
                                DictionaryWordRepository dictionaryWordRepository) {
-        this.gamerepository = gamerepository;
+        this.onePlayerGameRepository = onePlayerGameRepository;
         this.slagalicaRepository = slagalicaRepository;
         this.dictionaryWordRepository = dictionaryWordRepository;
     }
@@ -39,16 +39,16 @@ public class SlagalicaServiceImp implements SlagalicaService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        if (game.getSlagalicaGame()!=null){
-            return new LettersResponse(game.getSlagalicaGame().getLettersForFindingTheWord());
+        if (game.getGames().getSlagalicaGame()!=null){
+            return new LettersResponse(game.getGames().getSlagalicaGame().getLettersForFindingTheWord());
         }
         SlagalicaGame slagalicaGame = new SlagalicaGame();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
         slagalicaGame.setIsActive(true);
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
-        game.setSlagalicaGame(Sgame);
-        gamerepository.save(game);
+        game.getGames().setSlagalicaGame(Sgame);
+        onePlayerGameRepository.save(game);
         return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
     }
 
@@ -204,7 +204,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     @Override
     public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
         OnePlayerGame game=gameService.getGame(principal);
-        if(!game.getSlagalicaGame().getIsActive()){
+        if(!game.getGames().getSlagalicaGame().getIsActive()){
             return new SubmitResponse("",0);
         }
         int finalResult = 0;
@@ -230,13 +230,13 @@ public class SlagalicaServiceImp implements SlagalicaService {
         }
 
         finalResult = result;
-        game.getSlagalicaGame().setNumOfPoints(finalResult);
+        game.getGames().getSlagalicaGame().setNumOfPoints(finalResult);
         game.setNumOfPoints(game.getNumOfPoints()+finalResult);
-        game.getSlagalicaGame().setIsActive(false);
-        gamerepository.save(game);
+        game.getGames().getSlagalicaGame().setIsActive(false);
+        onePlayerGameRepository.save(game);
 
 
-        return new SubmitResponse(game.getSlagalicaGame().getComputerLongestWord(),finalResult);
+        return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),finalResult);
     }
 
 

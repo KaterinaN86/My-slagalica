@@ -5,9 +5,9 @@ import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
-import com.comtrade.repository.gamerepository.Gamerepository;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
-import com.comtrade.service.gameservice.GameServiceImpl;
+import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -24,24 +24,24 @@ import java.util.Optional;
 @Slf4j
 public class MojBrojServiceImpl implements MojBrojService{
     private final MojBrojRepository mojBrojRepository;
-    private final Gamerepository gamerepository;
+    private final OnePlayerGameRepository onePlayerGameRepository;
 
     @Autowired
-    private GameServiceImpl gameService;
-    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, Gamerepository gamerepository) {
+    private OnePlayerOnePlayerGameServiceImpl gameService;
+    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, OnePlayerGameRepository onePlayerGameRepository) {
         this.mojBrojRepository = mojBrojRepository;
-        this.gamerepository = gamerepository;
+        this.onePlayerGameRepository = onePlayerGameRepository;
     }
 
     @Override
     public MojBrojGame getGame(Principal principal) throws Exception {
         OnePlayerGame game=gameService.getGame(principal);
-        if(game.getMojBrojGame()!=null){
-            return game.getMojBrojGame();
+        if(game.getGames().getMojBrojGame()!=null){
+            return game.getGames().getMojBrojGame();
         }else{
             MojBrojGame MBgame=createNewGame();
-            game.setMojBrojGame(MBgame);
-            gamerepository.save(game);
+            game.getGames().setMojBrojGame(MBgame);
+            onePlayerGameRepository.save(game);
             return MBgame;
         }
     }
@@ -120,7 +120,7 @@ public class MojBrojServiceImpl implements MojBrojService{
     @Override
     public Integer userSolutionDiff(String expression, Principal principal) throws Exception {
         OnePlayerGame game= gameService.getGame(principal);
-        MojBrojGame MBgame=game.getMojBrojGame();
+        MojBrojGame MBgame=game.getGames().getMojBrojGame();
         Long gameId=MBgame.getId();
         if(!MBgame.isActive()){
             throw new Exception("You can submit only once");
@@ -137,7 +137,7 @@ public class MojBrojServiceImpl implements MojBrojService{
     @Override
     public String getSolution(Principal principal) throws Exception {
         OnePlayerGame game=gameService.getGame(principal);
-        MojBrojGame MBgame=game.getMojBrojGame();
+        MojBrojGame MBgame=game.getGames().getMojBrojGame();
         return MBgame.getSolution();
     }
 
@@ -171,8 +171,8 @@ public class MojBrojServiceImpl implements MojBrojService{
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints);
         }
         game.setNumOfPoints(game.getNumOfPoints()+numOfPoints);
-        game.getMojBrojGame().setNumOfPoints(numOfPoints);
-        gamerepository.save(game);
+        game.getGames().getMojBrojGame().setNumOfPoints(numOfPoints);
+        onePlayerGameRepository.save(game);
 
         return new MojBrojSubmitResponse("", solution, numOfPoints);
     }
