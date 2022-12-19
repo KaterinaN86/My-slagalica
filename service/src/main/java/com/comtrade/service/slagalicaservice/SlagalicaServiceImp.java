@@ -230,8 +230,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         }
 
         finalResult = result;
-        game.getGames().getSlagalicaGame().setNumOfPoints(finalResult);
-        game.setNumOfPoints(game.getNumOfPoints()+finalResult);
+        game.getPoints().setNumOfPointsSlagalica(finalResult);
         game.getGames().getSlagalicaGame().setIsActive(false);
         onePlayerGameRepository.save(game);
 

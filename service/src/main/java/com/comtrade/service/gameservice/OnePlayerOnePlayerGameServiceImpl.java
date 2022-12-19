@@ -3,8 +3,10 @@ package com.comtrade.service.gameservice;
 import com.comtrade.model.Games;
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
+import com.comtrade.model.Points;
 import com.comtrade.model.user.User;
 import com.comtrade.repository.GamesRepository;
+import com.comtrade.repository.PointsRepository;
 import com.comtrade.repository.UserRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,13 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
     private final OnePlayerGameRepository onePlayerGameRepository;
     private final UserRepository userRepository;
     private final GamesRepository gamesRepository;
+    private final PointsRepository pointsRepository;
 
-    public OnePlayerOnePlayerGameServiceImpl(OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository) {
+    public OnePlayerOnePlayerGameServiceImpl(OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository, PointsRepository pointsRepository) {
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.userRepository = userRepository;
         this.gamesRepository = gamesRepository;
+        this.pointsRepository = pointsRepository;
     }
 
     @Override
@@ -33,7 +37,11 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         }
         Games games=new Games();
         gamesRepository.save(games);
-        OnePlayerGame game= onePlayerGameRepository.save(new OnePlayerGame(user.get(),games));
+        OnePlayerGame onePlayerGame =new OnePlayerGame(user.get(),games);
+        Points points=new Points();
+        pointsRepository.save(points);
+        onePlayerGame.setPoints(points);
+        OnePlayerGame game= onePlayerGameRepository.save(onePlayerGame);
         return game;
     }
 
@@ -50,7 +58,7 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         OnePlayerGame game=getGame(principal);
         OnePlayerInitResponse response=new OnePlayerInitResponse();
         response.setMsg("");
-        response.setNumOfPointsSum(game.getNumOfPoints());
+        response.setNumOfPointsSum(game.getPoints().getSumOfPoints());
         if (game.getGames().getMojBrojGame()!=null){
             response.setNumOfPointsMojBroj(game.getGames().getMojBrojGame().getNumOfPoints());
         }
@@ -71,6 +79,7 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         if(game.getGames().getAsocijacijaGame() != null){
             response.setNumOfPointsAsocijacija((int) game.getGames().getAsocijacijaGame().getNumOfPoints());
         }
+        response.setNumOfPointsMojBroj(game.getPoints().getNumOfPointsMojBroj());//todo do this for all games
         return response;
     }
 

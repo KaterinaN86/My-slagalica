@@ -170,8 +170,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         } catch (Exception e) {
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints);
         }
-        game.setNumOfPoints(game.getNumOfPoints()+numOfPoints);
-        game.getGames().getMojBrojGame().setNumOfPoints(numOfPoints);
+        game.getPoints().setNumOfPointsMojBroj(numOfPoints);
         onePlayerGameRepository.save(game);
 
         return new MojBrojSubmitResponse("", solution, numOfPoints);

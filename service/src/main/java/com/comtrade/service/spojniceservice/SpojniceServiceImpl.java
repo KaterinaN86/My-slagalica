@@ -131,9 +131,8 @@ public class SpojniceServiceImpl implements SpojniceService{
             return spojniceGame.getPoints();
         }
         Integer points=calcPoints(spojniceGame, json);
-        spojniceGame.setPoints(points);
         OnePlayerGame game=gameService.getGame(principal);
-        game.setNumOfPoints(game.getNumOfPoints()+points);
+        game.getPoints().setNumOfPointsSpojnice(points);
         spojniceGame.setActive(false);
         spojniceRepository.save(spojniceGame);
 

@@ -1,6 +1,7 @@
 package com.comtrade.model.OnePlayerGame;
 
 import com.comtrade.model.Games;
+import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.AsocijacijaGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
@@ -28,7 +29,10 @@ public class OnePlayerGame {
 
     private boolean finished;
 
-    private Integer numOfPoints;
+    private Integer numOfPoints;//todo delete this and calc it as sum of all points
+
+    @OneToOne
+    private Points points;
 
     @OneToOne
     User user;

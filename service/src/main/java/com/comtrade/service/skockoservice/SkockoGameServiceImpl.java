@@ -75,9 +75,8 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         if(isWinningCombination){
             int numOfPoints=numberOfPoints(submit.getAttempt());
             if (Sgame.isActive()){
-                Sgame.setNumOfPoints(numOfPoints);
+                game.getPoints().setNumOfPointsSkocko(numOfPoints);
                 Sgame.setActive(false);
-                game.setNumOfPoints(game.getNumOfPoints()+numOfPoints);
                 onePlayerGameRepository.save(game);
             }
 
