@@ -24,10 +24,14 @@ public class OnePlayerGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private boolean finished;
+
     private Integer numOfPoints;
+
     @OneToOne
     User user;
+
     @OneToOne
     SlagalicaGame slagalicaGame;
 
@@ -40,12 +44,12 @@ public class OnePlayerGame {
     @OneToOne
     KoZnaZnaGame koZnaZnaGame;
 
-    //spojnice
     @OneToOne
     SpojniceGame spojniceGame;
 
     @OneToOne
     AsocijacijaGame asocijacijaGame;
+
     public OnePlayerGame(User user){
         this.user=user;
         finished=false;

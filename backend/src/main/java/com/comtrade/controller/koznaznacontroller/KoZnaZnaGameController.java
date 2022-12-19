@@ -14,7 +14,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/koZnaZna")
 public class KoZnaZnaGameController {
-    private KoZnaZnaServiceImpl koZnaZnaService;
+    private final KoZnaZnaServiceImpl koZnaZnaService;
 
     public KoZnaZnaGameController(KoZnaZnaServiceImpl koZnaZnaService) {
         this.koZnaZnaService = koZnaZnaService;

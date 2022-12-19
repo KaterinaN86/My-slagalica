@@ -122,7 +122,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         OnePlayerGame game= gameService.getGame(principal);
         MojBrojGame MBgame=game.getMojBrojGame();
         Long gameId=MBgame.getId();
-        if(MBgame.isActive()==false){
+        if(!MBgame.isActive()){
             throw new Exception("You can submit only once");
         }
         if(!validateExpression(expression,gameId)){

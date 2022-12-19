@@ -50,6 +50,15 @@ public class DataInitializer implements CommandLineRunner {
             }
             reader.close();
         }catch (FileNotFoundException e){
+            file=new File("backend/src/main/resources/static/serbian-latin.txt");//for docker just "serbian-latin.txt"
+            Scanner reader = new Scanner(file);
+            dictionaryWords = new ArrayList<>();
+
+            while (reader.hasNextLine()) {
+                DictionaryWord word=new DictionaryWord();
+                word.setWordFromDictionary(reader.nextLine());
+                dictionaryWords.add(word);
+            }
             System.out.println("nece da ucita");
         }
 

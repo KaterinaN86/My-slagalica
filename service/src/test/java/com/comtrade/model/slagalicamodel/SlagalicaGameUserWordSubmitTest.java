@@ -83,9 +83,9 @@ class SlagalicaGameUserWordSubmitTest {
         Assertions.assertEquals(lettersForUserWord, slagalicaUserWordSubmit.getLettersForFindingTheWord());
 
         SlagalicaUserWordSubmit slagalicaUserWordSubmit2 = new SlagalicaUserWordSubmit();
-        assertEquals(null, slagalicaUserWordSubmit2.getGameId());
-        assertEquals(null, slagalicaUserWordSubmit2.getLettersForFindingTheWord());
-        assertEquals(null, slagalicaUserWordSubmit2.getUserWord());
+        assertNull(slagalicaUserWordSubmit2.getGameId());
+        assertNull(slagalicaUserWordSubmit2.getLettersForFindingTheWord());
+        assertNull(slagalicaUserWordSubmit2.getUserWord());
 
     }
 

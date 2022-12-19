@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,7 +102,7 @@ class SlagalicaGameServiceImpTest {
     void testComputersLongestWord() {
 
         String lettersForWord = "ODIŽOSIRAĐAM";
-        List<DictionaryWord> dictionaryWordList = Arrays.asList(DictionaryWord.builder().wordFromDictionary("DOS").build());
+        List<DictionaryWord> dictionaryWordList = Collections.singletonList(DictionaryWord.builder().wordFromDictionary("DOS").build());
         when(dictionaryWordRepository.findAll()).thenReturn(dictionaryWordList);
         assertEquals("DOS", slagalicaService.computersLongestWord(lettersForWord));
     }

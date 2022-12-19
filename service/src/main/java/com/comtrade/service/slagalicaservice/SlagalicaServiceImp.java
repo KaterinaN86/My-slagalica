@@ -214,7 +214,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         int computerWordlength = Optional.of(slagalicaRepository.findAll().get(0).getComputerLongestWord().length()).orElse(0);
         String modifiedChosenWord="";
         if(chosenUserWord.length()>0){
-            modifiedChosenWord= String.valueOf(chosenUserWord.charAt(0))+chosenUserWord.substring(1,chosenUserWord.length()).toLowerCase();
+            modifiedChosenWord= chosenUserWord.charAt(0) +chosenUserWord.substring(1).toLowerCase();
         }
         if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 || dictionaryWordRepository.findAllByWord(modifiedChosenWord) >= 1) {
             if(computerWordlength == chosenUserWord.length()) {
