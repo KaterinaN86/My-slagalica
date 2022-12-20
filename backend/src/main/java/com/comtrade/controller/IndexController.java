@@ -76,6 +76,11 @@ public class IndexController {
     public String spojniceIndex() {
         return "spojnice.html";
     }
+
+    @GetMapping("/pravila")
+    public String pravilaIndex() {
+        return "pravila.html";
+    }
     
     @PostMapping("/NewUser")
     public ResponseEntity<RegistrationResponse> addUser(@RequestBody UserToRegister userToRegister){

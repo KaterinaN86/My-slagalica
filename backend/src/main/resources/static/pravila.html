@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pravila Igre</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="css/pravila.css" type="text/css">
+    <script src="javascript/pravila.js"></script>
+
+</head>
+
+<body>
+<div class="header col-md-12">
+    <header >
+        <h1 align="center" ><b>Pravila igre</b></h1>
+    </header>
+</div>
+
+<div class="h2">
+    <br>
+
+    <img src="https://play-lh.googleusercontent.com/R9B_1720B4sX6Q_UL4pQfwfsm1YZ91Cal7wOHQhNJ26sgr43Qe7plsGLrNr6n7gPFQw" alt="Sova" class="center" style="margin-left: 45%">
+
+    <p align="justify"><strong><i>Dobrodošli u igru Slagalice</i></strong>, igru reči i slova, znakova i brojeva, pitanja i odgovora. U nastavku dobijate
+        informacije, odnosno instrukcije za svaku igru ponaosob kako biste sa sigurnošću znali koji je Vaš
+        cilj u igrama koje Vas očekuju. Opisana su pravila igre kao i način bodovanja ukoliko se da tačan ili
+        netačan odgovor, u zavisnosti od igre. <STRONG>Srećno!</STRONG></p>
+
+    <h2 align="center">Slagalica</h2>
+    <p align="justify">Igra slagalica je prva igra u kojoj takmičar ispred sebe dobija 12 nasumično izabranih slova pritiskom na dugme ,,Stop“. Od datih slova
+        je potrebno formirati najdužu moguću reč. Nakon što igrač sastavi svoju reč, pritiskom na ,,potvrdi“ će se ispisati
+        određen broj poena ukoliko ta reč postoji. Ukoliko odabrana reč ne postoji, igrač dobija 0 bodova.
+        Ukoliko se takmičareva reč poklapa sa onom koju je generisao kompijuter, takmičar dobija dodatnih 6 bodova.
+        Takođe, ukoliko se ne upiše ništa u polje koje je predviđeno za to, takmičar dobija 0 bodova.
+        Ako igrač pogrešno unese reč, klikom na ‚‚Izbriši“ može obrisati broj slova i uneti ih ponovo kako bi formirao
+        željenu reč. Takmičar takođe može napustiti započetu igru klikom na strelicu za povratak na dnu igre.</p>
+
+    <h2 align="center">Moj Broj</h2>
+    <p align="justify">Moj broj je igra sa brojevima. Računar nasumično bira krajnji rezultat koji treba izračunati pomoću 6
+        cifara koje su nasumično generisane. Prve četiri cifre su brojevi od 1-9, naredni broj može biti 10, 15 ili 20,
+        dok treći broj može uzimati vrednosti 50, 75 i 100.
+        Igrač ima zadatak da sastavi izraz od ponuđenih brojeva koji će biti jednak ili što bliži zadatom rezultatu.
+        Izraz satavlja kombinovanjem 6 cifara pomoću matematičkih operacija operacija - sabiranja, oduzimanja, množenja
+        i deljenja.
+        <br>
+        Nije dozvoljeno ostaviti rešenje koje nije ceo broj, takođe nije dozvoljeno deljenje brojeva kojima se dobija
+        broj koji nije prirodan (ima decimalni zarez). Za takva rešenja takmičar dobija 0 bodova.</p>
+
+    <h2 align="center">Skočko</h2>
+    <p align="justify">U ovoj igri je ponuđeno 6 znakova. Kombinacija se sastoji od 4 znaka koju generiše računar. Igrač treba da
+        pronađe rešenje kombinacije. Moguće je da se znakovi ponavljaju. Igrač ima 6 pokušaja da doše do tačnog rešenja.
+        Nakon potvrde unete kombinacije, posle svakog pokušaja, igrač dobija odgovor o broju znakova koji se nalaze na pravom mestu
+        (prikazani crvenim krugovima) i broj znakova na pogrešnim mestima (pikazani žutim krugovima). <br>
+        Ukoliko igrač ne pogodi zadatu kombinaciju posle šestog pokušaja, dobija 0 bodova. U suprotnom, ako dođe do rešenja u poslednjem
+        koraku dobija 20 bodova, a ako pogodi pre poslednjeg koraka dobija 30 bodova.</p>
+
+    <h2 align="center">Spojnice</h2>
+    <p align="justify">Spojnice su igre rečima. Sastoji se od 8 parova podeljenih u dve kolone koji se dobijaju klikom na dugme ,,Submit“. Svaka reč iz leve kolone ima svoj par u desnoj koloni.
+        Igrač treba da pogodi koja reč iz desne kolone odgovara reči iz leve kolone. Ako igrač ne spoji nijedan par, dobija 0 bodova.
+        Za svaki spojeni par dobija po 3 boda. Ukupan broj bodova koji može da osvoji za sve spojene parove je 24.
+        Ukoliko je igrač uspešno spojio jedan od parova, on će biti prikazan zelenom bojom, u suprotnom se prelazi na sledeću reč
+        i polja ostaju nepromenjena.</p>
+
+    <h2 align="center">Ko zna zna</h2>
+    <p align="justify">Igrač u ovoj igri dobija 10 pitanja. Za svako pitanje dobija 4 ponuđena odgovora od kojih je samo jedan tačan.
+        Kada završi sa prvim pitanjem klikom na dugme ,,Next“ prelazi na sledeće pitanje. Ako igrač ne da nijedan tačan
+        odgovor, dobija 0 bodova. Za svaki tačan odgovor dobija se 3 boda, dok se za netačan odgovor dobija -1 bod. <br>
+        Kada završi sa svih 10 pitanja, klikom na dugme ,,Finish the game“ potvrđuje se da je igra završena prilikom
+        čega se takmičaru prikazuje broj osvojenih bodova. </p>
+
+    <h2 align="center">Asocijacije</h2>
+    <p align="justify">Igra asocijacije sastoji se od četiri kolone sa po četiri polja i konačnim rešenjem za svaku kolonu, kao i
+        krajnjeg rešenja cele asocijacije. Igrač otvara polje klikom na njega i time stiče pravo da pogaša rešenje za kolonu iz
+        koje je otvoreno polje. U slučaju da su otvorena i polja iz drugih kolona, igrač ima pravo da pogađa rešenja i za te kolone,
+        kao i krajnje rešenje asocijacije. <br>
+        Kao rešenje se prihvataju samo reči koje su istog oblika kao tražena reč. <br> Na primer: Ako je rešenje neke kolone
+        ,,Kuća“, igrač mora da unese istu reč da bi se odgovor prihvatio.<br>
+        Kada se otvori neko polje, igraču se oduzima 0.25 boda po otvorenom polju. Za svaku rešenu kolonu dobija 5 bodova, a
+        za krajnje rešenje asocijacije dobija 10 bodova. <br> Ako igrač ne reši ništa, dobija 0 bodova.</p>
+
+
+    <p>Jedna partija je završena tek kada igrač odigra svaku od postojećih igara, nakon toga može započeti novu igru, dok mu se
+        bodovi završene igre upisuju i čuvaju u rang listi. Kroz rang listu, igrač može da prati svoj napredak upoređivanjem ostvarenog
+        broja bodova. </p>
+
+    <h2 align="center">Rang Lista</h2>
+    <p>Rang lista predstavlja listu sa svim igračima koji su u nekom trenutku igrali igre i ostvarili neki rezultat.
+        U rang listi je prikazano ime igrača kao i njegov ostvaren broj bodova u jednoj igri. Igrači se rangiraju u listi
+        po broju ostvarenih bodova. Igrač sa više bodova zauzaće veću poziciju na listi.</p>
+</div>
+
+</body>
+
