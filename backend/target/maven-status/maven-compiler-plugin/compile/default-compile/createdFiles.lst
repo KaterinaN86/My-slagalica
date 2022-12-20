@@ -1,0 +1,15 @@
+com\comtrade\controller\mojbrojcontroller\MojBrojControler.class
+com\comtrade\bootstrap\DataInitializer$1.class
+com\comtrade\BackendApplication.class
+com\comtrade\controller\skockocontroller\SkockoGameController.class
+com\comtrade\bootstrap\DataInitializer.class
+com\comtrade\controller\asocijacijacontroller\AsocijacijaController.class
+com\comtrade\security\SecurityConfiguration.class
+com\comtrade\controller\koznaznacontroller\KoZnaZnaGameController.class
+com\comtrade\controller\Gamecontroler.class
+com\comtrade\controller\spojnicecontroller\SpojniceController.class
+com\comtrade\controller\slagalicacontroller\SlagalicaController.class
+com\comtrade\controller\IndexController.class
+com\comtrade\controller\koznaznacontroller\QuestionController.class
+com\comtrade\security\MyUserDetailService.class
+com\comtrade\security\MyUserDetails.class

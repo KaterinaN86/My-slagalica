@@ -59,8 +59,8 @@ class DictionaryWordTest {
 
         // No args constructor
         DictionaryWord dictionaryWord2 = new DictionaryWord();
-        assertEquals(null, dictionaryWord2.getId());
-        assertEquals(null, dictionaryWord2.getWordFromDictionary());
+        assertNull(dictionaryWord2.getId());
+        assertNull(dictionaryWord2.getWordFromDictionary());
 
     }
 

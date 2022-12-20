@@ -12,10 +12,10 @@ import java.util.ArrayList;
 public interface MojBrojService {
     MojBrojGame getGame(Principal principal) throws Exception;
     MojBrojGame createNewGame();
-    MojBrojGame createNewGame(Long id, ArrayList<Integer> nums,Boolean isActive,String solution, Integer numOfPoints);
+    MojBrojGame createNewGame(Long id, ArrayList<Integer> nums,Boolean isActive,String solution);
     boolean validateExpression(String expr, long gameId);
     Integer eval(String expr) throws ScriptException;
-    public Integer userSolutionDiff(String expression, Principal principal) throws Exception;
+    Integer userSolutionDiff(String expression, Principal principal) throws Exception;
     String getSolution(Principal principal) throws Exception;
     MojBrojSubmitResponse submit(MojBrojSubmitRequest request, Principal principal);
 

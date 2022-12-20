@@ -24,10 +24,10 @@ public class AsocijacijaController {
         return asocijacijaService.createNewAsocijacijaGame(principal);
     }
 
-    @GetMapping("/asocijacija/{gameId}/getField/{fieldName}")
+    @GetMapping("/asocijacija/getField/{fieldName}")
     @CrossOrigin
-    public ResponseEntity<Response> getFieldValue(@PathVariable Long gameId, @PathVariable String fieldName) {
-        return asocijacijaService.getValueOfSpecificField(gameId, fieldName);
+    public ResponseEntity<Response> getFieldValue(@PathVariable String fieldName, Principal principal) {
+        return asocijacijaService.getValueOfSpecificField(fieldName, principal);
     }
 
     @PostMapping("/asocijacija/submitWord")

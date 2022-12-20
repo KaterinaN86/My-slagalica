@@ -14,7 +14,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/koZnaZna")
 public class KoZnaZnaGameController {
-    private KoZnaZnaServiceImpl koZnaZnaService;
+    private final KoZnaZnaServiceImpl koZnaZnaService;
 
     public KoZnaZnaGameController(KoZnaZnaServiceImpl koZnaZnaService) {
         this.koZnaZnaService = koZnaZnaService;
@@ -38,13 +38,13 @@ public class KoZnaZnaGameController {
     }
 
     @PostMapping("/submitQuestion")
-    public ResponseEntity<Response> submitQuestion(@RequestBody SubmitQuestion submitQuestion){
-        return koZnaZnaService.checkSubmitedQuestion(submitQuestion.getGameId(), submitQuestion.getQuestionIndex(), submitQuestion.getQuestionId(), submitQuestion.getSelectedQuestion());
+    public ResponseEntity<Response> submitQuestion(@RequestBody SubmitQuestion submitQuestion, Principal principal) throws Exception {
+        return koZnaZnaService.checkSubmitedQuestion(submitQuestion.getGameId(), submitQuestion.getQuestionIndex(), submitQuestion.getQuestionId(), submitQuestion.getSelectedQuestion(),principal);
     }
 
-    @GetMapping("/numberOfPoints/{gameId}")
-    public Integer getNumberOfPoints(@PathVariable Long gameId){
-        return koZnaZnaService.getNumberOfPoints(gameId);
+    @GetMapping("/numberOfPoints")
+    public Integer getNumberOfPoints(Principal principal) throws Exception {
+        return koZnaZnaService.getNumberOfPoints(principal);
     }
 
     @PutMapping("/nextQuestion")

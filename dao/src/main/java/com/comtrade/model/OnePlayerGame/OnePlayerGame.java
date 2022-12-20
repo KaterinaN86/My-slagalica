@@ -1,5 +1,7 @@
 package com.comtrade.model.OnePlayerGame;
 
+import com.comtrade.model.Games;
+import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.AsocijacijaGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
@@ -24,30 +26,23 @@ public class OnePlayerGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private boolean finished;
-    private Integer numOfPoints;
+
+    private Integer numOfPoints;//todo delete this and calc it as sum of all points
+
+    @OneToOne
+    private Points points;
+
     @OneToOne
     User user;
-    @OneToOne
-    SlagalicaGame slagalicaGame;
 
     @OneToOne
-    MojBrojGame mojBrojGame;
+    Games games;
 
-    @OneToOne
-    SkockoGame skockoGame;
-
-    @OneToOne
-    KoZnaZnaGame koZnaZnaGame;
-
-    //spojnice
-    @OneToOne
-    SpojniceGame spojniceGame;
-
-    @OneToOne
-    AsocijacijaGame asocijacijaGame;
-    public OnePlayerGame(User user){
+    public OnePlayerGame(User user,Games games){
         this.user=user;
+        this.games=games;
         finished=false;
         numOfPoints=0;
     }

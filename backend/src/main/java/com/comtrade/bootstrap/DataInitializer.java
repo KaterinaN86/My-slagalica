@@ -13,12 +13,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Slf4j
 @Component
@@ -35,17 +34,34 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        String currentPath = new java.io.File(".").getCanonicalPath();
+        System.out.println("Current dir:" + currentPath);
+        File file=null;
+        List<DictionaryWord> dictionaryWords=new ArrayList<>();
+        try {
+            file=new File("serbian-latin.txt");//for docker just "serbian-latin.txt"
+            Scanner reader = new Scanner(file);
+            dictionaryWords = new ArrayList<>();
 
-        File file = ResourceUtils.getFile("classpath:static/serbian-latin.txt");
-        List<String> wordDictionary = Files.readAllLines(file.toPath());
-        List<DictionaryWord> dictionaryWords = new ArrayList<>();
+            while (reader.hasNextLine()) {
+                DictionaryWord word=new DictionaryWord();
+                word.setWordFromDictionary(reader.nextLine());
+                dictionaryWords.add(word);
+            }
+            reader.close();
+        }catch (FileNotFoundException e){
+            file=new File("backend/src/main/resources/static/serbian-latin.txt");//for docker just "serbian-latin.txt"
+            Scanner reader = new Scanner(file);
+            dictionaryWords = new ArrayList<>();
 
-        for(int i = 1; i < wordDictionary.size(); i++) {
-            dictionaryWords.add(DictionaryWord.builder().wordFromDictionary(wordDictionary.get(i)).build());
+            while (reader.hasNextLine()) {
+                DictionaryWord word=new DictionaryWord();
+                word.setWordFromDictionary(reader.nextLine());
+                dictionaryWords.add(word);
+            }
+            System.out.println("load from local");
         }
 
-        dictionaryWordRepository.deleteAll();
-        dictionaryWordRepository.flush();
 
         dictionaryWordRepository.saveAll(dictionaryWords);
         log.info("Dictionary words saved");

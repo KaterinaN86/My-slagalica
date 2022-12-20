@@ -1,11 +1,13 @@
 package com.comtrade.service.asocijacijaservice;
 
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.*;
+import com.comtrade.repository.PointsRepository;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
-import com.comtrade.repository.gamerepository.Gamerepository;
-import com.comtrade.service.gameservice.GameServiceImpl;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
+import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +22,17 @@ import java.util.*;
 public class AsocijacijaServiceImpl {
     private final AsocijacijaRepository asocijacijaRepository;
     private final WordRepository wordRepository;
+    private final PointsRepository pointsRepository;
 
     @Autowired
-    private GameServiceImpl gameService;
+    private OnePlayerOnePlayerGameServiceImpl gameService;
 
-    private final Gamerepository gamerepository;
-    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, Gamerepository gamerepository) {
+    private final OnePlayerGameRepository onePlayerGameRepository;
+    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, PointsRepository pointsRepository, OnePlayerGameRepository onePlayerGameRepository) {
         this.asocijacijaRepository = asocijacijaRepository;
         this.wordRepository = wordRepository;
-        this.gamerepository = gamerepository;
+        this.pointsRepository = pointsRepository;
+        this.onePlayerGameRepository = onePlayerGameRepository;
     }
     private WordModel getRandomWordModel() throws NoSuchElementException{
         int randomId = (int)(Math.floor((Math.random()*wordRepository.count()+1)));
@@ -52,11 +56,11 @@ public class AsocijacijaServiceImpl {
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
             asocijacijaRepository.save(asocijacijaGame);
-            if (game.getAsocijacijaGame()==null){
-                game.setAsocijacijaGame(asocijacijaGame);
-                gamerepository.save(game);
+            if (game.getGames().getAsocijacijaGame()==null){
+                game.getGames().setAsocijacijaGame(asocijacijaGame);
+                onePlayerGameRepository.save(game);
             }
-            AsocijacijaGame savedAsocijacijaGame = game.getAsocijacijaGame();
+            AsocijacijaGame savedAsocijacijaGame = game.getGames().getAsocijacijaGame();
             log.info("Asocijacija game instance with id: " + savedAsocijacijaGame.getId() + " created.");
             return ResponseEntity.ok()
                     .body(new ResponseWithGameId(savedAsocijacijaGame.getId()));
@@ -86,9 +90,12 @@ public class AsocijacijaServiceImpl {
         return optionalAsocijacijaGame.get();
     }
 
-    public ResponseEntity<Response> getValueOfSpecificField(Long gameId, String fieldName){
+    public ResponseEntity<Response> getValueOfSpecificField(String fieldName,Principal principal){
         try{
-            AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
+            OnePlayerGame onePlayerGame = gameService.getGame(principal);
+            Points points=onePlayerGame.getPoints();
+            AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
+            long gameId=asocijacijaGame.getId();
             boolean isGameActive = asocijacijaGame.isActive();
             String fieldNameUpperCase = fieldName.toUpperCase();
 
@@ -98,13 +105,16 @@ public class AsocijacijaServiceImpl {
                 return ResponseEntity.status(403).build();
             }else{
                 log.info("Returning value of field: " + fieldName + " for game id: " + gameId);
-                asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() - 0.25);
+                points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() - 0.25);
+                //asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() - 0.25);
                 asocijacijaRepository.save(asocijacijaGame);
                 return ResponseEntity.ok()
                         .body(new ResponseWithFieldValue(findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase)));
             }
         }catch (NoSuchElementException | IndexOutOfBoundsException ex){
-            log.info("Returning value of field: " + fieldName + " for game id: " + gameId + " failed.");
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.info("principal error");
             return ResponseEntity.notFound().build();
         }
     }
@@ -153,18 +163,20 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord, Principal principal){
         try{
-            AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
+            OnePlayerGame onePlayerGame = gameService.getGame(principal);
+            AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
+            Points points = onePlayerGame.getPoints();
             String submittedWordUpperCase = submittedWord.toUpperCase();
             String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
             log.info("Checking submit for game id: " + gameId);
             if(submittedWordUpperCase.equals(referenceWordUpperCase)){
                 if(fieldName.contains("final")){
                     asocijacijaGame.setActive(false);
-                    asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() + 10);
-                    asocijacijaRepository.save(asocijacijaGame);
+                    points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 10);
+                    pointsRepository.save(points);
                 }else{
-                    asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() + 5);
-                    asocijacijaRepository.save(asocijacijaGame);
+                    points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 5);
+                    pointsRepository.save(points);
                 }
                 return ResponseEntity.ok()
                         .body(new ResponseWithBoolean(true));
@@ -185,20 +197,20 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getNumberOfPoints(Long gameId, Principal principal){
         try{
-            AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
-            OnePlayerGame game=gameService.getGame(principal);
-            if(asocijacijaGame.getNumOfPoints()<0){
-                asocijacijaGame.setNumOfPoints(0);
+            OnePlayerGame onePlayerGame = gameService.getGame(principal);
+            AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
+            Points points = onePlayerGame.getPoints();
+            if(points.getNumOfPointsAsocijacije()<0){
+                points.setNumOfPointsAsocijacije(0);
             }
             else {
-                asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
+                points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 4);
             }
             asocijacijaRepository.save(asocijacijaGame);
-            game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
-            gamerepository.save(game);
+            pointsRepository.save(points);
             if(!asocijacijaGame.isActive()){
                 return ResponseEntity.ok()
-                        .body(new ResponseWithNumberOfPoints(asocijacijaGame.getNumOfPoints()));
+                        .body(new ResponseWithNumberOfPoints(points.getNumOfPointsAsocijacije()));
             }else{
                 log.info("Forbidden request for number of points:" + "- game with id: " + gameId+ " still active.");
                 return ResponseEntity.status(403).build();
@@ -211,19 +223,20 @@ public class AsocijacijaServiceImpl {
     }
 
     public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
-        OnePlayerGame game=gameService.getGame(principal);
-        AsocijacijaGame asocijacijaGame=game.getAsocijacijaGame();
+        OnePlayerGame game = gameService.getGame(principal);
+        AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
+        Points points = game.getPoints();
         asocijacijaGame.setActive(false);
-        if(asocijacijaGame.getNumOfPoints()<=0){
-            asocijacijaGame.setNumOfPoints(0);
+        if(points.getNumOfPointsAsocijacije()<=0){
+            points.setNumOfPointsAsocijacije(0);
         }
         else {
-            asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
+            points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 4);
+            //asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
         }
-        log.info("Number of points for Asocijacije game: "+asocijacijaGame.getNumOfPoints());
-        game.setNumOfPoints((int) (game.getNumOfPoints()+asocijacijaGame.getNumOfPoints()));
-        gamerepository.save(game);
-        asocijacijaRepository.save(asocijacijaGame);
+        log.info("Number of points for Asocijacije game: "+ points.getNumOfPointsAsocijacije());
+        onePlayerGameRepository.save(game);
+        pointsRepository.save(points);
         return ResponseEntity.ok().build();
     }
 }

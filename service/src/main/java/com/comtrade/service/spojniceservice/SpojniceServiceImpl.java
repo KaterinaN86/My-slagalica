@@ -3,13 +3,12 @@ package com.comtrade.service.spojniceservice;
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.spojnicemodel.PairsModel;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
-import com.comtrade.repository.gamerepository.Gamerepository;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.spojnicerepository.PairsRepository;
 import com.comtrade.repository.spojnicerepository.SpojniceRepository;
-import com.comtrade.service.gameservice.GameServiceImpl;
+import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -21,13 +20,13 @@ public class SpojniceServiceImpl implements SpojniceService{
 
     private final SpojniceRepository spojniceRepository;
     private final PairsRepository pairsRepository;
-    private final Gamerepository gamerepository;
-    private final GameServiceImpl gameService;
+    private final OnePlayerGameRepository onePlayerGameRepository;
+    private final OnePlayerOnePlayerGameServiceImpl gameService;
 
-    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, Gamerepository gamerepository, GameServiceImpl gameService) {
+    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, OnePlayerGameRepository onePlayerGameRepository, OnePlayerOnePlayerGameServiceImpl gameService) {
         this.spojniceRepository = spojniceRepository;
         this.pairsRepository = pairsRepository;
-        this.gamerepository = gamerepository;
+        this.onePlayerGameRepository = onePlayerGameRepository;
         this.gameService = gameService;
     }
 
@@ -85,12 +84,12 @@ public class SpojniceServiceImpl implements SpojniceService{
     @Override
     public SpojniceGame getGame(Principal principal) throws Exception {
         OnePlayerGame game = gameService.getGame(principal);
-        if(game.getSpojniceGame()!=null){
-            return game.getSpojniceGame();
+        if(game.getGames().getSpojniceGame()!=null){
+            return game.getGames().getSpojniceGame();
         }else{
             SpojniceGame spojniceGame= createNewSpojniceGame(principal);
-            game.setSpojniceGame(spojniceGame);
-            gamerepository.save(game);
+            game.getGames().setSpojniceGame(spojniceGame);
+            onePlayerGameRepository.save(game);
             return spojniceGame;
         }
     }
@@ -126,19 +125,18 @@ public class SpojniceServiceImpl implements SpojniceService{
     }
 
     public Integer getNumberOfPoints(Principal principal, String json) throws Exception {
-
+        OnePlayerGame onePlayerGame = gameService.getGame(principal);
         SpojniceGame spojniceGame = getGame(principal);
         if (!spojniceGame.isActive()){
-            return spojniceGame.getPoints();
+            return onePlayerGame.getPoints().getNumOfPointsSpojnice();
         }
         Integer points=calcPoints(spojniceGame, json);
-        spojniceGame.setPoints(points);
         OnePlayerGame game=gameService.getGame(principal);
-        game.setNumOfPoints(game.getNumOfPoints()+points);
+        game.getPoints().setNumOfPointsSpojnice(points);
         spojniceGame.setActive(false);
         spojniceRepository.save(spojniceGame);
 
-        return spojniceGame.getPoints();
+        return onePlayerGame.getPoints().getNumOfPointsSpojnice();
     }
 
 

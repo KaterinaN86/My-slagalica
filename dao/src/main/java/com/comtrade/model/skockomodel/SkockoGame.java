@@ -22,11 +22,9 @@ public class SkockoGame {
     private List<Integer> combination = new ArrayList<>();
 
     private boolean isActive;
-    private int numOfPoints;
 
     public SkockoGame() {
         isActive=true;
-        numOfPoints=0;
         generateNewCombination();
     }
 

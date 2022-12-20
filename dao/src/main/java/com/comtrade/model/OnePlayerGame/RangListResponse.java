@@ -9,6 +9,6 @@ public class RangListResponse {
 
     public RangListResponse(OnePlayerGame onePlayerGame) {
         this.userName=onePlayerGame.user.getUserName();
-        this.numberOfPoints=onePlayerGame.getNumOfPoints();
+        this.numberOfPoints=onePlayerGame.getPoints().getSumOfPoints();
     }
 }

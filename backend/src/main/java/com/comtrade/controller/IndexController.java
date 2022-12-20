@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.security.Principal;
 
 @Controller
 public class IndexController {
@@ -22,10 +21,12 @@ public class IndexController {
     public String login(){
         return "login.html";
     }
+
     @GetMapping("/register")
     public String register(){
         return "register.html";
     }
+
     @GetMapping({"","/","/home"})
     public String homePage(){
         return "homePage.html";
@@ -35,7 +36,6 @@ public class IndexController {
     public String onePlayer(){
         return "chooseGameOnePlayer.html";
     }
-
 
     @GetMapping("TwoPlayers")
     public String TwoPlayers(){
@@ -51,22 +51,27 @@ public class IndexController {
     public String SkockoIndex(){
         return "skocko.html";
     }
+
     @RequestMapping("/slagalica")
     public String showGame() {
         return "slagalica.html";
     }
+
     @RequestMapping("/MojBroj")
     public String mojBrojIndex(){
         return "mojbroj.html";
     }
+
     @RequestMapping("/asocijacija")
     public String asocijacijaIndex() {
         return "asocijacija.html";
     }
+
     @RequestMapping("/koZnaZna")
     public String koZnaZnaIndex() {
         return "koznazna.html";
     }
+
     @GetMapping("/spojnice")
     public String spojniceIndex() {
         return "spojnice.html";

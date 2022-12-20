@@ -25,20 +25,17 @@ public class MojBrojGame {
     private List<Integer> numbers=new ArrayList<>();
     private boolean isActive;
     private String solution;
-    private Integer numOfPoints;
 
     public MojBrojGame() {
         isActive=true;
-        this.numOfPoints=0;
         initializeRandom();
     }
 
-    public MojBrojGame(Long id, ArrayList<Integer> numbers, boolean isActive, String solution, int numOfPoints) {
+    public MojBrojGame(Long id, ArrayList<Integer> numbers, boolean isActive, String solution) {
         this.id = id;
         this.numbers = numbers;
         this.isActive = isActive;
         this.solution=solution;
-        this.numOfPoints=numOfPoints;
     }
     public void initializeRandom(){
         numbers.clear();
