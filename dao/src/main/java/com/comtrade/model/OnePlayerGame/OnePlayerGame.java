@@ -29,8 +29,6 @@ public class OnePlayerGame {
 
     private boolean finished;
 
-    private Integer numOfPoints;//todo delete this and calc it as sum of all points
-
     @OneToOne
     private Points points;
 
@@ -44,7 +42,6 @@ public class OnePlayerGame {
         this.user=user;
         this.games=games;
         finished=false;
-        numOfPoints=0;
     }
 
 }

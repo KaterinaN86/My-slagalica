@@ -72,8 +72,8 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
 
     @Override
     public List<OnePlayerGame> getTopTen() {
-        ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) onePlayerGameRepository.findByFinishedTrueOrderByNumOfPointsDesc();
-        return  lisOfGames;
+        ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) onePlayerGameRepository.findAllOrderedBySumOfPoints();
+        return lisOfGames;
     }
 
     public void finishedGame(Principal principal) throws Exception {
