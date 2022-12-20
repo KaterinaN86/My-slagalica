@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded",()=>{handleNewGame()})
+//document.addEventListener("DOMContentLoaded",()=>{handleNewGame()})
 var gameId;
 var numbers;
 function handleNewGame(){
@@ -68,3 +68,18 @@ async function submit(){
             console.log(error)
         }
 }
+const startTimer=function(){
+    let time=100;
+    const timerInterval=setInterval(function(){
+        const min = String(Math.trunc(time/60)).padStart(2,0);
+        const sec=String(time%60).padStart(2,0);
+        timer.textContent=`${min} : ${sec}`;
+        if(time === 0){
+            clearInterval(timerInterval);
+        }
+        time--;
+    },1000)
+    handleNewGame()
+}
+
+window.onload = startTimer();

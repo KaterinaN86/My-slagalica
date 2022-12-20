@@ -2,8 +2,10 @@ document.addEventListener("DOMContentLoaded",()=>{init()})
 
 let dataForSubmit = {}
 let selectedLeftBtn = null;
+var timer=document.getElementById("timer");
 
 function init() {
+    startTimer();
     document.getElementById("exitBtn").addEventListener("click",()=>{
         window.location.href="/OnePlayer"
     })
@@ -70,4 +72,17 @@ function submitData(event){
     }).catch((error) => {
         console.log(error)
     });
+}
+
+const startTimer=function(){
+    let time=90;
+    const timerInterval=setInterval(function(){
+        const min = String(Math.trunc(time/60)).padStart(2,0);
+        const sec=String(time%60).padStart(2,0);
+        timer.textContent=`${min} : ${sec}`;
+        if(time === 0){
+            clearInterval(timerInterval);
+        }
+        time--;
+    },1000)
 }

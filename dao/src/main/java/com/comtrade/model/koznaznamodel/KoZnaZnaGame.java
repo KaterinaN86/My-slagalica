@@ -4,6 +4,7 @@ import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
