@@ -66,8 +66,8 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public MojBrojGame createNewGame(Long id, ArrayList<Integer> nums, Boolean isActive, String solution,Integer numOfPoints){
-        MojBrojGame game=new MojBrojGame(id,nums,isActive, solution,numOfPoints);
+    public MojBrojGame createNewGame(Long id, ArrayList<Integer> nums, Boolean isActive, String solution){
+        MojBrojGame game=new MojBrojGame(id,nums,isActive, solution);
         mojBrojRepository.save(game);
         return game;
     }

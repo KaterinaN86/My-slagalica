@@ -58,28 +58,15 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         OnePlayerGame game=getGame(principal);
         OnePlayerInitResponse response=new OnePlayerInitResponse();
         response.setMsg("");
+
         response.setNumOfPointsSum(game.getPoints().getSumOfPoints());
-        if (game.getGames().getMojBrojGame()!=null){
-            response.setNumOfPointsMojBroj(game.getGames().getMojBrojGame().getNumOfPoints());
-        }
-        if (game.getGames().getSlagalicaGame()!=null){
-            response.setNumOfPointsSlagalica(game.getGames().getSlagalicaGame().getNumOfPoints());
-        }if(game.getGames().getSpojniceGame() != null){
-            response.setNumOfPointsSpojnice(game.getGames().getSpojniceGame().getPoints());
-        }
-        if(game.getGames().getSkockoGame() != null) {
-            response.setNumOfPointsSkocko(game.getGames().getSkockoGame().getNumOfPoints());
-        }
-        if(game.getGames().getKoZnaZnaGame() != null) {
-            response.setNumOfPointsKoZnaZna(game.getGames().getKoZnaZnaGame().getNumOfPoints());
-        }
-        if(game.getGames().getSpojniceGame()!= null) {
-            response.setNumOfPointsSpojnice(game.getGames().getSpojniceGame().getPoints());
-				}
-        if(game.getGames().getAsocijacijaGame() != null){
-            response.setNumOfPointsAsocijacija((int) game.getGames().getAsocijacijaGame().getNumOfPoints());
-        }
-        response.setNumOfPointsMojBroj(game.getPoints().getNumOfPointsMojBroj());//todo do this for all games
+
+        response.setNumOfPointsSlagalica(game.getPoints().getNumOfPointsSlagalica());
+        response.setNumOfPointsMojBroj(game.getPoints().getNumOfPointsMojBroj());
+        response.setNumOfPointsSkocko(game.getPoints().getNumOfPointsSkocko());
+        response.setNumOfPointsSpojnice(game.getPoints().getNumOfPointsSpojnice());
+        response.setNumOfPointsKoZnaZna(game.getPoints().getNumOfPointsKoZnaZna());
+        response.setNumOfPointsAsocijacija((int)game.getPoints().getNumOfPointsAsocijacije());
         return response;
     }
 

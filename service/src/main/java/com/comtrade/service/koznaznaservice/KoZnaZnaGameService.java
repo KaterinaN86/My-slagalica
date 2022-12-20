@@ -18,8 +18,8 @@ public interface KoZnaZnaGameService {
     Integer getCurrentQuestionIndex(Long id);
     List<Question> getListOfQuestionsById(Long id);
     KoZnaZnaGame getGame(Long id);
-    ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion);
-    Integer getNumberOfPoints(Long gameId);
+    ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws Exception;
+    Integer getNumberOfPoints(Principal principal) throws Exception;
     ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion);
     ResponseEntity<Response> finishGame( Principal principal) throws Exception;
 }

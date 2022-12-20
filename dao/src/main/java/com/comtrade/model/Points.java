@@ -25,15 +25,15 @@ public class Points {
     int numOfPointsSkocko=0;
     int numOfPointsSpojnice=0;
     int numOfPointsKoZnaZna=0;
-    int numOfPointsAsocijacije=0;
+    double numOfPointsAsocijacije=0;
 
     public int getSumOfPoints(){
-        return numOfPointsSlagalica+
+        return (int)(numOfPointsSlagalica+
                 numOfPointsMojBroj+
                 numOfPointsSkocko+
                 numOfPointsSpojnice+
                 numOfPointsKoZnaZna+
-                numOfPointsAsocijacije;
+                numOfPointsAsocijacije);
     }
 
 }

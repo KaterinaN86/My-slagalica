@@ -20,7 +20,6 @@ public class KoZnaZnaGame {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Question> questions;
 
-    private int numOfPoints;
 
     private boolean isActiveGame;
 

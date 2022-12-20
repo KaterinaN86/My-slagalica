@@ -91,7 +91,8 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
             return existingGame.isPresent() ? existingGame.get() : null;
         }
 
-        public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion) {
+        public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws Exception {
+            OnePlayerGame onePlayerGame = gameService.getGame(principal);
             KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
 
             Optional<Question> existingQuestion = questionRepository.findById(questionId);
@@ -105,9 +106,11 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
             }
             else {
                 if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
-                    koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()+3);
+                    onePlayerGame.getPoints().setNumOfPointsKoZnaZna(onePlayerGame.getPoints().getNumOfPointsKoZnaZna()+3);
+                    //koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()+3);
                 } else if (!selectedQuestion.equals(0)) {
-                    koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()-1);
+                    onePlayerGame.getPoints().setNumOfPointsKoZnaZna(onePlayerGame.getPoints().getNumOfPointsKoZnaZna()-1);
+                    //koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()-1);
                 }
                 koZnaZnaRepository.save(koZnaZnaGame);
                 log.info("The submit button is clicked and the correct answer is displayed!");
@@ -117,9 +120,9 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public Integer getNumberOfPoints(Long gameId) {
-        KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
-        return koZnaZnaGame.getNumOfPoints();
+    public Integer getNumberOfPoints(Principal principal) throws Exception {
+        OnePlayerGame onePlayerGame=gameService.getGame(principal);
+        return onePlayerGame.getPoints().getNumOfPointsKoZnaZna();
     }
 
     @Override
@@ -143,7 +146,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
         koZnaZnaGame.setFinishedGame(true);
         koZnaZnaGame.setActiveGame(false);
-        game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());
+        //game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());
         onePlayerGameRepository.save(game);
         koZnaZnaRepository.save(koZnaZnaGame);
         return ResponseEntity.ok().build();

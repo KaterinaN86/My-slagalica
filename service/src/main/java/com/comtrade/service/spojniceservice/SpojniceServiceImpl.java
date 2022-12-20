@@ -125,10 +125,10 @@ public class SpojniceServiceImpl implements SpojniceService{
     }
 
     public Integer getNumberOfPoints(Principal principal, String json) throws Exception {
-
+        OnePlayerGame onePlayerGame = gameService.getGame(principal);
         SpojniceGame spojniceGame = getGame(principal);
         if (!spojniceGame.isActive()){
-            return spojniceGame.getPoints();
+            return onePlayerGame.getPoints().getNumOfPointsSpojnice();
         }
         Integer points=calcPoints(spojniceGame, json);
         OnePlayerGame game=gameService.getGame(principal);
@@ -136,7 +136,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         spojniceGame.setActive(false);
         spojniceRepository.save(spojniceGame);
 
-        return spojniceGame.getPoints();
+        return onePlayerGame.getPoints().getNumOfPointsSpojnice();
     }
 
 
