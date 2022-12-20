@@ -1,0 +1,53 @@
+body {
+background: #333366;
+font-family: "Times New Roman", Times, serif;
+line-height: 1.5em;
+width: 100%;
+background-color: #4492f1;
+opacity: 0.9;
+background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #4492f1 26px ), repeating-linear-gradient( #0d149555, #0d1495 );
+}
+
+header {
+background-color:  #b3b3cc;
+color: white;
+height: 70px;
+width: 70%;
+margin-left: 270px;
+border-radius: 15px;
+margin-top: 40px;
+font-size: large;
+}
+
+.h2 {
+margin-top: 30px;
+background: #d9dad7;
+width: 68.5%;
+margin-left: 290px;
+border-radius: 15px;
+
+}
+
+p {
+font-size: large;
+align: justify;
+margin: 30px;
+
+}
+
+img {
+height: 10%;
+width: 10%;
+border-radius: 50%;
+display: block;
+margin-left: auto;
+margin-right: auto;
+}
+
+
+
+
+
+
+
+
