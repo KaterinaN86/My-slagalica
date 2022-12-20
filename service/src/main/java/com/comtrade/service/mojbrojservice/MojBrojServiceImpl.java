@@ -147,7 +147,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         try {
             diff = userSolutionDiff(request.getExpression(), principal);
         } catch (Exception e) {
-            return new MojBrojSubmitResponse(e.getMessage(), "", 0);
+            return new MojBrojSubmitResponse(e.getMessage(), "", 0, 0);
         }
 
         Integer numOfPoints=0;
@@ -164,15 +164,18 @@ public class MojBrojServiceImpl implements MojBrojService{
         }
         String solution = null;
         OnePlayerGame game=null;
+        String msg = "";
+        int result = 0;
         try {
             solution = getSolution(principal);
             game=gameService.getGame(principal);
+            result = eval(request.getExpression());
         } catch (Exception e) {
-            new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints);
+            new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);
         }
         game.getPoints().setNumOfPointsMojBroj(numOfPoints);
         onePlayerGameRepository.save(game);
 
-        return new MojBrojSubmitResponse("", solution, numOfPoints);
+        return new MojBrojSubmitResponse(msg, solution, numOfPoints, result);
     }
 }

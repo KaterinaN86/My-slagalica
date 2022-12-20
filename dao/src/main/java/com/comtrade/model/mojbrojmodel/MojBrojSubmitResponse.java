@@ -11,4 +11,5 @@ public class MojBrojSubmitResponse {
     String msg;
     String solution;
     Integer numOfPoints;
+    Integer result;
 }

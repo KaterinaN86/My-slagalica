@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded",()=>{handleNewGame()})
 var gameId;
 var numbers;
+var expressionList = [];
 function handleNewGame(){
     fetch('http://' + window.location.host + '/MojBroj/Init')
         .then(
@@ -21,13 +22,16 @@ function handleNewGame(){
                         elems[i].innerText=numbers[i+1].toString()
                         elems[i].addEventListener("click",(event)=>{
                             userExpression.innerText+=event.target.innerText
+                            expressionList.push(event.target.innerText)
                         })
                         elems1[i].addEventListener("click",(event)=>{
                             userExpression.innerText+=event.target.innerText
+                            expressionList.push(event.target.innerText)
                         })
                     }
                     document.getElementById("btnDelete").addEventListener("click",()=>{
-                        userExpression.innerText=userExpression.innerText.slice(0,userExpression.innerText.length-1)
+                        elm = expressionList.pop();
+                        userExpression.innerText = userExpression.innerText.slice(0, userExpression.innerText.length - elm.length)
                     })
                     document.getElementById("btnSubmit").addEventListener("click",submit)
                 });
@@ -57,7 +61,7 @@ async function submit(){
                 const data = await response.json();
                 document.getElementById("solution").innerText=data.solution
                 if(data.msg==""){
-                    alert("Osvojili ste "+data.numOfPoints+" poena")
+                    alert("Osvojili ste "+data.numOfPoints+" poena\n Vas rezultat je: " + data.result)
                 }
                 else{
                     alert(data.msg)
