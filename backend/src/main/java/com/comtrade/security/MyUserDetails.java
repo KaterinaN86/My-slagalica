@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
 
-    private String userName;
-    private String password;
-    private List<GrantedAuthority> authorities;
-    private Boolean active;
+    private final String userName;
+    private final String password;
+    private final List<GrantedAuthority> authorities;
+    private final Boolean active;
 
     public MyUserDetails(User user){
         this.userName=user.getUserName();
@@ -28,7 +28,7 @@ public class MyUserDetails implements UserDetails {
         this.userName=userName;
         this.password="pass";
         this.active=true;
-        this.authorities=Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        this.authorities= List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
 

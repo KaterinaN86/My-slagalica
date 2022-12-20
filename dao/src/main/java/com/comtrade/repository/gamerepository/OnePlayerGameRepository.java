@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface Gamerepository extends JpaRepository<OnePlayerGame,Long> {
+public interface OnePlayerGameRepository extends JpaRepository<OnePlayerGame,Long> {
 
     List<OnePlayerGame> findAllByUserUserNameAndFinishedFalse(String userName);
     List<OnePlayerGame> findByFinishedTrueOrderByNumOfPointsDesc();

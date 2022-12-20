@@ -66,7 +66,7 @@ const showWord = async (pressedButton)=>{
         gameId:gameId,
         fieldName:pressedButton.id
     }
-    fetch('http://' + window.location.host + '/asocijacija/' + sendObject.gameId + '/getField/' + sendObject.fieldName)
+    fetch('http://' + window.location.host + '/asocijacija/getField/' + sendObject.fieldName)
     .then(
         (response) => {
             if (response.status !== 200) {

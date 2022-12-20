@@ -145,7 +145,7 @@ async function updateQuestionNumber(){
     }
 }
 function getNumberOfPoints(){
-     fetch('http://' + window.location.host + '/koZnaZna/numberOfPoints/'+gameId).then(
+     fetch('http://' + window.location.host + '/koZnaZna/numberOfPoints').then(
         (response) => {
                 if (response.status !== 200) {
                     console.log('Error: ' + response.status);

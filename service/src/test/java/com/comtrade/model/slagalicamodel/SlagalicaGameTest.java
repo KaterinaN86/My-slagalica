@@ -70,9 +70,9 @@ class SlagalicaGameTest {
 
         // No args constructor
         SlagalicaGame slagalicaGame2 = new SlagalicaGame();
-        assertEquals(null, slagalicaGame2.getId());
-        assertEquals(null, slagalicaGame2.getLettersForFindingTheWord());
-        assertEquals(null, slagalicaGame2.getComputerLongestWord());
+        assertNull(slagalicaGame2.getId());
+        assertNull(slagalicaGame2.getLettersForFindingTheWord());
+        assertNull(slagalicaGame2.getComputerLongestWord());
 
 
 

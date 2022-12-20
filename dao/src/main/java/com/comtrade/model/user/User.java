@@ -13,7 +13,8 @@ public class User {
     private Boolean active;
     private String roles;
 
-    public User(){};
+    public User(){}
+
     public User(String userName, String password, Boolean active, String roles) {
         this.userName = userName;
         this.password = password;

@@ -1,7 +1,7 @@
 package com.comtrade.service.skockoservice;//package com.comtrade.service.skockoservice;
 
 import com.comtrade.model.skockomodel.SkockoGame;
-import com.comtrade.repository.gamerepository.Gamerepository;
+import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,19 +16,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SkockoGameServiceImplTest {
+class SkockoOnePlayerOnePlayerGameServiceImplTest {
 
     @Mock
     SkockoGameRepository skockoGameRepository;
     @Mock
-    Gamerepository gamerepository;
+    OnePlayerGameRepository onePlayerGameRepository;
 
     SkockoGameService skockoGameService;
 
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
-        skockoGameService=new SkockoGameServiceImpl(skockoGameRepository, gamerepository);
+        skockoGameService=new SkockoGameServiceImpl(skockoGameRepository, onePlayerGameRepository);
     }
 
     @Test
