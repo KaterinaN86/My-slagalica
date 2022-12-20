@@ -11,7 +11,7 @@ body {
 .naslov {
     border: 1px solid gray;
     border-radius: 10px;
-    margin-top: 20px;
+    margin-top: 0px;
     background-color: #b1b1b1;
 }
 
@@ -28,4 +28,12 @@ body {
 .b11,
 .b12 {
     width: 80px !important;
+}
+#timer {
+	position: relative;
+	float: inline-end;
+	text-align: right;
+	margin-top: 20px;
+	font-size: 25px;
+	color: white;
 }

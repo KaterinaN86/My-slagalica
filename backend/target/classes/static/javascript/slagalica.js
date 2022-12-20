@@ -3,6 +3,10 @@ var computerWord = ""
 var gameId
 var lastClickedButtons = []
 var timer;
+function $(id) {
+	return document.getElementById(id);
+}
+var mainTimer=$('timer');
 
 document.addEventListener("DOMContentLoaded", () => {
     handleNewGame();
@@ -30,7 +34,6 @@ const handleNewGame = () => {
                     gameLetters = data.lettersForFindingTheWord
                     console.log(gameLetters)
                     setLettersToButtons(data)
-
                 });
 
             }
@@ -111,6 +114,8 @@ const setLettersToButtons = (data) => {
     document.getElementById('stopButton').onclick = function () {
 
         clearInterval(timer)
+        timer=null;
+        startTimer();
         const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
         let m=0;
         for (let i = 0; i < data.lettersForFindingTheWord.length; i++) {
@@ -182,7 +187,7 @@ function fastAlphabetSwitch() {
 
         });
 
-    }, 150);
+    }, 200);
 
 }
 
@@ -201,4 +206,16 @@ function disableButtons() {
     document.getElementById('deleteLetter').setAttribute("disabled", "disabled")
     document.getElementById('stopButton').setAttribute("disabled", "disabled")
 
+}
+const startTimer=function(){
+    let time=90;
+    const timerInterval=setInterval(function(){
+        const min = String(Math.trunc(time/60)).padStart(2,0);
+        const sec=String(time%60).padStart(2,0);
+        mainTimer.textContent=`${min} : ${sec}`;
+        if(time === 0){
+            clearInterval(timerInterval);
+        }
+        time--;
+    },1000)
 }

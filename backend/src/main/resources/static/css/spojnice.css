@@ -5,6 +5,7 @@ html,body {
 h1 {
     margin-left: 45vw;
     font-size: 40px;
+    margin-top: -10px
 }
 
 button {
@@ -37,3 +38,12 @@ button:hover {
     align-items: center;
     display: flex;
 }
+
+#timer {
+  	position: relative;
+  	float: inline-end;
+  	text-align: right;
+  	margin-top: 20px;
+  	font-size: 25px;
+  	color: blue;
+  }

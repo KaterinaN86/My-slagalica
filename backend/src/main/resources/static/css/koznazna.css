@@ -6,10 +6,14 @@
 
 body {
     background-color: #333366;
+    justify-content: center;
+    align-items: center;
 }
 
 .b1, .b2, .b3, .b4, .b5, .b6, .b7, .b8, .b9, .b10, .b11, .b12, .b13, .b14, .b15, .b16, .b17, .b18, .b19, .b20, .b21, .b22, .b23, .b24 .b25 {
     width: 100% !important;
+    justify-content: center;
+    align-items: center;
 }
 
 .s1, .s2, .s3, .s4, .s5, .s6 {
@@ -40,16 +44,30 @@ body {
 	position: relative;
 	float: inline-end;
 	text-align: right;
-	margin-top: 20px;
+	margin-top: 0px;
 	font-size: 25px;
 	color: white;
+}
+#quiz {
+	display: inline-block;
+	justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -5%;
+    left: 10%;
 }
 
 #progress {
 	position: relative;
 	float: left;
 	text-align: left;
-	margin-top: 20px;
+	margin-top: 0px;
 	font-size: 20px;
 	color: white;
+}
+#naslov {
+	position: relative;
+	margin-top: -20px;
+#arrow{
+    position: inline;
 }

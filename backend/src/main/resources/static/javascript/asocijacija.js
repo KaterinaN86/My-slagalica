@@ -38,6 +38,7 @@ var numberOfOpenedFields=0;
 
 document.addEventListener("DOMContentLoaded", ()=>{
     handleNewGame();
+    startTimer()
 });
 
 const handleNewGame = () =>{
@@ -144,5 +145,15 @@ async function finishGame(){
 }
 
 
-
-
+const startTimer=function(){
+    let time=120;
+    const timerInterval=setInterval(function(){
+        const min = String(Math.trunc(time/60)).padStart(2,0);
+        const sec=String(time%60).padStart(2,0);
+        timer.textContent=`${min} : ${sec}`;
+        if(time === 0){
+            clearInterval(timerInterval);
+        }
+        time--;
+    },1000)
+}
