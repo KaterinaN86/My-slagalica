@@ -68,6 +68,7 @@ function submitData(event){
     }).then((response) => {
        response.json().then((data) => {
            console.log(data)
+           alert("You earned: " + data + " points")
        });
     }).catch((error) => {
         console.log(error)

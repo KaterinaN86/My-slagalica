@@ -16,34 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const handleNewGame = () => {
     fetch('http://' + window.location.host + '/slagalica/play')
-
         .then(
-
             (response) => {
-
                 if (response.status !== 200) {
-
                     console.log('Error: ' + response.status);
 
                     return;
-
                 }
 
                 response.json().then((data) => {
-
                     gameLetters = data.lettersForFindingTheWord
                     console.log(gameLetters)
                     setLettersToButtons(data)
                 });
-
             }
-
-        )
-
-        .catch((error) => {
-
+        ).catch((error) => {
             console.log('Fetch error: ', error);
-
         })
 
 }
@@ -55,24 +43,15 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
         gameId: gameId,
         lettersForFindingTheWord: lettersForUserWord,
         userWord: submitedUserWord,
-
-
     }
 
     try {
-
         const response = await fetch('http://' + window.location.host + '/slagalica/wordSubmit', {
-
             method: 'POST',
-
             headers: {
-
                 'Content-Type': 'application/json'
-
             },
-
             body: JSON.stringify(combinationObject)
-
         });
 
         if (response.status == 200) {
@@ -86,19 +65,19 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
                 document.getElementById('finalPoints').textContent = "You can only submit once."
                 document.getElementById('computerWordTxt').textContent += ""
             }
-
             disableButtons()
-
         }
 
     } catch (error) {
-
         console.log(error)
-
     }
 
 
 
+}
+
+function goBack() {
+    window.location.href = "OnePlayer";
 }
 
 function handleResponse() {

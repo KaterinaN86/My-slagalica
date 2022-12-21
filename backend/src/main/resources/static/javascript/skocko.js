@@ -44,6 +44,10 @@ const handleNewGame = () =>{
     })
 }
 
+function goBack() {
+    window.location.href = "OnePlayer";
+}
+
 function displaySymbol(object) {
     var text = object.innerHTML;
 
@@ -52,9 +56,6 @@ function displaySymbol(object) {
             cells[cell_count - 1].innerHTML = "";
             cell_count--;
         }
-    } else if (text == " ↺ ") {
-        //timer("stop");
-        window.location.href="OnePlayer";
     } else if (text == " ⚐ ") {
         handleLosingGame();
     } else {
