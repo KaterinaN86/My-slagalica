@@ -21,7 +21,7 @@ class SlagalicaGameTest {
 
     @BeforeEach
     void setUp() {
-        slagalicaGame = new SlagalicaGame(1L, "SAMBOIREMALA", "MALA",0,true);
+        slagalicaGame = new SlagalicaGame(1L, "SAMBOIREMALA", "MALA",true);
     }
 
     @Test
@@ -63,7 +63,7 @@ class SlagalicaGameTest {
         Long id = 3L;
         String word = "MOEAIRTISABI";
         String computerWord = "TISA";
-        slagalicaGame = new SlagalicaGame(id, word, computerWord,0,true);
+        slagalicaGame = new SlagalicaGame(id, word, computerWord,true);
 
         Assertions.assertEquals(id, slagalicaGame.getId());
         Assertions.assertEquals(word, slagalicaGame.getLettersForFindingTheWord());
