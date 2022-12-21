@@ -29,9 +29,15 @@ const handleNewGame = () => {
                     console.log(gameLetters)
                     setLettersToButtons(data)
                 });
+
             }
-        ).catch((error) => {
+
+        )
+
+        .catch((error) => {
+
             console.log('Fetch error: ', error);
+
         })
 
 }
@@ -46,6 +52,7 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
     }
 
     try {
+
         const response = await fetch('http://' + window.location.host + '/slagalica/wordSubmit', {
             method: 'POST',
             headers: {
@@ -145,7 +152,12 @@ function parseButtonText(elem) {
 function deleteOnClick() {
 
     var wordUpdate = document.getElementById('userWord').textContent;
-    document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 1)
+    if(wordUpdate.charAt(wordUpdate.length-1)=='j' || wordUpdate.charAt(wordUpdate.length-1)=='ž'){
+        document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 2)
+    }
+    else{
+        document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 1)
+    }
 
     lastClickedButtons[lastClickedButtons.length - 1].removeAttribute("disabled")
     lastClickedButtons.pop(lastClickedButtons[lastClickedButtons.length - 1])
@@ -194,6 +206,7 @@ const startTimer=function(){
         mainTimer.textContent=`${min} : ${sec}`;
         if(time === 0){
             clearInterval(timerInterval);
+            handleResponse();
         }
         time--;
     },1000)

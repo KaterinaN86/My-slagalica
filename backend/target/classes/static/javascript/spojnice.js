@@ -1,11 +1,8 @@
-document.addEventListener("DOMContentLoaded",()=>{init()})
-
 let dataForSubmit = {}
 let selectedLeftBtn = null;
 var timer=document.getElementById("timer");
 
 function init() {
-    startTimer();
     document.getElementById("exitBtn").addEventListener("click",()=>{
         window.location.href="/OnePlayer"
     })
@@ -55,24 +52,31 @@ function init() {
 
 function submitData(event){
     event.target.disabled=true;
+    disableButtons();
+    submitAndGetPoints();
+}
+function disableButtons(){
     let buttons=document.getElementsByTagName("button")
     for(let i=0 ; i<buttons.length-1;i++){
         buttons[i].disabled=true
     }
+}
+
+async function submitAndGetPoints(){
     fetch('http://' + window.location.host + '/spojnice/submit', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataForSubmit)
-    }).then((response) => {
-       response.json().then((data) => {
-           console.log(data)
-           alert("You earned: " + data + " points")
-       });
-    }).catch((error) => {
-        console.log(error)
-    });
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataForSubmit)
+        }).then((response) => {
+           response.json().then((data) => {
+               console.log(data)
+               alert("Score : "+data);
+           });
+        }).catch((error) => {
+            console.log(error)
+        });
 }
 
 const startTimer=function(){
@@ -82,8 +86,12 @@ const startTimer=function(){
         const sec=String(time%60).padStart(2,0);
         timer.textContent=`${min} : ${sec}`;
         if(time === 0){
+            disableButtons();
+            submitAndGetPoints();
             clearInterval(timerInterval);
         }
         time--;
     },1000)
+    init();
 }
+window.onload = startTimer();
