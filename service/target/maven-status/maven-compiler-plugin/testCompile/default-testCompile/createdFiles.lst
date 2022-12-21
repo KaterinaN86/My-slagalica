@@ -1,5 +1,6 @@
 com\comtrade\model\slagalicamodel\DictionaryWordTest.class
 com\comtrade\model\skockomodel\SkockoSubmitTest.class
+com\comtrade\model\slagalicamodel\SlagalicaGameTest.class
 com\comtrade\service\slagalicaservice\SlagalicaOnePlayerGameServiceImpTest.class
 com\comtrade\model\slagalicamodel\SlagalicaGameUserWordSubmitTest.class
 com\comtrade\model\skockomodel\SkockoGameTest.class
