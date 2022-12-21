@@ -153,6 +153,7 @@ const startTimer=function(){
         timer.textContent=`${min} : ${sec}`;
         if(time === 0){
             clearInterval(timerInterval);
+            finishGame();
         }
         time--;
     },1000)

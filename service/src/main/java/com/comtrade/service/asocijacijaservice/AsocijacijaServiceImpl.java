@@ -4,6 +4,7 @@ import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.*;
 import com.comtrade.repository.PointsRepository;
+import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -24,15 +26,17 @@ public class AsocijacijaServiceImpl {
     private final AsocijacijaRepository asocijacijaRepository;
     private final WordRepository wordRepository;
     private final PointsRepository pointsRepository;
+    private final TimersRepository timersRepository;
 
     @Autowired
     private OnePlayerOnePlayerGameServiceImpl gameService;
 
     private final OnePlayerGameRepository onePlayerGameRepository;
-    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, PointsRepository pointsRepository, OnePlayerGameRepository onePlayerGameRepository) {
+    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, PointsRepository pointsRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository) {
         this.asocijacijaRepository = asocijacijaRepository;
         this.wordRepository = wordRepository;
         this.pointsRepository = pointsRepository;
+        this.timersRepository = timersRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
     }
     private WordModel getRandomWordModel() throws NoSuchElementException{
@@ -56,6 +60,8 @@ public class AsocijacijaServiceImpl {
             log.info("Creating new Asocijacija game instance");
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
+            game.getTimers().setStartTimeAsocijacije(LocalTime.now());
+            timersRepository.save(game.getTimers());
             asocijacijaRepository.save(asocijacijaGame);
             if (game.getGames().getAsocijacijaGame()==null){
                 game.getGames().setAsocijacijaGame(asocijacijaGame);
@@ -95,6 +101,9 @@ public class AsocijacijaServiceImpl {
         try{
             OnePlayerGame onePlayerGame = gameService.getGame(principal);
             Points points=onePlayerGame.getPoints();
+            if(ChronoUnit.SECONDS.between(onePlayerGame.getTimers().getStartTimeAsocijacije(), LocalTime.now())>=120){
+                finishGame(principal);
+            }
             AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
             long gameId=asocijacijaGame.getId();
             boolean isGameActive = asocijacijaGame.isActive();
@@ -104,7 +113,12 @@ public class AsocijacijaServiceImpl {
                 //It does not return value of field A|B|C|D 5(column final word) or final word of a game if it is active
                 log.info("Forbidden request for field:" + fieldName + " - game with id: " + gameId + " still active.");
                 return ResponseEntity.status(403).build();
-            }else{
+            }else if(!isGameActive){
+                log.info("aaaaaReturning value of field: " + fieldName + " for game id: " + gameId);
+                return ResponseEntity.ok()
+                        .body(new ResponseWithFieldValue(findValueOfSpecificCell(findSpecificColumn(asocijacijaGame,fieldNameUpperCase),fieldNameUpperCase)));
+            }
+            else{
                 log.info("Returning value of field: " + fieldName + " for game id: " + gameId);
                 points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() - 0.25);
                 //asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints() - 0.25);
@@ -167,13 +181,16 @@ public class AsocijacijaServiceImpl {
             OnePlayerGame onePlayerGame = gameService.getGame(principal);
             AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
             Points points = onePlayerGame.getPoints();
+            if(ChronoUnit.SECONDS.between(onePlayerGame.getTimers().getStartTimeAsocijacije(), LocalTime.now())>=120){
+                finishGame(principal);
+            }
             String submittedWordUpperCase = submittedWord.toUpperCase();
             String referenceWordUpperCase = findValueOfSpecificField(asocijacijaGame,fieldName).toUpperCase();
             log.info("Checking submit for game id: " + gameId);
             if(submittedWordUpperCase.equals(referenceWordUpperCase)){
                 if(fieldName.contains("final")){
                     asocijacijaGame.setActive(false);
-                    points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 10);
+                    points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 14);
                     pointsRepository.save(points);
                 }else{
                     points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 5);
@@ -227,6 +244,9 @@ public class AsocijacijaServiceImpl {
         OnePlayerGame game = gameService.getGame(principal);
         AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
         Points points = game.getPoints();
+        if(!asocijacijaGame.isActive()){
+            return ResponseEntity.ok().build();
+        }
         asocijacijaGame.setActive(false);
         if(points.getNumOfPointsAsocijacije()<=0){
             points.setNumOfPointsAsocijacije(0);

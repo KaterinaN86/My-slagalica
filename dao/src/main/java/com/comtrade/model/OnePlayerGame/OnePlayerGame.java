@@ -2,12 +2,7 @@ package com.comtrade.model.OnePlayerGame;
 
 import com.comtrade.model.Games;
 import com.comtrade.model.Points;
-import com.comtrade.model.asocijacijamodel.AsocijacijaGame;
-import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
-import com.comtrade.model.mojbrojmodel.MojBrojGame;
-import com.comtrade.model.skockomodel.SkockoGame;
-import com.comtrade.model.slagalicamodel.SlagalicaGame;
-import com.comtrade.model.spojnicemodel.SpojniceGame;
+import com.comtrade.model.Timers;
 import com.comtrade.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,9 +33,13 @@ public class OnePlayerGame {
     @OneToOne
     Games games;
 
-    public OnePlayerGame(User user,Games games){
+    @OneToOne
+    Timers timers;
+
+    public OnePlayerGame(User user, Games games, Timers timers){
         this.user=user;
         this.games=games;
+        this.timers=timers;
         finished=false;
     }
 

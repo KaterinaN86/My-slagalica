@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -41,6 +43,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         }
         else{
             SkockoGame Sgame=createNewGame();
+            game.getTimers().setStartTimeSkocko(LocalTime.now());
             game.getGames().setSkockoGame(Sgame);
             onePlayerGameRepository.save(game);
             return game.getGames().getSkockoGame();
@@ -67,12 +70,11 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             System.out.println(e.getMessage());
         }
         SkockoGame Sgame=game.getGames().getSkockoGame();
-
         log.info("Processing submit for game: " + submit.getGameId() +". Submitted combination: " + submit.getCombination());
 
         isWinningCombination = isWinningCombination(Sgame.getCombination(), submit.getCombination());
 
-        if(isWinningCombination){
+        if(isWinningCombination || ChronoUnit.SECONDS.between(game.getTimers().getStartTimeSkocko(), LocalTime.now())>=120){
             int numOfPoints=numberOfPoints(submit.getAttempt());
             if (Sgame.isActive()){
                 game.getPoints().setNumOfPointsSkocko(numOfPoints);
@@ -85,7 +87,6 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             return ResponseEntity.ok()
                     .body(skockoResponse);
         }
-
         skockoResponse = new SkockoResponseWithPositions(isWinningCombination, getNumberOfCorrectlyPlacedSymbolsInCombination(Sgame.getCombination(), submit.getCombination()), getNumberOfMisplacedSymbolsInCombination(Sgame.getCombination(), submit.getCombination()));
         log.info("Returning object" + skockoResponse + "as response for submitting non-winning combination" + " for game id: " + Sgame.getId());
         return ResponseEntity.ok()

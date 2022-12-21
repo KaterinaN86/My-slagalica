@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import javax.script.ScriptException;
 import java.security.Principal;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,7 @@ public class MojBrojServiceImpl implements MojBrojService{
             return game.getGames().getMojBrojGame();
         }else{
             MojBrojGame MBgame=createNewGame();
+            game.getTimers().setStartTimeMojBroj(LocalTime.now());
             game.getGames().setMojBrojGame(MBgame);
             onePlayerGameRepository.save(game);
             return MBgame;
