@@ -269,7 +269,7 @@ const timer = (order) => {
 			if (seconds === 0) {
 				timer("stop");
 				handleLosingGame();
-				return;
+				return display.innerHTML = '0';
 			}
 			display.innerHTML = seconds;
 			seconds--;

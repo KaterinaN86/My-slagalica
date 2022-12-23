@@ -9,6 +9,7 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks the button, open the modal 
 function openModal(pressedButton) {
   modal.style.display = "block";
+  document.getElementById("inputField").focus()
   pressedButtonId = pressedButton.id;
   console.log(pressedButtonId);
 }
@@ -18,7 +19,7 @@ span.onclick = function() {
   modal.style.display = "none";
 }
 
-// When the user clicks anywhere outside of the modal, close it
+// When the user clicks anywhere outside the modal, close it
 window.onclick = function(event) {
     if (event.target == modal) {
         closeModal();
@@ -38,7 +39,6 @@ var numberOfOpenedFields=0;
 
 document.addEventListener("DOMContentLoaded", ()=>{
     handleNewGame();
-    startTimer()
 });
 
 const handleNewGame = () =>{
@@ -52,8 +52,8 @@ const handleNewGame = () =>{
 
             response.json().then((data) => {
                 gameId = data.gameId;
+                timer();
                 console.log(gameId);
-                //timer();
             });
         }
     )
@@ -63,6 +63,7 @@ const handleNewGame = () =>{
 }
 
 const showWord = async (pressedButton)=>{
+    console.log(pressedButton)
     var sendObject={
         gameId:gameId,
         fieldName:pressedButton.id
@@ -78,14 +79,21 @@ const showWord = async (pressedButton)=>{
             response.json().then((data) => {
                 console.log(numberOfOpenedFields);
                 pressedButton.innerHTML = data.fieldValue;
+                pressedButton.disabled = true;
                 console.log(data.fieldValue);
-                //timer();
+                timer();
             });
         }
     )
     .catch((error) => {
         console.log('Fetch error: ', error);
     })
+}
+
+document.onkeydown = function () {
+    if (window.event.keyCode == '13') {
+        sendSubmit();
+    }
 }
 
 const sendSubmit = async () =>{
@@ -110,9 +118,20 @@ const sendSubmit = async () =>{
             const data = await response.json();
             if(data.correct){
                 document.getElementById(pressedButtonId).innerHTML = enteredWord;
-                document.getElementById(pressedButtonId).disabled = true; //ovo iskombinovati sa onim dole disable
-                if(pressedButtonId=='final'){
+                document.getElementById(pressedButtonId).disabled = true;
+                if (pressedButtonId == 'A5' || pressedButtonId == 'B5' || pressedButtonId == 'C5' || pressedButtonId == 'D5') {
+                    var column = pressedButtonId.replace(/[0-9]/g, '');
+                    console.log(column)
+                    let columnButton;
+                    for (let i = 1; i <= 4; i++) {
+                        columnButton = document.getElementById(column + i);
+                        await showWord(columnButton)
+                    }
+                }
+                if(pressedButtonId == 'final'){
                     showAll();
+                    timer("stop");
+                    await finishGame();
                 }
             }
         }
@@ -126,9 +145,10 @@ const sendSubmit = async () =>{
 }
 
 function showAll(){
-    let buttons = document.getElementsByClassName('disable');
+    let buttons = document.getElementsByTagName("button");
     for(let button of buttons){
         button.disabled=true;
+        button.classList.add("modalColor")
         showWord(button);
     }
 }
@@ -144,16 +164,21 @@ async function finishGame(){
     closeModal();
 }
 
+var displayTimer = document.getElementById("asocijacije-timer")
 
-const startTimer=function(){
-    let time=120;
-    const timerInterval=setInterval(function(){
-        const min = String(Math.trunc(time/60)).padStart(2,0);
-        const sec=String(time%60).padStart(2,0);
-        timer.textContent=`${min} : ${sec}`;
-        if(time === 0){
-            clearInterval(timerInterval);
-        }
-        time--;
-    },1000)
+const timer = (order) => {
+    if (order == "stop") {
+        clearInterval(countdown);
+        seconds = 120;
+    } else {
+        countdown = setInterval(function() {
+            if (seconds === 0) {
+                timer("stop");
+                finishGame();
+                return displayTimer.innerHTML = '0';
+            }
+            displayTimer.innerHTML = seconds;
+            seconds--;
+        }, 1000);
+    }
 }

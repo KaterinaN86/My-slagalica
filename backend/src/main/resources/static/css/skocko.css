@@ -8,8 +8,36 @@ body {
 	/*-webkit-mask-image: url("https://s3.amazonaws.com/viget.com/legacy/uploads/image/blog/grit.png");
   mask-image: url("https://s3.amazonaws.com/viget.com/legacy/uploads/image/blog/grit.png");*/
 }
+
+.exit-button {
+	border: 1px solid gold;
+	border-radius: 10px;
+	display: table-cell;
+	padding: 0px 40px 0px 40px;
+	width: 75px;
+	height: 75px;
+	background-color: #333366;
+	text-align: center;
+	font-size: 20px;
+	vertical-align: middle;
+	/*background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%239C92AC' fill-opacity='0.39' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");*/
+	border: 1px solid gold;
+	width: 75px;
+	height: 75px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-color: #333366;
+	/*background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.21' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");*/
+
+}
+
 #container {
 	display: inline-block;
+	margin-left: 32%;
 	justify-content: center;
     align-items: center;
     top: 5%;
@@ -38,7 +66,7 @@ body {
 	display: inline-block;
 	float: left;
 	clear: both;
-	margin: 10px 0px 0px 0px;
+	margin: 10px 0px 275px 0px;
 	text-align: center;
 	background-color: rgb(15, 57, 99);
 	height: 50px;
@@ -165,6 +193,7 @@ body {
 	visibility:hidden;
 	display:block;
 	width: 100%;
+	color: white;
 }
 
 .resistant{

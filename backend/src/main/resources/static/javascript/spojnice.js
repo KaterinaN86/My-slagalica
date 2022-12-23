@@ -75,15 +75,21 @@ function submitData(event){
     });
 }
 
-const startTimer=function(){
-    let time=90;
-    const timerInterval=setInterval(function(){
-        const min = String(Math.trunc(time/60)).padStart(2,0);
-        const sec=String(time%60).padStart(2,0);
-        timer.textContent=`${min} : ${sec}`;
-        if(time === 0){
-            clearInterval(timerInterval);
-        }
-        time--;
-    },1000)
+var display = document.getElementById("timer")
+
+const timer = (order) => {
+    if (order == "stop") {
+        clearInterval(countdown);
+        seconds = 120;
+    } else {
+        countdown = setInterval(function() {
+            if (seconds === 0) {
+                timer("stop");
+                handleLosingGame();
+                return display.innerHTML = '0';
+            }
+            display.innerHTML = seconds;
+            seconds--;
+        }, 1000);
+    }
 }

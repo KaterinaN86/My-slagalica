@@ -1,5 +1,9 @@
 html,body {
-    background-color: #e2e2e2;
+    background-color: #333366;
+}
+
+.header-spojnice {
+    color: white;
 }
 
 h1 {
@@ -11,7 +15,7 @@ h1 {
 button {
     width: 28vw;
     height: 7vh;
-    background-color: #281fff;
+    background-color: #6c757d;
     color: white;
     font-size: 18px;
     cursor: pointer;
@@ -22,7 +26,7 @@ button:hover {
 }
 
 .selected {
-    background-color: red;
+    background-color: #ffaa00;
 }
 
 .selected:hover {
@@ -41,9 +45,10 @@ button:hover {
 
 #timer {
   	position: relative;
-  	float: inline-end;
+  	float: left;
+    display: inline-block;
   	text-align: right;
   	margin-top: 20px;
   	font-size: 25px;
-  	color: blue;
+  	color: white;
   }
