@@ -19,7 +19,7 @@ span.onclick = function() {
   modal.style.display = "none";
 }
 
-// When the user clicks anywhere outside of the modal, close it
+// When the user clicks anywhere outside the modal, close it
 window.onclick = function(event) {
     if (event.target == modal) {
         closeModal();
@@ -54,7 +54,6 @@ const handleNewGame = () =>{
                 gameId = data.gameId;
                 timer();
                 console.log(gameId);
-                //timer();
             });
         }
     )
@@ -82,7 +81,7 @@ const showWord = async (pressedButton)=>{
                 pressedButton.innerHTML = data.fieldValue;
                 pressedButton.disabled = true;
                 console.log(data.fieldValue);
-                //timer();
+                timer();
             });
         }
     )
@@ -165,6 +164,7 @@ async function finishGame(){
     closeModal();
 }
 
+
 var displayTimer = document.getElementById("asocijacije-timer")
 
 const timer = (order) => {
@@ -172,7 +172,7 @@ const timer = (order) => {
         clearInterval(countdown);
         seconds = 120;
     } else {
-        countdown = setInterval(function() {
+        countdown = setInterval(function () {
             if (seconds === 0) {
                 timer("stop");
                 finishGame();
