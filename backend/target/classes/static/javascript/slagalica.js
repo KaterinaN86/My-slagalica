@@ -7,10 +7,12 @@ function $(id) {
 	return document.getElementById(id);
 }
 var mainTimer=$('timer');
+var stopButton=$('stopButton');
 
 document.addEventListener("DOMContentLoaded", () => {
-    handleNewGame();
+    stopButton.style.visibility = "hidden";
     fastAlphabetSwitch();
+    handleNewGame();
 });
 
 
@@ -27,6 +29,7 @@ const handleNewGame = () => {
                 response.json().then((data) => {
                     gameLetters = data.lettersForFindingTheWord
                     console.log(gameLetters)
+                    stopButton.style.visibility = "visible";
                     setLettersToButtons(data)
                 });
 
@@ -43,9 +46,7 @@ const handleNewGame = () => {
 }
 
 const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
-
     var combinationObject = {
-
         gameId: gameId,
         lettersForFindingTheWord: lettersForUserWord,
         userWord: submitedUserWord,
@@ -96,7 +97,6 @@ function handleResponse() {
 
 
 const setLettersToButtons = (data) => {
-
     document.getElementById('stopButton').onclick = function () {
 
         clearInterval(timer)
@@ -124,7 +124,7 @@ const setLettersToButtons = (data) => {
                document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[i]
            }
         }
-
+        document.getElementById('stopButton').setAttribute("disabled", "disabled")
     }
 
 
