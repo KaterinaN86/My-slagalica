@@ -32,12 +32,16 @@ public class MyUserDetailService implements UserDetailsService {
     }
 
     public String addUser(String userName, String password) {
+        if (userName==""||password.length()<5){
+            return "Bad username or password";
+        }
         Optional<User> user=userRepository.findByUserName(userName);
+
         if(user.isEmpty()) {
             this.userRepository.save(new User(userName, bCryptPasswordEncoder.encode(password), true, "ROLE_USER"));
-            return "Uspesno ste se registrovali";
+            return "You successfully registered";
         }else{
-            return "Zauseto korisnicko ime";
+            return "Username already taken";
         }
     }
 }
