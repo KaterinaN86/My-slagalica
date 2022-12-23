@@ -9,9 +9,9 @@ function init() {
     fetch('http://' + window.location.host + '/spojnice/start').then((response) => {
         response.json().then((data) => {
             document.getElementById("submitBtn").addEventListener("click", submitData)
-
+            console.log(data);
             let tbody = document.getElementById("tbody");
-
+            document.getElementById("headline").textContent=data[16];
             for (let i = 0 ; i < 8; i++) {
                 let tr = document.createElement("tr")
                 let td1 = document.createElement("td")

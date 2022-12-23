@@ -1,5 +1,8 @@
 html,body {
     background-color: #e2e2e2;
+    justify-content: center;
+    align-items: center;
+
 }
 
 h1 {
@@ -46,4 +49,10 @@ button:hover {
   	margin-top: 20px;
   	font-size: 25px;
   	color: blue;
-  }
+}
+#headline {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    text-align: center;
+}

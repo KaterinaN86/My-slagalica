@@ -59,6 +59,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         for (String word : column2) {
             words.add(word.split(":")[1]);
         }
+        words.add(game.getPairsModel().getHeadline());
 
         return words;
 
