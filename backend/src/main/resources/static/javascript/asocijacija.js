@@ -172,7 +172,7 @@ const timer = (order) => {
         clearInterval(countdown);
         seconds = 120;
     } else {
-        countdown = setInterval(function() {
+        countdown = setInterval(function () {
             if (seconds === 0) {
                 timer("stop");
                 finishGame();
@@ -182,3 +182,4 @@ const timer = (order) => {
             seconds--;
         }, 1000);
     }
+}
