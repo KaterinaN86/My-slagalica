@@ -1,11 +1,9 @@
 body {
-background: #333366;
 font-family: "Times New Roman", Times, serif;
 line-height: 1.5em;
 width: 100%;
-background-color: #4492f1;
+background-color: #333366;
 opacity: 0.9;
-background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #4492f1 26px ), repeating-linear-gradient( #0d149555, #0d1495 );
 }
 
 header {
