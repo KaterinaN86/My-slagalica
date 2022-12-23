@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -58,6 +59,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         for (String word : column2) {
             words.add(word.split(":")[1]);
         }
+        words.add(game.getPairsModel().getHeadline());
 
         return words;
 
@@ -89,6 +91,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         }else{
             SpojniceGame spojniceGame= createNewSpojniceGame(principal);
             game.getGames().setSpojniceGame(spojniceGame);
+            game.getTimers().setStartTimeSpojnice(LocalTime.now());
             onePlayerGameRepository.save(game);
             return spojniceGame;
         }

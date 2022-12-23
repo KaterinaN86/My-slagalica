@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -42,6 +43,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         }else{
             KoZnaZnaGame koZnaZnaGame=this.createNewGame();
             game.getGames().setKoZnaZnaGame(koZnaZnaGame);
+            game.getTimers().setStartTimeKoZnaZna(LocalTime.now());
             onePlayerGameRepository.save(game);
             return koZnaZnaGame;
         }
@@ -95,7 +97,10 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws Exception {
             OnePlayerGame onePlayerGame = gameService.getGame(principal);
             KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
-
+            long numberOfSeconds = ChronoUnit.SECONDS.between(onePlayerGame.getTimers().getStartTimeKoZnaZna(), LocalTime.now());
+            if(numberOfSeconds>=120){
+                finishGame(principal);
+            }
             Optional<Question> existingQuestion = questionRepository.findById(questionId);
             if (existingQuestion.isEmpty()) {
                 return ResponseEntity.notFound()

@@ -788,5 +788,315 @@
       "36"
     ],
     "correctAnswer": 2
+  },
+  {
+    "questionContent": "GDE SE NALAZI TZV. \"KOŠČANI LAVIRINT\"?",
+    "options": [
+      "UHO",
+      "ŠAKA",
+      "STOPALO",
+      "GRUDNI KOŠ"
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "KO JE OSVOJIO ZLATO U VELESLALOMU U VANKUVERU?",
+    "options": [
+      "IVICA KOSTELIĆ",
+      "CARLO JANKA",
+      "BODI MILER",
+      "AKSEL LUND SVINDAL"
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "KOLIKO STEPENI RIHTEROVE SKALE JE BIO ZEMLJOTRES U KRALJEVU 2010. GODINE?",
+    "options": [
+      "7,1",
+      "4,3",
+      "6,7",
+      "5,4"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "U JEDNOM DANU IMA:",
+    "options": [
+      "38400 SEKUNDI",
+      "3600 SEKUNDI",
+      "36000 SEKUNDI",
+      "86400 SEKUNDI"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "KOJI PROCENAT POVRŠINE MESECA JE VIDLJIV SA ZEMLJE?",
+    "options": [
+      "38%",
+      "62%",
+      "50%",
+      "56%"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "KOJE GODINE JE ROĐEN VIKTOR TROICKI?",
+    "options": [
+      "1986.",
+      "1980.",
+      "1989.",
+      "1982."
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "PO KOJIM ŽIVOTINJAMA JE BILA POZNATA HANIBALOVA VOJSKA?",
+    "options": [
+      "PSIMA",
+      "KONJIMA",
+      "SLONOVIMA",
+      "KAMILAMA"
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "questionContent": "KOJA JE HEMIJSKA OZNAKA ZA ZLATO?",
+    "options": [
+      "Ag",
+      "Zt",
+      "Au",
+      "At"
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "questionContent": "U KOM GRADU SE NALAZI HOTEL ZDRAVLJAK?",
+    "options": [
+      "NA TARI",
+      "SOKOBANJI",
+      "LESKOVCU",
+      "VRSCU"
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "NAJPOZNATIJI VLADAR NOVOG VAVILONSKOG CARSTVA BIO JE:",
+    "options": [
+      "ŠAMAH",
+      "NAVUHODONOSOR",
+      "HAMURABI",
+      "ZARATUSTRA"
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "KO JE NAPISAO DELO \"KNJIGA O DŽUNGLI\"?",
+    "options": [
+      "DŽON STAJNBEK",
+      "HENRIK SJENKEJEVIČ",
+      "RADJARD KIPLING",
+      "VOLT DIZNI"
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "questionContent": "KO JE SVETSKI REKORDER U SKOKU U VIS ZA MUŠKARCE?",
+    "options": [
+      "VJEČESLAV VORONJIN",
+      "IGOR PAKLIN",
+      "HAVIJER SOTOMAJER",
+      "PATRIK SJEBERG"
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "questionContent": "GLAVNI GRAD BRAZILA JE:",
+    "options": [
+      "BRAZILIJA",
+      "RIO DE ŽANEIRO",
+      "SAO PAULO",
+      "PORTO ALERGE"
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "KOJE GODINE JE U VOJVODINI IZBILA \"JOGURT REVOLUCIJA\"?",
+    "options": [
+      "1992.",
+      "1988.",
+      "1993.",
+      "1995."
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "U KOM BANATSKOM MESTU JE ROĐEN VELIKI SRPSKI SLIKAR UROŠ PREDIĆ?",
+    "options": [
+      "PERLEZ",
+      "IDVOR",
+      "SAKULE",
+      "ORLOVAT"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "KOJE JE BOJE DRAGI KAMEN RUBIN?",
+    "options": [
+      "ZELENE",
+      "CRNE",
+      "PLAVE",
+      "CRVENE"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "KOJI JE JEDINI GRAD NA SVETU KOJI IMA I GREND SLEM I MARSTERS TURNIR?",
+    "options": [
+      "MELBURN",
+      "LONDON",
+      "NJU JORK",
+      "PARIS"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "KOLIKO ČOVEK IMA STALNIH ZUBA?",
+    "options": [
+      "20",
+      "34",
+      "30",
+      "32"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "KOJA OD PONUĐENIH NIJE AMERIČKA TV STANICA?",
+    "options": [
+      "ABC",
+      "NBC",
+      "BBC",
+      "CNN"
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "questionContent": "KOJI GRAD SE NALAZI ISTOČNO OD BEOGRADA?",
+    "options": [
+      "PARIS",
+      "RIM",
+      "MOSKVA",
+      "LONDON"
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "questionContent": "KOJI JE NAJVEĆI VRH AFRIKE?",
+    "options": [
+      "VELIKI ATLAS",
+      "MONBLAN",
+      "BABIN ZUB",
+      "KILIMANDŽARO"
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "VERA WANG JE:",
+    "options": [
+      "DIZAJNER",
+      "PEVAČICA",
+      "GLUMICA",
+      "MANEKENKA"
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "ŠTA SU \"DŽINOVSKI LONCI\"?",
+    "options": [
+      "ZATVORENE DEPRESIJE SLIČNE REČNIM DOLINAMA",
+      "ZATVORENE DEPRESIJE SLIČNE BUNARIMA",
+      "OTVORENE DEPRESIJE SLIČNE KANJONIMA",
+      "OTVORENE DEPRESIJE SLIČNE UVALAMA"
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "KOJE GODINE JE OSNOVAN FACEBOOK?",
+    "options": [
+      "2001.",
+      "2006.",
+      "2003.",
+      "2004."
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "questionContent": "MOKASINE SPADAJU U:",
+    "options": [
+      "OBUĆU",
+      "ODEĆU",
+      "HRANU",
+      "ALAT"
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "KAKO SE ZOVE REAKCIJA IZMEĐU BAZA I KISELINA?",
+    "options": [
+      "NEUTRALIZACIJA",
+      "JONIZACIJA",
+      "HIDROGENIZACIJA",
+      "OKSIDACIJA"
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "KOJE GODINE JE ROĐEN BRANISLAV NUŠIĆ?",
+    "options": [
+      "1755.",
+      "1864.",
+      "1665.",
+      "1912."
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "POTAMOLOGIJA JE NAUKA O:",
+    "options": [
+      "REKAMA",
+      "PEĆINAMA",
+      "ZEMLJIŠTU",
+      "JEZERIMA"
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "questionContent": "ČIJE JE PRAVO IME LUIS NAZARIO DE LIMA?",
+    "options": [
+      "RONALDINJO",
+      "RONALDO",
+      "PELE",
+      "BEBETO"
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "FRANCUSKI GLUMAC KOJI TUMAČI GLAVNI LIK U SERIJALU \"POSETIOCI\" JE:",
+    "options": [
+      "ŽERAR DEPARDJE",
+      "ŽAN RENO",
+      "SAMI NACERI",
+      "VINSENT PEREZ"
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "questionContent": "ZAČETNIK KLASIČNOG IDEALIZMA U FILOZOFIJI JE:",
+    "options": [
+      "JOZEF SELING",
+      "IMANUEL KANT",
+      "JOHAN FIHTE",
+      "MANEKENKA"
+    ],
+    "correctAnswer": 2
   }
 ]

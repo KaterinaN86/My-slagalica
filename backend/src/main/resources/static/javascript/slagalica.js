@@ -7,10 +7,12 @@ function $(id) {
 	return document.getElementById(id);
 }
 var mainTimer=$('timer');
+var stopButton=$('stopButton');
 
 document.addEventListener("DOMContentLoaded", () => {
-    handleNewGame();
+    stopButton.style.visibility = "hidden";
     fastAlphabetSwitch();
+    handleNewGame();
 });
 
 
@@ -27,25 +29,31 @@ const handleNewGame = () => {
                 response.json().then((data) => {
                     gameLetters = data.lettersForFindingTheWord
                     console.log(gameLetters)
+                    stopButton.style.visibility = "visible";
                     setLettersToButtons(data)
                 });
+
             }
-        ).catch((error) => {
+
+        )
+
+        .catch((error) => {
+
             console.log('Fetch error: ', error);
+
         })
 
 }
 
 const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
-
     var combinationObject = {
-
         gameId: gameId,
         lettersForFindingTheWord: lettersForUserWord,
         userWord: submitedUserWord,
     }
 
     try {
+
         const response = await fetch('http://' + window.location.host + '/slagalica/wordSubmit', {
             method: 'POST',
             headers: {
@@ -89,7 +97,6 @@ function handleResponse() {
 
 
 const setLettersToButtons = (data) => {
-
     document.getElementById('stopButton').onclick = function () {
 
         clearInterval(timer)
@@ -117,7 +124,7 @@ const setLettersToButtons = (data) => {
                document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[i]
            }
         }
-
+        document.getElementById('stopButton').setAttribute("disabled", "disabled")
     }
 
 
@@ -145,7 +152,12 @@ function parseButtonText(elem) {
 function deleteOnClick() {
 
     var wordUpdate = document.getElementById('userWord').textContent;
-    document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 1)
+    if(wordUpdate.charAt(wordUpdate.length-1)=='j' || wordUpdate.charAt(wordUpdate.length-1)=='ž'){
+        document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 2)
+    }
+    else{
+        document.getElementById('userWord').textContent = wordUpdate.substring(0, wordUpdate.length - 1)
+    }
 
     lastClickedButtons[lastClickedButtons.length - 1].removeAttribute("disabled")
     lastClickedButtons.pop(lastClickedButtons[lastClickedButtons.length - 1])
@@ -194,6 +206,7 @@ const startTimer=function(){
         mainTimer.textContent=`${min} : ${sec}`;
         if(time === 0){
             clearInterval(timerInterval);
+            handleResponse();
         }
         time--;
     },1000)

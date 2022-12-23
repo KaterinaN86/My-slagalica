@@ -1,20 +1,17 @@
-document.addEventListener("DOMContentLoaded",()=>{init()})
-
 let dataForSubmit = {}
 let selectedLeftBtn = null;
 var timer=document.getElementById("timer");
 
 function init() {
-    startTimer();
     document.getElementById("exitBtn").addEventListener("click",()=>{
         window.location.href="/OnePlayer"
     })
     fetch('http://' + window.location.host + '/spojnice/start').then((response) => {
         response.json().then((data) => {
             document.getElementById("submitBtn").addEventListener("click", submitData)
-
+            console.log(data);
             let tbody = document.getElementById("tbody");
-
+            document.getElementById("headline").textContent=data[16];
             for (let i = 0 ; i < 8; i++) {
                 let tr = document.createElement("tr")
                 let td1 = document.createElement("td")
@@ -55,24 +52,31 @@ function init() {
 
 function submitData(event){
     event.target.disabled=true;
+    disableButtons();
+    submitAndGetPoints();
+}
+function disableButtons(){
     let buttons=document.getElementsByTagName("button")
     for(let i=0 ; i<buttons.length-1;i++){
         buttons[i].disabled=true
     }
+}
+
+async function submitAndGetPoints(){
     fetch('http://' + window.location.host + '/spojnice/submit', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataForSubmit)
-    }).then((response) => {
-       response.json().then((data) => {
-           console.log(data)
-           alert("You earned: " + data + " points")
-       });
-    }).catch((error) => {
-        console.log(error)
-    });
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataForSubmit)
+        }).then((response) => {
+           response.json().then((data) => {
+               console.log(data)
+               alert("Score : "+data);
+           });
+        }).catch((error) => {
+            console.log(error)
+        });
 }
 
 var display = document.getElementById("timer")

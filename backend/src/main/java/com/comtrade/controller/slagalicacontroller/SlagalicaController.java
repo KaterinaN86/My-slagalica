@@ -1,10 +1,12 @@
 package com.comtrade.controller.slagalicacontroller;
 
+import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.model.slagalicamodel.LettersResponse;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
 import com.comtrade.model.slagalicamodel.SlagalicaUserWordSubmit;
 import com.comtrade.model.slagalicamodel.SubmitResponse;
 import com.comtrade.service.slagalicaservice.SlagalicaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -34,5 +36,4 @@ public class SlagalicaController {
     public SubmitResponse slagalicaGame(@RequestBody SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
         return slagalicaService.userWordProcessing(slagalicaUserWordSubmit, principal);
     }
-
 }

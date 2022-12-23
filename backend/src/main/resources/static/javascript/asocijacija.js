@@ -164,6 +164,7 @@ async function finishGame(){
     closeModal();
 }
 
+
 var displayTimer = document.getElementById("asocijacije-timer")
 
 const timer = (order) => {
@@ -181,4 +182,3 @@ const timer = (order) => {
             seconds--;
         }, 1000);
     }
-}

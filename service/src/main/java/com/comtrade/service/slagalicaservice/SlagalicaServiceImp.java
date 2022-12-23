@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         slagalicaGame.setIsActive(true);
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
+        game.getTimers().setStartTimeSlagalica(LocalTime.now());
         game.getGames().setSlagalicaGame(Sgame);
         onePlayerGameRepository.save(game);
         return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
@@ -237,6 +239,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),finalResult);
     }
+
 
 
 }
