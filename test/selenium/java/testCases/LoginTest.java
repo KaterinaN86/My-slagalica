@@ -37,6 +37,11 @@ public class LoginTest extends TestBase {
         Assert.assertNotNull(homePage.logout().userAdisLogin().logout());
     }
 
+    @Test(priority = 3)
+    public void invalidUserLoginTest(){
+        Assert.assertNotNull(loginPage.invalidUserLogin());
+    }
+
     @AfterClass
     public void tearDown() {
         close();
