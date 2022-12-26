@@ -76,9 +76,9 @@ public class SkockoGameServiceImpl implements SkockoGameService{
 
         if(isWinningCombination || ChronoUnit.SECONDS.between(game.getTimers().getStartTimeSkocko(), LocalTime.now())>=120){
             int numOfPoints=numberOfPoints(submit.getAttempt());
-            if (Sgame.isActive()){
+            if (game.getIsActive().isActiveSkocko()){
                 game.getPoints().setNumOfPointsSkocko(numOfPoints);
-                Sgame.setActive(false);
+                game.getIsActive().setActiveSkocko(true);
                 onePlayerGameRepository.save(game);
             }
 
@@ -148,7 +148,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             throw new RuntimeException(e);
         }
         SkockoGame Sgame=game.getGames().getSkockoGame();
-        Sgame.setActive(false);
+        game.getIsActive().setActiveSkocko(false);
 
         log.info("Returning combination for game id: " + Sgame.getId());
         return ResponseEntity.ok().body(Sgame.getCombination());

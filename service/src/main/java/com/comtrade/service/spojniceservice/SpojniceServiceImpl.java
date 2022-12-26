@@ -66,13 +66,13 @@ public class SpojniceServiceImpl implements SpojniceService{
     }
 
     @Override
-    public SpojniceGame createNewSpojniceGame(Principal principal) {
-
+    public SpojniceGame createNewSpojniceGame(Principal principal) throws Exception {
+        OnePlayerGame game = gameService.getGame(principal);
         SpojniceGame spojniceGame = null;
         try {
             log.info("Create new Spojnice game.");
             spojniceGame = new SpojniceGame();
-            spojniceGame.setActive(true);
+            game.getIsActive().setActiveSpojnice(true);
             spojniceGame.setPairsModel(getRandomPairsModel());
             SpojniceGame savedSpojniceGame = spojniceRepository.save(spojniceGame);
             log.info("Created game with id: " + savedSpojniceGame.getId());
@@ -130,13 +130,13 @@ public class SpojniceServiceImpl implements SpojniceService{
     public Integer getNumberOfPoints(Principal principal, String json) throws Exception {
         OnePlayerGame onePlayerGame = gameService.getGame(principal);
         SpojniceGame spojniceGame = getGame(principal);
-        if (!spojniceGame.isActive()){
+        if (!onePlayerGame.getIsActive().isActiveSpojnice()){
             return onePlayerGame.getPoints().getNumOfPointsSpojnice();
         }
         Integer points=calcPoints(spojniceGame, json);
         OnePlayerGame game=gameService.getGame(principal);
         game.getPoints().setNumOfPointsSpojnice(points);
-        spojniceGame.setActive(false);
+        onePlayerGame.getIsActive().setActiveSpojnice(false);
         spojniceRepository.save(spojniceGame);
 
         return onePlayerGame.getPoints().getNumOfPointsSpojnice();

@@ -48,8 +48,8 @@ public class KoZnaZnaGameController {
     }
 
     @PutMapping("/nextQuestion")
-    public ResponseEntity<Response> updateQuestionNumber(@RequestBody NextQuestion nextQuestion){
-        return koZnaZnaService.updateQuestionNumber(nextQuestion);
+    public ResponseEntity<Response> updateQuestionNumber(@RequestBody NextQuestion nextQuestion, Principal principal) throws Exception {
+        return koZnaZnaService.updateQuestionNumber(nextQuestion, principal);
     }
     @PutMapping("/finishGame")
     public ResponseEntity<Response> finishGame(Principal principal) throws Exception {

@@ -24,18 +24,15 @@ public class MojBrojGame {
 
     @ElementCollection
     private List<Integer> numbers=new ArrayList<>();
-    private boolean isActive;
     private String solution;
 
     public MojBrojGame() {
-        isActive=true;
         initializeRandom();
     }
 
     public MojBrojGame(Long id, ArrayList<Integer> numbers, boolean isActive, String solution) {
         this.id = id;
         this.numbers = numbers;
-        this.isActive = isActive;
         this.solution=solution;
     }
     public void initializeRandom(){

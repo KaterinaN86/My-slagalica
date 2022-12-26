@@ -41,7 +41,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         if(game.getGames().getKoZnaZnaGame()!=null){
             return game.getGames().getKoZnaZnaGame();
         }else{
-            KoZnaZnaGame koZnaZnaGame=this.createNewGame();
+            KoZnaZnaGame koZnaZnaGame=this.createNewGame(principal);
             game.getGames().setKoZnaZnaGame(koZnaZnaGame);
             game.getTimers().setStartTimeKoZnaZna(LocalTime.now());
             onePlayerGameRepository.save(game);
@@ -50,12 +50,12 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public KoZnaZnaGame createNewGame(){
+    public KoZnaZnaGame createNewGame(Principal principal) throws Exception {
             KoZnaZnaGame koZnaZnaGame=new KoZnaZnaGame();
+            OnePlayerGame game = gameService.getGame(principal);
             koZnaZnaGame.setQuestions(getRandomQuestions());
-            koZnaZnaGame.setActiveGame(true);
+            game.getIsActive().setActiveKoZnaZna(true);
             koZnaZnaGame.setIndexOfTheCurrentQuestion(0);
-            koZnaZnaGame.setFinishedGame(false);
             koZnaZnaRepository.save(koZnaZnaGame);
             log.info("A new Ko zna zna game has been created!");
             return koZnaZnaGame;
@@ -106,7 +106,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
                 return ResponseEntity.notFound()
                         .build();
             }
-            else if(!koZnaZnaGame.isActiveGame() || koZnaZnaGame.getIndexOfTheCurrentQuestion()!=questionIndex){
+            else if(!onePlayerGame.getIsActive().isActiveKoZnaZna() || koZnaZnaGame.getIndexOfTheCurrentQuestion()!=questionIndex){
                 return ResponseEntity.ok()
                         .body(new AnswerResponse(0));
             }
@@ -132,9 +132,10 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion) {
+    public ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion, Principal principal) throws Exception {
+        OnePlayerGame game = gameService.getGame(principal);
         KoZnaZnaGame koZnaZnaGame=this.getGame(nextQuestion.getGameId());
-        if (!koZnaZnaGame.isActiveGame()) {
+        if (!game.getIsActive().isActiveKoZnaZna()) {
             return ResponseEntity.notFound()
                     .build();
         }
@@ -147,11 +148,9 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
 
     @Override
     public ResponseEntity<Response> finishGame( Principal principal) throws Exception {
-        OnePlayerGame game=null;
-        game=gameService.getGame(principal);
+        OnePlayerGame game=gameService.getGame(principal);
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
-        koZnaZnaGame.setFinishedGame(true);
-        koZnaZnaGame.setActiveGame(false);
+        game.getIsActive().setActiveKoZnaZna(false);
         //game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());
         onePlayerGameRepository.save(game);
         koZnaZnaRepository.save(koZnaZnaGame);

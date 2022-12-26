@@ -18,5 +18,4 @@ public class SlagalicaGame {
 
     private String lettersForFindingTheWord;
     private String computerLongestWord;
-    private Boolean isActive=true;
 }

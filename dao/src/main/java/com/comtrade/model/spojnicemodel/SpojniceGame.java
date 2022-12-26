@@ -22,7 +22,5 @@ public class SpojniceGame {
         @JoinColumn(name = "pairs_model_id")
         private PairsModel pairsModel;
 
-        private boolean isActive;
-
 }
 

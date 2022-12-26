@@ -32,19 +32,13 @@ class SkockoGameTest {
         Assertions.assertEquals(list, skockoGame.getCombination());
     }
 
-    @Test
-    void isActive() {
-        skockoGame.setActive(false);
-        Assertions.assertFalse(skockoGame.isActive());
-    }
 
     @Test
     void constructorTest(){
         skockoGame=null;
         List<Integer> list=new ArrayList<>(Arrays.asList(1, 2, 3, 4));
-        skockoGame=new SkockoGame(123L,list, true);
+        skockoGame=new SkockoGame(123L,list);
         Assertions.assertEquals(123L, skockoGame.getId());
         Assertions.assertEquals(list, skockoGame.getCombination());
-        Assertions.assertTrue(skockoGame.isActive());
     }
 }

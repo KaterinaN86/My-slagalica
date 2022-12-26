@@ -12,7 +12,7 @@ import java.util.Set;
 
 public interface KoZnaZnaGameService {
     KoZnaZnaGame getGame(Principal principal) throws Exception;
-    KoZnaZnaGame createNewGame();
+    KoZnaZnaGame createNewGame(Principal principal) throws Exception;
     List<Question> getRandomQuestions();
     Set<Integer> getRandomQuestionIds();
     Integer getCurrentQuestionIndex(Long id);
@@ -20,6 +20,6 @@ public interface KoZnaZnaGameService {
     KoZnaZnaGame getGame(Long id);
     ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws Exception;
     Integer getNumberOfPoints(Principal principal) throws Exception;
-    ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion);
+    ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion, Principal principal) throws Exception;
     ResponseEntity<Response> finishGame( Principal principal) throws Exception;
 }

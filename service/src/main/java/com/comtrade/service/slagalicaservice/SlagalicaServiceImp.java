@@ -1,6 +1,7 @@
 package com.comtrade.service.slagalicaservice;
 
 
+import com.comtrade.model.IsActive;
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.slagalicamodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
@@ -45,7 +46,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         }
         SlagalicaGame slagalicaGame = new SlagalicaGame();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
-        slagalicaGame.setIsActive(true);
+        game.getIsActive().setActiveSlagalica(true);
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
         game.getTimers().setStartTimeSlagalica(LocalTime.now());
@@ -206,7 +207,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     @Override
     public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
         OnePlayerGame game=gameService.getGame(principal);
-        if(!game.getGames().getSlagalicaGame().getIsActive()){
+        if(!game.getIsActive().isActiveSlagalica()){
             return new SubmitResponse("",0);
         }
         int finalResult = 0;
@@ -233,7 +234,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         finalResult = result;
         game.getPoints().setNumOfPointsSlagalica(finalResult);
-        game.getGames().getSlagalicaGame().setIsActive(false);
+        game.getIsActive().setActiveSlagalica(false);
         onePlayerGameRepository.save(game);
 
 
