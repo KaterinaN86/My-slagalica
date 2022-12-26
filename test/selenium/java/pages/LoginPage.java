@@ -1,6 +1,7 @@
 package pages;
 
 import base.TestBase;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -35,6 +36,8 @@ public class LoginPage extends TestBase {
     private String username;
     private String password;
     private String pageTitle;
+    //Initializing variable with page title from config file (used for title verification)
+    private String configTitle = prop.getProperty("loginPageTitle");
 
     /**
      * Empty constructor.
@@ -60,7 +63,6 @@ public class LoginPage extends TestBase {
     }
 
     public void verifyPageTitle() {
-        String configTitle = prop.getProperty("title");
         if (!pageTitle.equals(configTitle)) {
             Reporter.log("Page title '" + pageTitle + "' is not equal to expected '" + configTitle + "'.");
             System.out.println("Page title is not equal to expected.");
@@ -144,27 +146,56 @@ public class LoginPage extends TestBase {
         return new LoginPage();
     }
 
-    public void setUsernameAndPassword(String username, String password){
+    /**
+     * Helper method for defining username and password values
+     *
+     * @param username
+     * @param password
+     */
+    public void setUsernameAndPassword(String username, String password) {
         driver.findElement(usernameTextInputLoc).sendKeys(username);
         Reporter.log("Entered username: " + username);
         System.out.println("Entered username: " + username);
         driver.findElement(passwordTextInputLoc).sendKeys(password);
-        Reporter.log("Entered password: "+ password);
-        System.out.println("Entered password: "+ password);
+        Reporter.log("Entered password: " + password);
+        System.out.println("Entered password: " + password);
     }
 
+    /**
+     * Login method for user Katerina
+     *
+     * @return Homepage object
+     */
     public HomePage userKaterinaLogin() {
         setUsernameAndPassword(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
         driver.findElement(signInBtnLoc).click();
         return new HomePage();
     }
 
-    public HomePage invalidUserLogin(){
-        setUsernameAndPassword("","");
+    public HomePage invalidUserLogin() {
+        setUsernameAndPassword("", "");
         driver.findElement(signInBtnLoc).click();
+        wait.until(ExpectedConditions.alertIsPresent());
+        //click on OK button on displayed alert window
+        Alert invalidLoginAlert = driver.switchTo().alert();
+        Reporter.log("Verify error message on invalid user login.");
+        String errorMsg = invalidLoginAlert.getText();
+        if (errorMsg.equals(prop.getProperty("invalidLoginErrorMsg"))) {
+            Reporter.log("Message: " + errorMsg + " is displayed.");
+            System.out.println("Message: " + errorMsg + " is displayed.");
+        } else {
+            Reporter.log("Wrong message displayed!");
+            System.out.println("Wrong message displayed!");
+        }
+        invalidLoginAlert.accept();
         return new HomePage();
     }
 
+    /**
+     * Login method for user Adis
+     *
+     * @return Homepage object
+     */
     public HomePage userAdisLogin() {
         setUsernameAndPassword(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword"));
         driver.findElement(signInBtnLoc).click();
