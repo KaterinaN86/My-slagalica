@@ -59,7 +59,7 @@ function init() {
 
 function submitData(event){
     event.target.disabled=true;
-    timer(stop);
+    timer("stop");
     disableButtons();
     submitAndGetPoints();
 }

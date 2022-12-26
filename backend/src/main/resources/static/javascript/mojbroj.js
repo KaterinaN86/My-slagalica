@@ -1,9 +1,14 @@
-//document.addEventListener("DOMContentLoaded",()=>{handleNewGame()})
+document.addEventListener("DOMContentLoaded",()=>{
+        handleNewGame();
+    }
+)
 var gameId;
 var numbers;
 var expressionList = [];
 var selectedNumber = [];
 var symbols = ['(', ')', '-', '+', '/', '*']
+let time=100;
+var isActiveGame=true;
 
 function handleNewGame(){
     fetch('http://' + window.location.host + '/MojBroj/Init')
@@ -14,6 +19,7 @@ function handleNewGame(){
                     return;
                 }
                 response.json().then((data) => {
+                    startTimer();
                     gameId = data.id;
                     numbers=data.numbers;
                     userExpression=document.getElementById("userExpression")
@@ -54,6 +60,7 @@ function handleNewGame(){
 
 }
 async function submit(){
+    startTimer("stop")
     var requestBody = {
             gameId: gameId,
             expression: document.getElementById("userExpression").innerText
@@ -82,19 +89,22 @@ async function submit(){
             console.log(error)
         }
 }
-const startTimer=function(){
-    let time=100;
-    const timerInterval = setInterval(function(){
-        const min = String(Math.trunc(time/60)).padStart(2,0);
-        const sec = String(time%60).padStart(2,0);
-        timer.textContent=`${min} : ${sec}`;
-        if(time === 0){
-            clearInterval(timerInterval);
-            submit()
-        }
-        time--;
-    },1000)
-    handleNewGame()
+const startTimer = (order) => {
+    if (order == "stop") {
+        clearInterval(timerInterval);
+        isActiveGame=false;
+    }
+    else {
+        timerInterval = setInterval(function(){
+             if(isActiveGame){
+                time--;
+             }
+            const min = String(Math.trunc(time/60)).padStart(2,0);
+            const sec = String(time%60).padStart(2,0);
+            timer.textContent=`${min} : ${sec}`;
+            if(time === 0){
+                submit()
+            }
+        },1000)
+    }
 }
-
-window.onload = startTimer();

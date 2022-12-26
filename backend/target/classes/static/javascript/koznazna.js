@@ -1,4 +1,7 @@
-
+document.addEventListener("DOMContentLoaded",()=>{
+    startTimer();
+    getQuizSet(0);
+})
 var questionCount = 0;
 var selectedOption=0;
 var selectedOptionIndex=0;
@@ -16,13 +19,14 @@ var button3 = $("btn3");
 var button4 = $("btn4");
 var progress = $("progress");
 var nextQuestion = $("next");
-var timer=$("timer");
+var displayTimer=$("timer");
+var isActiveGame=true;
 var currentQuestionIndex=0;
 var questionList={};
 var gameId=0;
 var activeGame=false;
 var numberOfPoints=0;
-
+let time=120;
 
 function getQuestions(){
     fetch('http://' + window.location.host + '/koZnaZna/play').then(
@@ -124,7 +128,11 @@ async function finishGame(){
         });
         if (response.status !== 200) {
             console.log('Error: ' + response.status);
+            startTimer("stop");
             return;
+        }
+        else{
+            startTimer("stop");
         }
 }
 
@@ -179,20 +187,24 @@ function getQuizSet(questionNumber){
     getQuestions();
 }
 
-const startTimer=function(){
-    let time=120;
-    const timerInterval=setInterval(function(){
-        const min = String(Math.trunc(time/60)).padStart(2,0);
-        const sec=String(time%60).padStart(2,0);
-        timer.textContent=`${min} : ${sec}`;
-        if(time === 0){
-            clearInterval(timerInterval);
-            getNumberOfPoints();
-            finishGame();
-        }
-        time--;
-    },1000)
-    getQuizSet(0);
-}
+const startTimer = (order) => {
+    if (order == "stop") {
+        clearInterval(timerInterval);
+        isActiveGame=false;
+    }
+    else {
+        timerInterval=setInterval(function(){
+            if(isActiveGame){
+                time--;
+            }
+            const min = String(Math.trunc(time/60)).padStart(2,0);
+            const sec=String(time%60).padStart(2,0);
+            displayTimer.textContent=`${min} : ${sec}`;
+            if(time === 0){
+                getNumberOfPoints();
+                finishGame();
+            }
+        },1000)
+    }
 
-window.onload = startTimer();
+}
