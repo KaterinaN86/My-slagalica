@@ -8,6 +8,7 @@ function $(id) {
 }
 var mainTimer=$('timer');
 var stopButton=$('stopButton');
+let time=90;
 
 document.addEventListener("DOMContentLoaded", () => {
     stopButton.style.visibility = "hidden";
@@ -46,6 +47,7 @@ const handleNewGame = () => {
 }
 
 const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
+    startTimer("stop");
     var combinationObject = {
         gameId: gameId,
         lettersForFindingTheWord: lettersForUserWord,
@@ -63,7 +65,6 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
         });
 
         if (response.status == 200) {
-
             const data = await response.json();
             if(data!=-1){
                 //alert("Time out, you earned " + data + " points")
@@ -198,16 +199,21 @@ function disableButtons() {
     document.getElementById('stopButton').setAttribute("disabled", "disabled")
 
 }
-const startTimer=function(){
-    let time=90;
-    const timerInterval=setInterval(function(){
-        const min = String(Math.trunc(time/60)).padStart(2,0);
-        const sec=String(time%60).padStart(2,0);
-        mainTimer.textContent=`${min} : ${sec}`;
-        if(time === 0){
-            clearInterval(timerInterval);
-            handleResponse();
-        }
-        time--;
-    },1000)
+const startTimer=(order) =>{
+    if (order == "stop") {
+        clearInterval(timerInterval);
+        isActiveGame=false;
+    }
+    else {
+        timerInterval=setInterval(function(){
+                const min = String(Math.trunc(time/60)).padStart(2,0);
+                const sec=String(time%60).padStart(2,0);
+                mainTimer.textContent=`${min} : ${sec}`;
+                if(time === 0){
+                    clearInterval(timerInterval);
+                    handleResponse();
+                }
+                time--;
+            },1000)
+    }
 }

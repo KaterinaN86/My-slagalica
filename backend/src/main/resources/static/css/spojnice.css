@@ -2,13 +2,13 @@ html,body {
     background-color: #333366;
 }
 
-.header-spojnice {
+/*.header-spojnice {
     color: white;
     background-color: #e2e2e2;
     justify-content: center;
     align-items: center;
 }
-
+*/
 h1 {
     margin-left: 45vw;
     font-size: 40px;
@@ -53,9 +53,8 @@ button:hover {
   	text-align: right;
   	margin-top: 20px;
   	font-size: 25px;
-  	color: white;
   }
-  
+
 #headline {
     justify-content: center;
     align-items: center;
