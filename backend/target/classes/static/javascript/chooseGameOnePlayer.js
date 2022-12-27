@@ -18,6 +18,13 @@ function init(){
                         document.getElementById("numOfPointsKoZnaZna").innerText=data.numOfPointsKoZnaZna
                         document.getElementById("numOfPointsSpojnice").innerText=data.numOfPointsSpojnice
                         document.getElementById("numOfPointsAsocijacije").innerText=data.numOfPointsAsocijacija
+
+                        document.getElementById("btnSlagalica").disabled=!data.activeSlagalica
+                        document.getElementById("btnMojBroj").disabled=!data.activeMojBroj
+                        document.getElementById("btnSkocko").disabled=!data.activeSkocko
+                        document.getElementById("btnSpojnice").disabled=!data.activeSpojnice
+                        document.getElementById("btnKoZnaZna").disabled=!data.activeKoZnaZna
+                        document.getElementById("btnAsocijacije").disabled=!data.activeAsocijacije
                     });
                 }
             )
@@ -28,7 +35,6 @@ function init(){
 
 function newGame() {
     fetch('http://' + window.location.host + '/OnePlayer/newGame').then(r => {
-        console.log(r);
         window.location.reload();
     }).catch((error) => {
         console.log(error);

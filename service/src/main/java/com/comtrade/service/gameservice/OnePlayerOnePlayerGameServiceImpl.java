@@ -75,6 +75,14 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         response.setNumOfPointsSpojnice(game.getPoints().getNumOfPointsSpojnice());
         response.setNumOfPointsKoZnaZna(game.getPoints().getNumOfPointsKoZnaZna());
         response.setNumOfPointsAsocijacija((int)game.getPoints().getNumOfPointsAsocijacije());
+
+        response.setActiveSlagalica(game.getIsActive().isActiveSlagalica());
+        response.setActiveMojBroj(game.getIsActive().isActiveMojBroj());
+        response.setActiveSkocko(game.getIsActive().isActiveSkocko());
+        response.setActiveSpojnice(game.getIsActive().isActiveSpojnice());
+        response.setActiveKoZnaZna(game.getIsActive().isActiveKoZnaZna());
+        response.setActiveAsocijacije(game.getIsActive().isActiveAsocijacije());
+
         return response;
     }
 
