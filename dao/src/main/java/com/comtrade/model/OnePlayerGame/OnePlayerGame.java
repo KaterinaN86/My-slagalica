@@ -1,6 +1,7 @@
 package com.comtrade.model.OnePlayerGame;
 
 import com.comtrade.model.Games;
+import com.comtrade.model.IsActive;
 import com.comtrade.model.Points;
 import com.comtrade.model.Timers;
 import com.comtrade.model.user.User;
@@ -25,6 +26,9 @@ public class OnePlayerGame {
     private boolean finished;
 
     @OneToOne
+    private IsActive isActive;
+
+    @OneToOne
     private Points points;
 
     @OneToOne
@@ -36,11 +40,12 @@ public class OnePlayerGame {
     @OneToOne
     Timers timers;
 
-    public OnePlayerGame(User user, Games games, Timers timers){
+    public OnePlayerGame(User user, Games games, Timers timers,IsActive isActive){
         this.user=user;
         this.games=games;
         this.timers=timers;
         finished=false;
+        this.isActive = isActive;
     }
 
 }

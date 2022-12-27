@@ -21,9 +21,5 @@ public class KoZnaZnaGame {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Question> questions;
 
-    private boolean isActiveGame;
-
-    private boolean isFinishedGame;
-
     private int indexOfTheCurrentQuestion;
 }

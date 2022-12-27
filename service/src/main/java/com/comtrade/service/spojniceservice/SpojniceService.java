@@ -11,7 +11,7 @@ public interface SpojniceService {
 
     SpojniceGame getGame(Principal principal) throws Exception;
 
-    SpojniceGame createNewSpojniceGame(Principal principal);
+    SpojniceGame createNewSpojniceGame(Principal principal) throws Exception;
 
     PairsModel getRandomPairsModel();
 

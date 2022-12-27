@@ -56,7 +56,7 @@ public class AsocijacijaServiceImpl {
     public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
         try{
             OnePlayerGame game=gameService.getGame(principal);
-
+            game.getIsActive().setActiveAsocijacije(true);
             log.info("Creating new Asocijacija game instance");
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
@@ -106,7 +106,7 @@ public class AsocijacijaServiceImpl {
             }
             AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
             long gameId=asocijacijaGame.getId();
-            boolean isGameActive = asocijacijaGame.isActive();
+            boolean isGameActive = onePlayerGame.getIsActive().isActiveAsocijacije();
             String fieldNameUpperCase = fieldName.toUpperCase();
 
             if(isGameActive && (fieldName.contains("5") || fieldName.contains("final"))){
@@ -189,7 +189,7 @@ public class AsocijacijaServiceImpl {
             log.info("Checking submit for game id: " + gameId);
             if(submittedWordUpperCase.equals(referenceWordUpperCase)){
                 if(fieldName.contains("final")){
-                    asocijacijaGame.setActive(false);
+                    onePlayerGame.getIsActive().setActiveAsocijacije(false);
                     points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 14);
                     pointsRepository.save(points);
                 }else{
@@ -208,8 +208,9 @@ public class AsocijacijaServiceImpl {
     }
 
     public void change(Long gameId){
+        OnePlayerGame game = null;
         AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
-        asocijacijaGame.setActive(false);
+        game.getIsActive().setActiveAsocijacije(false);
         asocijacijaRepository.save(asocijacijaGame);
     }
 
@@ -226,7 +227,7 @@ public class AsocijacijaServiceImpl {
             }
             asocijacijaRepository.save(asocijacijaGame);
             pointsRepository.save(points);
-            if(!asocijacijaGame.isActive()){
+            if(!onePlayerGame.getIsActive().isActiveAsocijacije()){
                 return ResponseEntity.ok()
                         .body(new ResponseWithNumberOfPoints(points.getNumOfPointsAsocijacije()));
             }else{
@@ -244,10 +245,10 @@ public class AsocijacijaServiceImpl {
         OnePlayerGame game = gameService.getGame(principal);
         AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
         Points points = game.getPoints();
-        if(!asocijacijaGame.isActive()){
+        if(!game.getIsActive().isActiveAsocijacije()){
             return ResponseEntity.ok().build();
         }
-        asocijacijaGame.setActive(false);
+        game.getIsActive().setActiveAsocijacije(false);
         if(points.getNumOfPointsAsocijacije()<=0){
             points.setNumOfPointsAsocijacije(0);
         }

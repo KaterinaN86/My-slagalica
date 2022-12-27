@@ -21,17 +21,13 @@ public class SkockoGame {
     @ElementCollection
     private List<Integer> combination = new ArrayList<>();
 
-    private boolean isActive;
-
     public SkockoGame() {
-        isActive=true;
         generateNewCombination();
     }
 
-    public SkockoGame(Long id, List<Integer> combination, boolean isActive) {
+    public SkockoGame(Long id, List<Integer> combination) {
         this.id = id;
         this.combination = combination;
-        this.isActive = isActive;
         generateNewCombination();
     }
 

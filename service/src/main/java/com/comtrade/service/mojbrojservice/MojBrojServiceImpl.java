@@ -125,13 +125,13 @@ public class MojBrojServiceImpl implements MojBrojService{
         OnePlayerGame game= gameService.getGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         Long gameId=MBgame.getId();
-        if(!MBgame.isActive()){
+        if(!game.getIsActive().isActiveMojBroj()){
             throw new Exception("You can submit only once");
         }
         if(!validateExpression(expression,gameId)){
             throw new Exception("Bad expression");
         }
-        MBgame.setActive(false);
+        game.getIsActive().setActiveMojBroj(false);
         mojBrojRepository.save(MBgame);
         int target=MBgame.getNumbers().get(0);
         return Math.abs(eval(expression)-target);

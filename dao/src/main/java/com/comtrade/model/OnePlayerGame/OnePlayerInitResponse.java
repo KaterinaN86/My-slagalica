@@ -15,6 +15,14 @@ public class OnePlayerInitResponse {
     int numOfPointsSpojnice;
     int numOfPointsKoZnaZna;
     int numOfPointsAsocijacija;
+
+    boolean isActiveSlagalica;
+    boolean isActiveMojBroj;
+    boolean isActiveSkocko;
+    boolean isActiveSpojnice;
+    boolean isActiveKoZnaZna;
+    boolean isActiveAsocijacije;
+
     public OnePlayerInitResponse(){
         msg="";
         numOfPointsSum=0;
@@ -24,6 +32,13 @@ public class OnePlayerInitResponse {
         numOfPointsSpojnice=0;
         numOfPointsKoZnaZna=0;
         numOfPointsAsocijacija=0;
+
+        boolean isActiveSlagalica=true;
+        boolean isActiveMojBroj=true;
+        boolean isActiveSkocko=true;
+        boolean isActiveSpojnice=true;
+        boolean isActiveKoZnaZna=true;
+        boolean isActiveAsocijacije=true;
     }
 
 

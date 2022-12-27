@@ -1,15 +1,13 @@
 package com.comtrade.service.gameservice;
 
 import com.comtrade.model.Games;
+import com.comtrade.model.IsActive;
 import com.comtrade.model.OnePlayerGame.OnePlayerGame;
 import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
 import com.comtrade.model.Points;
 import com.comtrade.model.Timers;
 import com.comtrade.model.user.User;
-import com.comtrade.repository.GamesRepository;
-import com.comtrade.repository.PointsRepository;
-import com.comtrade.repository.TimersRepository;
-import com.comtrade.repository.UserRepository;
+import com.comtrade.repository.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +22,15 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
     private final GamesRepository gamesRepository;
     private final PointsRepository pointsRepository;
     private final TimersRepository timersRepository;
+    private final IsActiveRepository isActiveRepository;
 
-    public OnePlayerOnePlayerGameServiceImpl(OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository, PointsRepository pointsRepository, TimersRepository timersRepository) {
+    public OnePlayerOnePlayerGameServiceImpl(OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository, PointsRepository pointsRepository, TimersRepository timersRepository, IsActiveRepository isActiveRepository) {
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.userRepository = userRepository;
         this.gamesRepository = gamesRepository;
         this.pointsRepository = pointsRepository;
         this.timersRepository = timersRepository;
+        this.isActiveRepository = isActiveRepository;
     }
 
     @Override
@@ -43,7 +43,9 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         gamesRepository.save(games);
         Timers timers=new Timers();
         timersRepository.save(timers);
-        OnePlayerGame onePlayerGame =new OnePlayerGame(user.get(),games, timers);
+        IsActive isActive = new IsActive();
+        isActiveRepository.save(isActive);
+        OnePlayerGame onePlayerGame =new OnePlayerGame(user.get(),games, timers, isActive);
         Points points=new Points();
         pointsRepository.save(points);
         onePlayerGame.setPoints(points);
@@ -73,6 +75,14 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
         response.setNumOfPointsSpojnice(game.getPoints().getNumOfPointsSpojnice());
         response.setNumOfPointsKoZnaZna(game.getPoints().getNumOfPointsKoZnaZna());
         response.setNumOfPointsAsocijacija((int)game.getPoints().getNumOfPointsAsocijacije());
+
+        response.setActiveSlagalica(game.getIsActive().isActiveSlagalica());
+        response.setActiveMojBroj(game.getIsActive().isActiveMojBroj());
+        response.setActiveSkocko(game.getIsActive().isActiveSkocko());
+        response.setActiveSpojnice(game.getIsActive().isActiveSpojnice());
+        response.setActiveKoZnaZna(game.getIsActive().isActiveKoZnaZna());
+        response.setActiveAsocijacije(game.getIsActive().isActiveAsocijacije());
+
         return response;
     }
 
