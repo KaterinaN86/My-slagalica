@@ -1,4 +1,6 @@
 com\comtrade\model\Points.class
+com\comtrade\model\IsActive.class
+com\comtrade\repository\IsActiveRepository.class
 com\comtrade\model\slagalicamodel\LettersResponse.class
 com\comtrade\model\slagalicamodel\SlagalicaUserWordSubmit$SlagalicaUserWordSubmitBuilder.class
 com\comtrade\model\asocijacijamodel\SubmitNumberOfFields.class
@@ -10,6 +12,7 @@ com\comtrade\model\spojnicemodel\PairsModel.class
 com\comtrade\model\asocijacijamodel\ResponseWithFieldValue.class
 com\comtrade\repository\asocijacijarepository\AsocijacijaRepository.class
 com\comtrade\model\skockomodel\SkockoResponse.class
+com\comtrade\repository\TimersRepository.class
 com\comtrade\model\slagalicamodel\SubmitResponse.class
 com\comtrade\model\asocijacijamodel\SubmitFieldValue.class
 com\comtrade\model\asocijacijamodel\WordModel.class
@@ -35,6 +38,7 @@ com\comtrade\model\slagalicamodel\SlagalicaUserWordSubmit.class
 com\comtrade\model\koznaznamodel\responses\Response.class
 com\comtrade\model\spojnicemodel\SpojniceGame.class
 com\comtrade\model\skockomodel\SkockoGame.class
+com\comtrade\model\Timers.class
 com\comtrade\model\koznaznamodel\NextQuestion.class
 com\comtrade\repository\spojnicerepository\PairsRepository.class
 com\comtrade\model\asocijacijamodel\ResponseWithBoolean.class
