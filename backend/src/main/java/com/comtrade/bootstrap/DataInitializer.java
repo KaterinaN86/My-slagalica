@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,33 +35,16 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String currentPath = new java.io.File(".").getCanonicalPath();
-        System.out.println("Current dir:" + currentPath);
-        File file=null;
         List<DictionaryWord> dictionaryWords=new ArrayList<>();
-        try {
-            file=new File("serbian-latin.txt");//for docker just "serbian-latin.txt"
-            Scanner reader = new Scanner(file);
-            dictionaryWords = new ArrayList<>();
-
-            while (reader.hasNextLine()) {
-                DictionaryWord word=new DictionaryWord();
-                word.setWordFromDictionary(reader.nextLine());
-                dictionaryWords.add(word);
+            URL url = new URL("https://raw.githubusercontent.com/peterjcarroll/recnik-api/master/serbian-latin.txt");
+            BufferedReader read = new BufferedReader(
+                    new InputStreamReader(url.openStream()));
+            List<String> words=read.lines().toList();
+            for (String word: words) {
+                dictionaryWords.add(new DictionaryWord(word));
             }
-            reader.close();
-        }catch (FileNotFoundException e){
-            file=new File("backend/src/main/resources/static/serbian-latin.txt");//for docker just "serbian-latin.txt"
-            Scanner reader = new Scanner(file);
-            dictionaryWords = new ArrayList<>();
 
-            while (reader.hasNextLine()) {
-                DictionaryWord word=new DictionaryWord();
-                word.setWordFromDictionary(reader.nextLine());
-                dictionaryWords.add(word);
-            }
-            System.out.println("load from local");
-        }
+
 
 
         dictionaryWordRepository.saveAll(dictionaryWords);
