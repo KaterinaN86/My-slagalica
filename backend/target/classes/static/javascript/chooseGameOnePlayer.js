@@ -29,7 +29,6 @@ function init(){
 function newGame() {
     fetch('http://' + window.location.host + '/OnePlayer/newGame').then(r => {
         console.log(r);
-        window.location.reload();
     }).catch((error) => {
         console.log(error);
     })

@@ -1,7 +1,7 @@
-package com.comtrade.service.gameservice;
+package com.comtrade.interfaces;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
+import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerInitResponse;
 
 import java.security.Principal;
 import java.util.List;

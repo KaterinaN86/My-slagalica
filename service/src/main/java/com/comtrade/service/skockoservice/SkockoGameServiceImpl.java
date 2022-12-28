@@ -1,6 +1,6 @@
 package com.comtrade.service.skockoservice;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.skockomodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;

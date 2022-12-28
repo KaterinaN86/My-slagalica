@@ -1,7 +1,6 @@
 package com.comtrade.repository.gamerepository;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.Points;
+import com.comtrade.model.games.OnePlayerGame;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

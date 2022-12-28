@@ -1,8 +1,7 @@
 package com.comtrade.service.slagalicaservice;
 
 
-import com.comtrade.model.IsActive;
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.slagalicamodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;

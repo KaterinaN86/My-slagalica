@@ -1,9 +1,10 @@
 package com.comtrade.service.gameservice;
 
+import com.comtrade.interfaces.OnePlayerGameService;
 import com.comtrade.model.Games;
 import com.comtrade.model.IsActive;
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
+import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerInitResponse;
 import com.comtrade.model.Points;
 import com.comtrade.model.Timers;
 import com.comtrade.model.user.User;

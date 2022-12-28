@@ -3,6 +3,7 @@ package com.comtrade.controller;
 import com.comtrade.model.user.RegistrationResponse;
 import com.comtrade.model.user.UserToRegister;
 import com.comtrade.security.MyUserDetailService;
+import com.comtrade.service.gameservice.MultiPlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
+
     @Autowired
     MyUserDetailService myUserDetailService;
+
+    @Autowired
+    MultiPlayerServiceImpl multiPlayerService;
 
     @GetMapping ("/login")
     public String login(){
@@ -35,11 +40,6 @@ public class IndexController {
     @GetMapping("OnePlayer")
     public String onePlayer(){
         return "chooseGameOnePlayer.html";
-    }
-
-    @GetMapping("TwoPlayers")
-    public String TwoPlayers(){
-        return "chooseGameTwoPlayers.html";
     }
 
     @GetMapping("RangList")
@@ -87,4 +87,10 @@ public class IndexController {
         String msg=myUserDetailService.addUser(userToRegister.getUserName(),userToRegister.getPassword());
         return ResponseEntity.ok().body(new RegistrationResponse(msg));
     }
+
+    @GetMapping("/findingGamePage")
+    public String findingGamePage() {
+        return "findingGame.html";
+    }
+
 }

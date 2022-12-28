@@ -1,7 +1,7 @@
 package com.comtrade.service.mojbrojservice;
 
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.script.ScriptException;
 import java.security.Principal;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

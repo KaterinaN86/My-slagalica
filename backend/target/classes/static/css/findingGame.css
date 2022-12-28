@@ -1,0 +1,36 @@
+body {
+    background-color: #333366;
+}
+
+.head-two-player {
+    background-color: gray;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    margin: 20px auto;
+    width: 40vw;
+    height: 55px;
+}
+
+.find-game-button {
+    background-color: orange;
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+    font-size: 40px;
+    margin: 13vh 0px;
+}
+
+.button-container {
+    margin: 5vh auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.exit-two-player {
+    background-color: gray;
+    border-radius: 10px;
+    width: 16vw;
+    height: 7vh;
+}

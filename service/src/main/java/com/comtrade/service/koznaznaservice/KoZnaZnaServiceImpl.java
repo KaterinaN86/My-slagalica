@@ -1,6 +1,6 @@
 package com.comtrade.service.koznaznaservice;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.koznaznamodel.NextQuestion;
 import com.comtrade.model.koznaznamodel.Question;

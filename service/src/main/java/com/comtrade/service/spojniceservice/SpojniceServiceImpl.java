@@ -1,6 +1,6 @@
 package com.comtrade.service.spojniceservice;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.spojnicemodel.PairsModel;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;

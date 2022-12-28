@@ -1,12 +1,14 @@
 package com.comtrade.controller;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
-import com.comtrade.model.OnePlayerGame.RangListResponse;
+import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerInitResponse;
+import com.comtrade.model.games.RangListResponse;
+import com.comtrade.service.gameservice.MultiPlayerServiceImpl;
 import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -18,9 +20,11 @@ import java.util.List;
 public class Gamecontroler {
 
     private final OnePlayerOnePlayerGameServiceImpl gameservice;
+    private final MultiPlayerServiceImpl multiPlayerService;
 
-    public Gamecontroler(OnePlayerOnePlayerGameServiceImpl gameservice) {
+    public Gamecontroler(OnePlayerOnePlayerGameServiceImpl gameservice, MultiPlayerServiceImpl multiPlayerService) {
         this.gameservice = gameservice;
+        this.multiPlayerService = multiPlayerService;
     }
 
     @GetMapping("/OnePlayer/init")
@@ -48,11 +52,14 @@ public class Gamecontroler {
     }
 
     @GetMapping("OnePlayer/newGame")
-    public String newGame(Principal principal) throws Exception {
+    public String newOnePlayerGame(Principal principal) throws Exception {
         gameservice.finishedGame(principal);
         return "chooseGameOnePlayer.html";
     }
 
-
+    @PostMapping("/findingGame")
+    public String twoPlayerGame(Principal principal) {
+        return multiPlayerService.addPlayerToQueue(principal);
+    }
 
 }

@@ -1,6 +1,6 @@
 package com.comtrade.service.asocijacijaservice;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.*;
 import com.comtrade.repository.PointsRepository;

@@ -1,4 +1,4 @@
-package com.comtrade.model.OnePlayerGame;
+package com.comtrade.model.games;
 
 import com.comtrade.model.Games;
 import com.comtrade.model.IsActive;
@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
 
 import javax.persistence.*;
 
@@ -47,5 +46,4 @@ public class OnePlayerGame {
         finished=false;
         this.isActive = isActive;
     }
-
 }
