@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Mirko
+
+  - include:
+      file: db/changelog/sql/01-create-needed-tables.sql
+
+  - include:
+      file: db/changelog/sql/02-insert-into-database.sql
