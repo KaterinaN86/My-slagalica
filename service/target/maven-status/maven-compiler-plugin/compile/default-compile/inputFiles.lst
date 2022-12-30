@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\com\comtrade\service\gameservice\OnePlayerOnePlayerGameServiceImpl.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\com\comtrade\service\asocijacijaservice\AsocijacijaServiceImpl.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\com\comtrade\service\mojbrojservice\MojBrojServiceImpl.java
@@ -15,3 +16,22 @@ C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\com\comtrade\service\skockoservice\SkockoGameServiceImpl.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\com\comtrade\interfaces\MultiPlayerService.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\main\java\com\comtrade\service\slagalicaservice\SlagalicaService.java
+=======
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\MultiPlayerServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\interfaces\MultiPlayerService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\mojbrojservice\MojBrojServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\slagalicaservice\SlagalicaServiceImp.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\koznaznaservice\QuestionServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\spojniceservice\SpojniceServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\koznaznaservice\KoZnaZnaServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\mojbrojservice\MojBrojService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\gameservice\OnePlayerOnePlayerGameServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\koznaznaservice\QuestionService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\asocijacijaservice\AsocijacijaServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\skockoservice\SkockoGameService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\gameservice\OnePlayerGameService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\koznaznaservice\KoZnaZnaGameService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\skockoservice\SkockoGameServiceImpl.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\slagalicaservice\SlagalicaService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\main\java\com\comtrade\service\spojniceservice\SpojniceService.java
+>>>>>>> 7cc66f6aab0f2d76af5f714dc95c2d39014547b5

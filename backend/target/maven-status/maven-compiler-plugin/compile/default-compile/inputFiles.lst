@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\skockocontroller\SkockoGameController.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\slagalicacontroller\SlagalicaController.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\com\comtrade\security\MyUserDetails.java
@@ -12,3 +13,19 @@ C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\Gamecontroler.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\spojnicecontroller\SpojniceController.java
 C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\koznaznacontroller\KoZnaZnaGameController.java
+=======
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\security\MyUserDetailService.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\security\SecurityConfiguration.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\koznaznacontroller\KoZnaZnaGameController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\koznaznacontroller\QuestionController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\BackendApplication.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\IndexController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\skockocontroller\SkockoGameController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\security\MyUserDetails.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\slagalicacontroller\SlagalicaController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\spojnicecontroller\SpojniceController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\bootstrap\DataInitializer.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\asocijacijacontroller\AsocijacijaController.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\mojbrojcontroller\MojBrojControler.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\backend\src\main\java\com\comtrade\controller\Gamecontroler.java
+>>>>>>> 7cc66f6aab0f2d76af5f714dc95c2d39014547b5
