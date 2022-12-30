@@ -31,11 +31,6 @@ class SkockoOnePlayerOnePlayerGameServiceImplTest {
         skockoGameService=new SkockoGameServiceImpl(skockoGameRepository, onePlayerGameRepository);
     }
 
-    @Test
-    void createNewGame() throws NoSuchAlgorithmException {
-        SkockoGame skockoGame=skockoGameService.createNewGame();
-        Assertions.assertTrue(skockoGame.isActive());
-    }
 
     @Test
     void isWinningCombination() {
