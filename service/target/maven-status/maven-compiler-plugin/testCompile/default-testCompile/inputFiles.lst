@@ -1,10 +1,23 @@
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\service\slagalicaservice\SlagalicaOnePlayerGameServiceImpTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoGameTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoResponseWithPositionsTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\DictionaryWordTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\SlagalicaGameUserWordSubmitTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\service\mojbrojservice\MojBrojServiceImplTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\service\skockoservice\SkockoOnePlayerOnePlayerGameServiceImplTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoResponseWithNumberOfPointsTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoSubmitTest.java
-C:\Users\mirkop\Desktop\javaSlagalica1\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\SlagalicaGameTest.java
+<<<<<<< HEAD
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoGameTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoResponseWithPositionsTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\SlagalicaGameTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\service\skockoservice\SkockoOnePlayerOnePlayerGameServiceImplTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\DictionaryWordTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\SlagalicaGameUserWordSubmitTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoSubmitTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\service\mojbrojservice\MojBrojServiceImplTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\service\slagalicaservice\SlagalicaOnePlayerGameServiceImpTest.java
+C:\Users\mirkop\Desktop\javaSlagalica\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoResponseWithNumberOfPointsTest.java
+=======
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\service\slagalicaservice\SlagalicaOnePlayerGameServiceImpTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoResponseWithNumberOfPointsTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoResponseWithPositionsTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\service\skockoservice\SkockoOnePlayerOnePlayerGameServiceImplTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoGameTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\skockomodel\SkockoSubmitTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\service\mojbrojservice\MojBrojServiceImplTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\DictionaryWordTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\SlagalicaGameUserWordSubmitTest.java
+C:\Users\eminas\IdeaProjects\Beta-team-slagalica\service\src\test\java\com\comtrade\model\slagalicamodel\SlagalicaGameTest.java
+>>>>>>> 7cc66f6aab0f2d76af5f714dc95c2d39014547b5
