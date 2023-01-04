@@ -1,6 +1,11 @@
 --liquibase formatted sql
 --changeset Mirko:create-tables spitStatement:true andDelimiter:;
 
+
+INSERT INTO users VALUES (
+1,1,"$2a$10$Whcr6HD8FI6/TsaH0nqyMuF8nEYkw987FBkcraT3wLBPSJlnE5/te","ROLE_USER","user1"
+)
+;
 INSERT INTO word_model (columnA, columnB, columnC, columnD, final_word) VALUES (
 
 'MODNA,FORMULA,REVIJA,SLETETI,PISTA',

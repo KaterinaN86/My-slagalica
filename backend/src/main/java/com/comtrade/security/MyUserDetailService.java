@@ -21,7 +21,6 @@ public class MyUserDetailService implements UserDetailsService {
     UserRepository userRepository;
     MyUserDetailService(UserRepository userRepository){
         this.userRepository=userRepository;
-        this.userRepository.save(new User("user1","$2a$10$Whcr6HD8FI6/TsaH0nqyMuF8nEYkw987FBkcraT3wLBPSJlnE5/te",true,"ROLE_USER"));
     }
 
     @Override
