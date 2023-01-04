@@ -10,6 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
+import pages.LoginPage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,6 +43,10 @@ public class TestBase {
      * WebDriverWait object used for explicit wait.
      */
     public static WebDriverWait wait;
+    /**
+     * LoginPage instance, used in several classes.
+     */
+    public static LoginPage loginPage;
     /**
      * Username and password text input elements locators
      */
@@ -76,7 +81,7 @@ public class TestBase {
     /**
      * Calls corresponding WebDriverManager setup method depending on browser property. Initializes WebDeiverWait object and baseUrl using config property.
      */
-    public static void init() {
+    public void init() {
         try {
             //Initializing properties object that stores data from confing.properties file.
             prop = new Properties();
@@ -109,6 +114,8 @@ public class TestBase {
         }
         //Initializing wait driver
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        //Initializing LoginPage object
+        this.loginPage=new LoginPage();
     }
 
     /**
