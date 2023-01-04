@@ -99,14 +99,33 @@ async function submitSelect(){
             case 4 : button4.style.backgroundColor = "green";
                     break;
             }
-
+            updateQuestionNumber();
         }
 }
 
+async function submitWithNextQuestion(){
+        var result=0;
+        var submitQuestionObject={
+            gameId : gameId,
+            questionIndex : questionCount,
+            questionId : questionList[questionCount].id,
+            selectedQuestion : selectedOptionIndex
+        }
+        const response = await fetch('http://' + window.location.host + '/koZnaZna/submitQuestion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submitQuestionObject)
+        });
+        if (response.status == 200) {
+            updateQuestionNumber();
+        }
+}
 
-function nextQuestionSelect(e){
+function nextQuestionSelect(){
+    submitWithNextQuestion();
     defaultOptionColors();
-    updateQuestionNumber();
     selectedOptionIndex=0;
     if(questionCount==9){
        getNumberOfPoints();
