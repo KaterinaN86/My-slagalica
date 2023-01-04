@@ -14,13 +14,13 @@ public class HomePage extends TestBase {
     By rangListLoc  = By.xpath("//button[text()='Rang Lista']");
     By logOutLoc  = By.xpath("//button[text()='Log out']");
 
-    HomePage(){
+   public HomePage(){
         super();
     }
     public LoginPage logout(){
         Reporter.log("Logging out active user.");
         driver.findElement(logOutLoc).click();
-        System.out.println("User logged out.");
-        return new LoginPage();
+        System.out.println("User logged out.");        ;
+        return (LoginPage) verifyPageObjectInitialized(new LoginPage());
     }
 }
