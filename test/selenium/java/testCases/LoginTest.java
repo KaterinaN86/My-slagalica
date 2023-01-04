@@ -11,10 +11,7 @@ import pages.LoginPage;
  * Class with test methods for Login page. Inherits TestBase fields and methods.
  */
 public class LoginTest extends TestBase {
-    /**
-     * LoginPage instance, used in several methods.
-     */
-    LoginPage loginPage;
+
     /**
      * HomePage instance, used in several methods.
      */
@@ -35,8 +32,6 @@ public class LoginTest extends TestBase {
     public void setup() {
         //Calling parent class init method to initialize properties and drivers.
         init();
-        //Initializing LoginPage instance.
-        this.loginPage = new LoginPage();
     }
 
     @Test(priority = 0)
