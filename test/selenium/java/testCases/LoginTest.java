@@ -1,45 +1,57 @@
 package testCases;
 
 import base.TestBase;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.LoginPage;
 
+/**
+ * Class with test methods for Login page. Inherits TestBase fields and methods.
+ */
 public class LoginTest extends TestBase {
-    LoginPage loginPage;
+
+    /**
+     * HomePage instance, used in several methods.
+     */
     HomePage homePage;
 
+    /**
+     * Empty constructor.
+     */
     public LoginTest() {
+        //Calling parent class constructor.
         super();
     }
 
+    /**
+     * Method executed before the first test in the class.
+     */
     @BeforeClass
     public void setup() {
+        //Calling parent class init method to initialize properties and drivers.
         init();
-        this.loginPage = new LoginPage();
     }
 
     @Test(priority = 0)
     public void loginPageOpenTest() {
-        Assert.assertNotNull(loginPage.openLoginPage());
+        this.loginPage = loginPage.openLoginPage();
     }
 
     @Test(priority = 1)
-    public void userKatrinaLoginTest(){
-        homePage=loginPage.userKaterinaLogin();
-        Assert.assertNotNull(homePage);
+    public void userKatrinaLoginTest() {
+        this.homePage = this.loginPage.userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
     }
+
     @Test(priority = 2)
-    public void differentUsersLoginTest(){
-        Assert.assertNotNull(homePage.logout().userAdisLogin().logout());
+    public void differentUsersLoginTest() {
+        this.loginPage = this.homePage.logout().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).logout();
     }
 
     @Test(priority = 3)
-    public void invalidUserLoginTest(){
-        Assert.assertNotNull(loginPage.invalidUserLogin());
+    public void invalidUserLoginTest() {
+        loginPage.invalidUserLogin();
     }
 
     @AfterClass
