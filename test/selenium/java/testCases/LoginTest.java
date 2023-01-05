@@ -5,7 +5,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.HomePage;
-import pages.LoginPage;
 
 /**
  * Class with test methods for Login page. Inherits TestBase fields and methods.
