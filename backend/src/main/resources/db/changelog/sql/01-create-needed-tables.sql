@@ -135,6 +135,7 @@ CREATE TABLE timers (
 CREATE TABLE two_player_game (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     games_id INTEGER,
+    finished BIT,
     is_active1_id INTEGER,
     is_active2_id INTEGER,
     points1_id INTEGER,

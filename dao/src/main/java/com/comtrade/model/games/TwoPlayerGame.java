@@ -20,6 +20,8 @@ public class TwoPlayerGame {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Boolean finished;
+
     @OneToOne
     private IsActive isActive1;
 

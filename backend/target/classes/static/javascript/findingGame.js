@@ -10,8 +10,13 @@ async function findGame() {
         let btn = document.getElementById("findGameId")
         if (btn.innerText == "Find Game") {
             btn.innerText = "Cancel"
+
+            document.getElementById("waitingAnimation").style.visibility ="visible"
+            //document.getElementById("waitingAnimation").style.display="flex"
         } else {
             btn.innerText = "Find Game"
+            document.getElementById("waitingAnimation").style.visibility ="hidden"
+            //document.getElementById("waitingAnimation").style.display="none"
         }
     }
 }
