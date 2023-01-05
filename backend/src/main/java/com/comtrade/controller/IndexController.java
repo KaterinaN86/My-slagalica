@@ -88,7 +88,7 @@ public class IndexController {
         return ResponseEntity.ok().body(new RegistrationResponse(msg));
     }
 
-    @GetMapping("/findingGamePage")
+    @GetMapping("/findingGame")
     public String findingGamePage() {
         return "findingGame.html";
     }

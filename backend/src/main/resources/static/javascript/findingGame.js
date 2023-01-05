@@ -3,7 +3,7 @@ function exit() {
 }
 
 async function findGame() {
-    const response = await fetch("http://" + window.location.host + "/findGame", {
+    const response = await fetch("http://" + window.location.host + "/findingGame", {
         method: 'POST'
     });
     if (response.status == 200) {
