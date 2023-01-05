@@ -93,4 +93,9 @@ public class IndexController {
         return "findingGame.html";
     }
 
+    @GetMapping("/twoPlayerGame")
+    public String twoPlayerGame() {
+        return "twoPlayerGame.html";
+    }
+
 }
