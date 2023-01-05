@@ -4,6 +4,8 @@ import java.security.Principal;
 
 public interface MultiPlayerService {
 
-    String addPlayerToQueue(Principal principal);
-    void createTwoPlayerGame(Principal principal);
+    boolean addPlayerToQueue(Principal principal);
+    boolean removePlayerFromQueue(Principal principal);
+    void createTwoPlayerGame();
+    boolean isInGame(Principal principal);
 }

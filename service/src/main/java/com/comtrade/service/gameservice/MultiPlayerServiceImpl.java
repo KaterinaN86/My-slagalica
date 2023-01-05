@@ -9,6 +9,7 @@ import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.user.User;
 import com.comtrade.repository.*;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class MultiPlayerServiceImpl implements MultiPlayerService {
 
     private final TwoPlayerGameRepository twoPlayerGameRepository;
@@ -45,24 +47,35 @@ public class MultiPlayerServiceImpl implements MultiPlayerService {
     }
 
     @Override
-    public String addPlayerToQueue(Principal principal) {
-        Optional<User> optUser=userRepository.findByUserName(principal.getName());
-        if (optUser.isPresent()){
-            if (!playerQueue.contains(optUser.get())) {
-                playerQueue.add(optUser.get());
-            }
-            return "Player added to queue!";
+    public boolean addPlayerToQueue(Principal principal) {
+        if (isInGame(principal)){
+            log.info("Korinsik je vec u gejmu");
+            return false;
         }
-        return "Something went wrong!?";
-    }
-
-    public void removePlayerFromQueue(Principal principal) {
         Optional<User> optUser=userRepository.findByUserName(principal.getName());
-        playerQueue.remove(optUser.get());
+        if (!playerQueue.contains(optUser.get())){
+            playerQueue.add(optUser.get());
+            createTwoPlayerGame();
+            log.info("Queue is: "+playerQueue.toString());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public void createTwoPlayerGame(Principal principal) {
+    public boolean removePlayerFromQueue(Principal principal) {
+        Optional<User> optUser=userRepository.findByUserName(principal.getName());
+        if (playerQueue.contains(optUser.get())) {
+            playerQueue.remove(optUser.get());
+            log.info(playerQueue.toString());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void createTwoPlayerGame() {
         if (playerQueue.size() >= 2) {
             User user1 = playerQueue.get(0);
             User user2 = playerQueue.get(1);
@@ -85,10 +98,22 @@ public class MultiPlayerServiceImpl implements MultiPlayerService {
             pointsRepository.save(points2);
             twoPlayerGame.setPoints1(points1);
             twoPlayerGame.setPoints2(points2);
-            playerGames.add(twoPlayerGame);
-            playerQueue.remove(user1);
-            playerQueue.remove(user2);
+            twoPlayerGame.setFinished(false);
+            twoPlayerGameRepository.save(twoPlayerGame);
+            log.info("twoPlayerGame ccreated");
+        } else {
+            log.info("Not enough player in queue");
         }
     }
+
+    @Override
+    public boolean isInGame(Principal principal) {
+        List<TwoPlayerGame> listOfGames = twoPlayerGameRepository.findByUserName(principal.getName());
+        if (!listOfGames.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
 
 }

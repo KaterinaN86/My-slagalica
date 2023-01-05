@@ -12,6 +12,7 @@ import java.util.List;
 public interface OnePlayerGameRepository extends JpaRepository<OnePlayerGame,Long> {
 
     List<OnePlayerGame> findAllByUserUserNameAndFinishedFalse(String userName);
+
     @Query("SELECT opg from OnePlayerGame opg where opg.finished=true order by (opg.points.numOfPointsSlagalica+" +
             "opg.points.numOfPointsMojBroj+" +
             "opg.points.numOfPointsSkocko+" +

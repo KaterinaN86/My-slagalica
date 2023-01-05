@@ -1,22 +1,40 @@
+document.addEventListener("beforeunload",()=>{dequeue()})
+
 function exit() {
     window.location.href="/";
+    dequeue()
 }
-
+let interval
 async function findGame() {
-    const response = await fetch("http://" + window.location.host + "/findingGame", {
-        method: 'POST'
-    });
+    const response = await fetch("http://" + window.location.host + "/queue");
     if (response.status == 200) {
         let btn = document.getElementById("findGameId")
-        if (btn.innerText == "Find Game") {
+        data = await response.json()
+        console.log(data)
+        if (btn.innerText == "Find Game" && data) {
             btn.innerText = "Cancel"
-
             document.getElementById("waitingAnimation").style.visibility ="visible"
-            //document.getElementById("waitingAnimation").style.display="flex"
+            interval=window.setInterval(isGameFound,1000)
         } else {
             btn.innerText = "Find Game"
             document.getElementById("waitingAnimation").style.visibility ="hidden"
-            //document.getElementById("waitingAnimation").style.display="none"
+            window.clearInterval(interval)
+            dequeue()
+        }
+
+    }
+}
+async function isGameFound(){
+    const response = await fetch("http://" + window.location.host + "/isInGame");
+    if (response.status == 200) {
+        data = await response.json()
+        if(data){
+            window.location="http://" + window.location.host + "/twoPlayerGame"
+            window.clearInterval(interval)
         }
     }
 }
+async function dequeue(){
+    const response = await fetch("http://" + window.location.host + "/dequeue");
+}
+

@@ -57,9 +57,20 @@ public class Gamecontroler {
         return "chooseGameOnePlayer.html";
     }
 
-    @PostMapping("/findingGame")
-    public String twoPlayerGame(Principal principal) {
-        return multiPlayerService.addPlayerToQueue(principal);
+    @GetMapping("/queue")
+    public ResponseEntity<Boolean> queue(Principal principal) {
+        return ResponseEntity.ok(multiPlayerService.addPlayerToQueue(principal));
     }
+
+    @GetMapping("/dequeue")
+    public ResponseEntity<Boolean> dequeue(Principal principal) {
+        return ResponseEntity.ok(multiPlayerService.removePlayerFromQueue(principal));
+    }
+
+    @GetMapping("/isInGame")
+    public ResponseEntity<Boolean> isInGame(Principal principal) {
+        return ResponseEntity.ok(multiPlayerService.isInGame(principal));
+    }
+
 
 }
