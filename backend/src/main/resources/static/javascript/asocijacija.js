@@ -6,6 +6,9 @@ var modal = document.getElementById("myModal");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
+var displayTimer = document.getElementById("timer")
+var seconds = 120;
+var isActiveGame=true;
 // When the user clicks the button, open the modal 
 function openModal(pressedButton) {
   modal.style.display = "block";
@@ -81,7 +84,6 @@ const showWord = async (pressedButton)=>{
                 pressedButton.innerHTML = data.fieldValue;
                 pressedButton.disabled = true;
                 console.log(data.fieldValue);
-                timer();
             });
         }
     )
@@ -165,21 +167,23 @@ async function finishGame(){
 }
 
 
-var displayTimer = document.getElementById("asocijacije-timer")
-
 const timer = (order) => {
     if (order == "stop") {
         clearInterval(countdown);
-        seconds = 120;
+        isActiveGame=false;
     } else {
         countdown = setInterval(function () {
+            if(isActiveGame){
+                seconds--;
+            }
+            displayTimer.textContent=seconds;
             if (seconds === 0) {
                 timer("stop");
-                finishGame();
-                return displayTimer.innerHTML = '0';
+                finishGame()
+                displayTimer.textContent='0';
+                //return displayTimer.innerHTML = '0';
             }
-            displayTimer.innerHTML = seconds;
-            seconds--;
+            //displayTimer.innerHTML = seconds;
         }, 1000);
     }
 }

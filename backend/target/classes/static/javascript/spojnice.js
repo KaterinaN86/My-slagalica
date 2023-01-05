@@ -1,8 +1,15 @@
+
 let dataForSubmit = {}
 let selectedLeftBtn = null;
-var timer=document.getElementById("timer");
-
+var seconds = 90;
+var display = document.getElementById("timer")
+var isActiveGame=true;
+document.addEventListener("DOMContentLoaded",()=>{init()})
 function init() {
+    const min = String(Math.trunc(seconds/60)).padStart(2,0);
+    const sec=String(seconds%60).padStart(2,0);
+    display.textContent=`${min} : ${sec}`;
+    timer();
     document.getElementById("exitBtn").addEventListener("click",()=>{
         window.location.href="/OnePlayer"
     })
@@ -52,6 +59,7 @@ function init() {
 
 function submitData(event){
     event.target.disabled=true;
+    timer("stop");
     disableButtons();
     submitAndGetPoints();
 }
@@ -73,27 +81,32 @@ async function submitAndGetPoints(){
            response.json().then((data) => {
                console.log(data)
                alert("Score : "+data);
+               timer("stop");
            });
         }).catch((error) => {
             console.log(error)
         });
 }
 
-var display = document.getElementById("timer")
 
 const timer = (order) => {
     if (order == "stop") {
         clearInterval(countdown);
-        seconds = 120;
+        isActiveGame=false;
     } else {
         countdown = setInterval(function() {
-            if (seconds === 0) {
-                timer("stop");
-                handleLosingGame();
-                return display.innerHTML = '0';
+            if(isActiveGame){
+                seconds--;
             }
-            display.innerHTML = seconds;
-            seconds--;
+            const min = String(Math.trunc(seconds/60)).padStart(2,0);
+            const sec=String(seconds%60).padStart(2,0);
+            display.textContent=`${min} : ${sec}`;
+            if (seconds === 0) {
+                 disableButtons();
+                 submitAndGetPoints();
+               // return display.innerHTML = '0';
+            }
+            //display.innerHTML = seconds;
         }, 1000);
     }
 }

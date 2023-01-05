@@ -72,7 +72,7 @@ button {
     cursor: pointer;
   }
 
-  #asocijacije-timer {
+  /*#asocijacije-timer {
   	position: relative;
     float: right;
     display: inline-block;
@@ -80,4 +80,13 @@ button {
   	margin-top: 20px;
   	font-size: 25px;
   	color: white;
-  }
+  }*/
+
+  #timer {
+    position: relative;
+    float: inline-end;
+    text-align: right;
+    margin-top: 20px;
+    font-size: 25px;
+    color: white;
+   }
