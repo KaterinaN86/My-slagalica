@@ -1,4 +1,4 @@
-document.addEventListener("beforeunload",()=>{dequeue()})
+window.onbeforeunload=dequeue
 
 function exit() {
     window.location.href="/";
@@ -10,7 +10,6 @@ async function findGame() {
     if (response.status == 200) {
         let btn = document.getElementById("findGameId")
         data = await response.json()
-        console.log(data)
         if (btn.innerText == "Find Game" && data) {
             btn.innerText = "Cancel"
             document.getElementById("waitingAnimation").style.visibility ="visible"
@@ -34,7 +33,7 @@ async function isGameFound(){
         }
     }
 }
-async function dequeue(){
-    const response = await fetch("http://" + window.location.host + "/dequeue");
+function dequeue(){
+    const response = fetch("http://" + window.location.host + "/dequeue");
 }
 
