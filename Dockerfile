@@ -7,9 +7,9 @@ RUN apt-get update && \
 # Install JDK 17
     apt-get install -qy openjdk-17-jdk
 # Install Maven 3.8.6
-RUN  wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz -P /tmp && \
+RUN  wget https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz -P /tmp && \
     tar xf /tmp/apache-maven-*.tar.gz -C /opt && \
-    ln -s /opt/apache-maven-3.8.6 /opt/maven
+    ln -s /opt/apache-maven-3.8.7 /opt/maven
 
 
 #Enviornment variables for Maven and java
