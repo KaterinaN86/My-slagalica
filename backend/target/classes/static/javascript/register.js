@@ -13,7 +13,7 @@ async function addUser(){
                     body: JSON.stringify(requestBody)
                 });
     data=await response.json()
-    if(data.msg=="Uspesno ste se registrovali"){
+    if(data.msg=="You successfully registered"){
         window.location.href='http://' + window.location.host + '/login'
     }
     alert(data.msg)
