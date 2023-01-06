@@ -3,24 +3,81 @@
     margin: 0;
     padding: 0;
 }
+
 body {
     background-color: #333366;
+    font-size: 25px;
 }
+
 .head-line {
     border: 1px solid gray;
+    color: white;
+    text-align: center;
     border-radius: 10px;
-    margin-top: 20px;
+    margin: auto;
     background-color: #b1b1b1;
 }
-.points {
+
+.gamesContainer {
+    text-align: center
+}
+
+.sumOfPointsContainer {
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.allPoints {
+    background-color: white;
     border-radius: 10px;
-    margin: 2vh auto;
-    width:15%;
+    width: 70px;
+    margin: auto;
+}
+
+.gameAndPoints {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin: auto;
+}
+
+.gamebtn {
+    border-radius: 10px;
+    border-color: white;
+    border-style: solid;
+    margin: 15px 0px;
+    background-color: #333366;
+    color: white;
+    width: 30vw;
+    height: 10vh;
+}
+
+.gamebtn:hover {
+    color: black;
     background-color: white;
 }
+
+.points {
+    border-radius: 10px;
+    margin: auto 10px auto auto;
+    width: 50px;
+    height: 40px;
+    background-color: white;
+}
+
+.points2 {
+    border-radius: 10px;
+    margin: auto auto auto 10px;
+    width: 50px;
+    height: 40px;
+    background-color: white;
+}
+
 .text-center {
     margin-left: 2vw;
 }
+
 .newGame {
     border-radius: 7px;
     border-color: black;

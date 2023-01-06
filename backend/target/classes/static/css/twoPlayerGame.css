@@ -5,17 +5,44 @@
 }
 body {
     background-color: #333366;
+    font-size: 25px;
 }
 .head-line {
     border: 1px solid gray;
+    color: white;
+    text-align: center;
     border-radius: 10px;
-    margin-top: 20px;
+    margin: auto;
     background-color: #b1b1b1;
+}
+.gamesContainer {
+
+}
+
+.gameAndPoints {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+}
+.gamebtn {
+
+    border-radius: 10px;
+    border-color: white;
+    border-style: solid;
+    background-color: #333366;
+    color: white;
+    width: 30vw;
+    height: 5vw;
+}
+.gamebtn:hover {
+    color: black;
+    background-color: white;
 }
 .points {
     border-radius: 10px;
     margin: 2vh auto;
-    width:15%;
+    width: 50px;
     background-color: white;
 }
 .text-center {
