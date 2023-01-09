@@ -34,10 +34,18 @@ function init(){
 }
 
 function newGame() {
-    fetch('http://' + window.location.host + '/OnePlayer/newGame').then(r => {
+    fetch('http://' + window.location.host + '/OnePlayer/finishGame').then(r => {
         window.location.reload()
         console.log(r);
     }).catch((error) => {
         console.log(error);
     })
+}
+
+function goBack(){
+    if(confirm("If you exit game will be finished.\nAre you sure you want to leave?")){
+        fetch('http://' + window.location.host + '/OnePlayer/finishGame')
+        history.back()
+
+    }
 }

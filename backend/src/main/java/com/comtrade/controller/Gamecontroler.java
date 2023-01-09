@@ -51,7 +51,7 @@ public class Gamecontroler {
         }
     }
 
-    @GetMapping("OnePlayer/newGame")
+    @GetMapping("OnePlayer/finishGame")
     public String newOnePlayerGame(Principal principal) throws Exception {
         gameservice.finishedGame(principal);
         return "chooseGameOnePlayer.html";
