@@ -50,7 +50,7 @@ public class LoginPage extends TestBase {
      */
     public void verifySignInDisplayed() {
         //Displaying and logging messages that inform if WebElement object for "Sign in" button is displayed.
-        Assert.assertEquals(driver.findElement(signInBtnLoc).isDisplayed(), "Sign in button not displayed!");
+        Assert.assertTrue(driver.findElement(signInBtnLoc).isDisplayed(), "Sign in button not displayed!");
         Reporter.log("Sign in button verified!");
         System.out.println("Sign in button is displayed.");
     }
@@ -113,5 +113,11 @@ public class LoginPage extends TestBase {
         Reporter.log("Clicked \"OK\" button in alert window.");
         System.out.println("Clicked \"OK\" button in alert window.");
         return (LoginPage) verifyPageObjectInitialized(this);
+    }
+    public RegisterPage clickRegister(){
+        Reporter.log("Click register button.");
+        System.out.println("Click register button.");
+        driver.findElement(getRegisterBtnLoc()).click();
+        return (RegisterPage) verifyPageObjectInitialized(new RegisterPage());
     }
 }

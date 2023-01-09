@@ -2,6 +2,7 @@ package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,13 +11,13 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
+import pages.HomePage;
 import pages.LoginPage;
 import utility.VerifyBrokenLink;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,9 @@ public class TestBase {
      */
     public static Properties prop;
     /**
-     * Base URL (the one the browser opens initially).
+     * Variable that specifies which browser is used for testing.
      */
-    public static String baseUrl;
+    public static String browserName;
     /**
      * Current URL.
      */
@@ -63,12 +64,22 @@ public class TestBase {
     /**
      * Locator object for container element, used in HomePage and SinglePlayerGamePage.
      */
-    By containerLoc = By.xpath("//div[@class='container p-5'");
+    By containerLoc = By.xpath("//div[@class='container p-5']");
+    /**
+     * Locator object for container title.
+     */
+    By containerTitleLoc = By.xpath("//h1[contains(@class,'text-center text-white')]");
+    /**
+     * Locator object for menu elements.
+     */
+    By menuLoc = By.xpath("//div[contains(@class,'col-md-12 p-3')]");
     /**
      * Variable used for storing page title.
      */
     private String pageTitle;
-    //Initializing variable with page title from config file (used for title verification).
+    /**
+     * Variable used for storing page title value from config file (used for title verification).
+     */
     private String configTitle;
 
     /**
@@ -98,7 +109,7 @@ public class TestBase {
         /**
          * Defining browser used for testing.
          */
-        String browserName = prop.getProperty("browser");
+        this.browserName = prop.getProperty("browser");
         /**
          * Initializing driver object depending on chosen browser
          */
@@ -240,16 +251,25 @@ public class TestBase {
     }
 
     /**
-     * Helper method for sending username and password values to corresponding text input field elements.
+     * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
      *
      * @param username
      * @param password
      */
     public void setUsernameAndPassword(String username, String password) {
-        driver.findElement(usernameTextInputLoc).sendKeys(username);
+        //Initializing username and password we elements.
+        WebElement usernameEl = driver.findElement(usernameTextInputLoc);
+        WebElement passwordEl = driver.findElement(passwordTextInputLoc);
+        //Deleting existing data in text input fields (CTRL+delete).
+        usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        usernameEl.sendKeys(Keys.DELETE);
+        passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        passwordEl.sendKeys(Keys.DELETE);
+        //Sending new values for username and password. Logging entered data.
+        usernameEl.sendKeys(username);
         Reporter.log("Entered username: " + username);
         System.out.println("Entered username: " + username);
-        driver.findElement(passwordTextInputLoc).sendKeys(password);
+        passwordEl.sendKeys(password);
         Reporter.log("Entered password: " + password);
         System.out.println("Entered password: " + password);
     }
@@ -265,16 +285,49 @@ public class TestBase {
         Reporter.log("Message: " + message + " is displayed and matches specified.");
         System.out.println("Message: " + message + " is displayed and matches specified.");
     }
-    public void verifyContainerDisplayed(){
+
+    /**
+     * Verifies container element in pages with menus containing links (like HomePage and SinglePlayerGamePage).
+     */
+    public void verifyContainerDisplayed() {
         Reporter.log("Verifying main container element is displayed.");
         System.out.println("Verifying main container element is displayed.");
-        Assert.assertTrue(driver.findElement(containerLoc).isDisplayed(),"Main container element not displayed!");
+        Assert.assertTrue(driver.findElement(containerLoc).isDisplayed(), "Main container element not displayed!");
         Reporter.log("Main container element is displayed.");
         System.out.println("Main container element is displayed.");
     }
 
     /**
+     * Verifies all menu items are displayed.
+     */
+    public void verifyMenuItems() {
+        Reporter.log("Checking all options in menu are displayed.");
+        System.out.println("Checking all options in menu are displayed.");
+        List<WebElement> menuList = driver.findElements(menuLoc);
+        for (WebElement el : menuList) {
+            Assert.assertTrue(el.isDisplayed(), "Menu element not displayed.");
+        }
+        Reporter.log("Verified all menu elements.");
+        System.out.println("All menu elements are displayed.");
+    }
+
+    public TestBase verifyTitlesAndMenuElements(String configTitle, String menuContainerTitle){
+        setConfigTitle(configTitle);
+        setPageTitle(driver.getTitle());
+        verifyPageTitle();
+        verifyContainerDisplayed();
+        Reporter.log("Verifying menu title matches specified.");
+        Assert.assertEquals(driver.findElement(containerTitleLoc).getText(), menuContainerTitle, "Menu title doesn't match specified value!");
+        Reporter.log("Menu title verified.");
+        System.out.println("Menu title verified.");
+        Reporter.log("Verifying menu elements.");
+        verifyMenuItems();
+        return verifyPageObjectInitialized(this);
+    }
+
+    /**
      * Creates a list of all link elements in page. After verifying each link a list of active links is created.
+     *
      * @return int (Number of active links on page).
      */
     public int getValidLinkNumber() {
@@ -283,7 +336,7 @@ public class TestBase {
         //List of all links on page.
         List<WebElement> linkElementsList = driver.findElements(By.tagName("a"));
         //Initializing list of active links.
-        List<WebElement> validLinkElementsList= new ArrayList<WebElement>();
+        List<WebElement> validLinkElementsList = new ArrayList<WebElement>();
         // Number of total links.
         int total = linkElementsList.size();
         System.out.println("Number of total links: " + total);
@@ -292,33 +345,32 @@ public class TestBase {
             //Variable that stores value of href attribute.
             String url = el.getAttribute("href");
             //Links with no href attribute or href that leads to script are ignored.
-            if ( url!= null && !url.contains("javascript")) {
+            if (url != null && !url.contains("javascript")) {
                 //Every link that passes previous condition is verified using VerifyBrokenLink object.
-                if(verifyBrokenLink.verifyLink(url)) {
+                if (verifyBrokenLink.verifyLink(url)) {
                     //Adding link to active links list.
                     validLinkElementsList.add(el);
                 }
             }
         }
         //Logging number of total links as well as valid and invalid link number for current page.
-        Reporter.log("Number of total links on page: "+total);
-        Reporter.log("Number of valid links on page: "+verifyBrokenLink.validLinkNumber);
-        Reporter.log("Number of invalid links on page: "+verifyBrokenLink.invalidLinkNumber);
-        System.out.println("Number of total links on page: "+total);
-        System.out.println("Number of valid links on page: "+verifyBrokenLink.validLinkNumber);
-        System.out.println("Number of invalid links on page: "+verifyBrokenLink.invalidLinkNumber);
+        Reporter.log("Number of total links on page: " + total);
+        Reporter.log("Number of invalid links on page: " + verifyBrokenLink.invalidLinkNumber);
+        System.out.println("Number of total links on page: " + total);
+        System.out.println("Number of invalid links on page: " + verifyBrokenLink.invalidLinkNumber);
         //Return the number of active links.
         return validLinkElementsList.size();
     }
 
     /**
      * Verifies number of valid links on page matches specified number
-     * @param actualNumber (int value equal to number of valid links on current page).
+     *
+     * @param actualNumber   (int value equal to number of valid links on current page).
      * @param expectedNumber (int value equal to number specified in config.properties file).
      */
-    public TestBase verifyValidLinkNumber(int actualNumber, int expectedNumber){
-        Reporter.log("Number of valid links on page: "+actualNumber+"; Expected valid links number: "+expectedNumber+".");
-        System.out.println("Number of valid links on page: "+actualNumber+"; Expected valid links number: "+expectedNumber+".");
+    public TestBase verifyValidLinkNumber(int actualNumber, int expectedNumber) {
+        Reporter.log("Number of valid links on page: " + actualNumber + "; Expected valid links number: " + expectedNumber + ".");
+        System.out.println("Number of valid links on page: " + actualNumber + "; Expected valid links number: " + expectedNumber + ".");
         Reporter.log("Verifying number of valid links matches expected.");
         System.out.println("Check number of valid links matches specified.");
         Assert.assertEquals(expectedNumber, actualNumber, "Number of valid links doesn't match expected.");
