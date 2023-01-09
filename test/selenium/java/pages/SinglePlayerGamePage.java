@@ -8,10 +8,6 @@ import org.openqa.selenium.By;
  */
 public class SinglePlayerGamePage extends TestBase {
 
-    /**
-     * Locator object for container element title.
-     */
-    By containerTitleLoc = By.xpath("//h1[contains(@class,'naslov')]");
 
     public SinglePlayerGamePage() {
         super();

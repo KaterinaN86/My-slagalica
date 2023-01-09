@@ -8,6 +8,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
 
+/**
+ * Class representing Register page using Page Object Model. Inherits TestBase fields and methods.
+ */
 public class RegisterPage extends TestBase {
     /**
      * Locator object for register container div element
@@ -23,67 +26,91 @@ public class RegisterPage extends TestBase {
      */
     By registerFormTitleLoc = By.xpath("//h1[text()='Register']");
 
+    /**
+     * Constructor
+     */
     public RegisterPage() {
         super();
     }
 
+    /**
+     * Verifying register form is displayed.
+     */
     public void verifyRegisterFormDisplayed() {
         WebElement registerFormEl = driver.findElement(registerFormLoc);
         wait.until(ExpectedConditions.visibilityOf(registerFormEl));
-        if (!registerFormEl.isDisplayed()) {
-            Reporter.log("Register form displayed not verified.");
-            System.out.println("Register form is not displayed.");
-        }
+        Assert.assertTrue(registerFormEl.isDisplayed(), "Register form displayed not verified.");
         Reporter.log("Verified register form displayed.");
         System.out.println("Register form is displayed.");
     }
 
+    /**
+     * Verifying log in button.
+     */
     public void verifyLogInDisplayed() {
-        Assert.assertTrue(driver.findElement(loginBtnLoc).isDisplayed(),"Log in button not displayed!") ;
+        Assert.assertTrue(driver.findElement(loginBtnLoc).isDisplayed(), "Log in button not displayed!");
         Reporter.log("Log in button verified!");
         System.out.println("Log in button is displayed.");
     }
 
+    /**
+     * Opens register page and verifies titles and web elements on page.
+     *
+     * @return RegisterPage instance.
+     */
     public RegisterPage openRegisterPage() {
         openSetup(prop.getProperty("registerUrl"));
         setConfigTitle(prop.getProperty("registerPageTitle"));
         verifyStateAfterOpen();
         verifyRegisterFormDisplayed();
-        verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(),prop.getProperty("registerFormTitle"));
-        verifyUsernamePasswordDisplayed();
+        verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
         verifyLogInDisplayed();
-        verifyRegisterDisplayed();
         return (RegisterPage) verifyPageObjectInitialized(this);
     }
 
-    public void registerUserAlertResponse(Alert registerAlert) {
-        String registerMsg = registerAlert.getText();
-        if (registerMsg.equals(prop.getProperty("registerSuccessMsg"))) {
-            Reporter.log("Verified user successfully registered.");
-            System.out.println("User successfully registered!");
-        } else if (registerMsg.equals(prop.getProperty("registerFailMsg"))) {
-            Reporter.log("User not registered. Username is not available!");
-            System.out.println("Username already taken!");
-
-        }else {
-            Reporter.log("Message: " + registerMsg + " is displayed.");
-            System.out.println("Message: " + registerMsg + " is displayed.");
-        }
-    }
-
-    public RegisterPage register(String username, String password) {
-        setUsernameAndPassword(username, password);
-        Reporter.log("Register user: " + username + " with password: " + password);
-        System.out.println("Register user: " + username + " with password: " + password);
-        driver.findElement(getRegisterBtnLoc()).click();
+    /**
+     * Checking if message displayed in alert window matches specified.
+     *
+     * @param message (String value displayed in alert window).
+     */
+    public void alertResponse(String message) {
         wait.until(ExpectedConditions.alertIsPresent());
         Alert registerAlert = driver.switchTo().alert();
-        Reporter.log("Verify successful register or fail register due to existing user.");
+        Reporter.log("Verify successful register or fail.");
         System.out.println("Checking if register succeeded.");
-        registerUserAlertResponse(registerAlert);
+        verifyAlertMessage(registerAlert.getText(), message);
         //click on OK button on displayed alert window
         registerAlert.accept();
-        return (RegisterPage) verifyPageObjectInitialized(this);
+    }
+
+    /**
+     * Register user and verify action depending on displayed alert message.
+     *
+     * @param username (String value for username).
+     * @param password (String value for password).
+     * @param message  (String value for expected alert message).
+     * @return TestBase instance (instance is of LoginPage or HomePage type depending on alert message).
+     */
+    public TestBase register(String username, String password, String message) {
+        //Success message value defined in config file.
+        String success = prop.getProperty("registerSuccessMsg");
+        //Filling in data for username and password.
+        setUsernameAndPassword(username, password);
+        //Logging entered data.
+        Reporter.log("Registering user: " + username + " with password: " + password);
+        System.out.println("Registering user: " + username + " with password: " + password);
+        //Perform register action.
+        driver.findElement(getRegisterBtnLoc()).click();
+        //In firefox browser alert is not shown when user is successfully registered.
+        if (browserName.equals("firefox") && message.equals(success)) {
+            Reporter.log("User successfully registered.");
+            System.out.println("User successfully registered.");
+            return (LoginPage) verifyPageObjectInitialized(new LoginPage());
+        }
+        //Check if alert response message matches specified.
+        alertResponse(message);
+        //Return corresponding instance.
+        return message.equals(success) ? (LoginPage) verifyPageObjectInitialized(new LoginPage()) : this;
     }
 
 }

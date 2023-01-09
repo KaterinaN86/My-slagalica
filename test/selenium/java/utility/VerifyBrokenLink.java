@@ -15,11 +15,11 @@ public class VerifyBrokenLink {
             HttpURLConnection httpURLConnection = (HttpURLConnection) urlVar.openConnection();
             httpURLConnection.connect();
             if (httpURLConnection.getResponseCode() >= 400) {
-                System.out.println(urlVar + ": is a broken link" + "---" + httpURLConnection.getResponseMessage() + "---" + httpURLConnection.getResponseCode());
+                System.out.println(urlVar + ": is a broken link" + "--- Response code: " +  httpURLConnection.getResponseCode());
                 invalidLinkNumber+=1;
                 return false;
             } else {
-                System.out.println(urlVar + ": is a valid link" + "---" + httpURLConnection.getResponseMessage() + "---" + httpURLConnection.getResponseCode());
+                System.out.println(urlVar + ": is a valid link" +  "--- Response code: " +  httpURLConnection.getResponseCode());
                 validLinkNumber+=1;
                 return true;
             }

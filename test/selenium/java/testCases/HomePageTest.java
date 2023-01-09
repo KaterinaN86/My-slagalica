@@ -22,14 +22,15 @@ public class HomePageTest extends TestBase {
     public void setup() {
         //Calling parent class init method to initialize properties and drivers.
         init();
+        this.homePage=new HomePage();
     }
     @Test(priority = 0)
     public void verifyOpen(){
-        this.homePage=this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword")).verifyElementsAfterOpen();
+        this.homePage= (HomePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword")).verifyTitlesAndMenuElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
     }
     @Test(priority = 1)
     public void verifyLinks(){
-
+        this.homePage= (HomePage) this.homePage.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
     }
     @AfterClass
     public void tearDown() {
