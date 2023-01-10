@@ -3,7 +3,6 @@ package com.comtrade.controller;
 import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.games.OnePlayerInitResponse;
 import com.comtrade.model.games.RangListResponse;
-import com.comtrade.service.gameservice.MultiPlayerServiceImpl;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,11 +18,9 @@ import java.util.List;
 public class Gamecontroler {
 
     private final GameServiceImpl gameservice;
-    private final MultiPlayerServiceImpl multiPlayerService;
 
-    public Gamecontroler(GameServiceImpl gameservice, MultiPlayerServiceImpl multiPlayerService) {
+    public Gamecontroler(GameServiceImpl gameservice ) {
         this.gameservice = gameservice;
-        this.multiPlayerService = multiPlayerService;
     }
 
     @GetMapping("/OnePlayer/init")
@@ -58,17 +55,17 @@ public class Gamecontroler {
 
     @GetMapping("/queue")
     public ResponseEntity<Boolean> queue(Principal principal) {
-        return ResponseEntity.ok(multiPlayerService.addPlayerToQueue(principal));
+        return ResponseEntity.ok(gameservice.addPlayerToQueue(principal));
     }
 
     @GetMapping("/dequeue")
     public ResponseEntity<Boolean> dequeue(Principal principal) {
-        return ResponseEntity.ok(multiPlayerService.removePlayerFromQueue(principal));
+        return ResponseEntity.ok(gameservice.removePlayerFromQueue(principal));
     }
 
     @GetMapping("/isInGame")
     public ResponseEntity<Boolean> isInGame(Principal principal) {
-        return ResponseEntity.ok(multiPlayerService.isInGame(principal));
+        return ResponseEntity.ok(gameservice.isInGame(principal));
     }
 
 

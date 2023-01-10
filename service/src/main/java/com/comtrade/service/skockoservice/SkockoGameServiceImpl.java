@@ -39,7 +39,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     public SkockoGame getGame(Principal principal) {
         Game game=null;
         try {
-            game=gameService.getOnePlayerGame(principal);
+            game=gameService.getGame(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -75,7 +75,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         SkockoResponse skockoResponse;
         Game game=null;
         try {
-            game=gameService.getOnePlayerGame(principal);
+            game=gameService.getGame(principal);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -158,7 +158,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     public ResponseEntity<List<Integer>> getCombination(Principal principal){
         Game game=null;
         try {
-            game=gameService.getOnePlayerGame(principal);
+            game=gameService.getGame(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

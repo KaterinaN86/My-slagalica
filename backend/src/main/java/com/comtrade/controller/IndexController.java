@@ -3,7 +3,6 @@ package com.comtrade.controller;
 import com.comtrade.model.user.RegistrationResponse;
 import com.comtrade.model.user.UserToRegister;
 import com.comtrade.security.MyUserDetailService;
-import com.comtrade.service.gameservice.MultiPlayerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,9 +17,6 @@ public class IndexController {
 
     @Autowired
     MyUserDetailService myUserDetailService;
-
-    @Autowired
-    MultiPlayerServiceImpl multiPlayerService;
 
     @GetMapping ("/login")
     public String login(){

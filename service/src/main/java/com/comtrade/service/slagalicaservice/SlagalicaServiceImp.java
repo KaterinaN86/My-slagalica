@@ -41,7 +41,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     public LettersResponse saveLetterForFindingWords(Principal principal) {
         Game game=null;
         try {
-            game=gameService.getOnePlayerGame(principal);
+            game=gameService.getGame(principal);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -58,9 +58,9 @@ public class SlagalicaServiceImp implements SlagalicaService {
         if(game.getClass()==OnePlayerGame.class){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        //if(game.getClass()== TwoPlayerGame.class){
-        //    twoPlayerGameRepository.save((TwoPlayerGame) game);
-        //}
+        if(game.getClass()== TwoPlayerGame.class){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
         return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
     }
 
@@ -215,7 +215,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
     @Override
     public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
-        Game game=gameService.getOnePlayerGame(principal);
+        Game game=gameService.getGame(principal);
         if(!game.getIsActive(principal).isActiveSlagalica()){
             return new SubmitResponse("",0);
         }

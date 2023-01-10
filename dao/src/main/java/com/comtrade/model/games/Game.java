@@ -20,4 +20,6 @@ public interface Game {
 
     Games getGames();
     void setGames(Games games);
+
+    void setFinished(Boolean finished);
 }

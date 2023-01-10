@@ -41,7 +41,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public MojBrojGame getGame(Principal principal) throws Exception {
-        Game game=gameService.getOnePlayerGame(principal);
+        Game game=gameService.getGame(principal);
         if(game.getGames().getMojBrojGame()!=null){
             return game.getGames().getMojBrojGame();
         }else{
@@ -131,7 +131,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public Integer userSolutionDiff(String expression, Principal principal) throws Exception {
-        Game game= gameService.getOnePlayerGame(principal);
+        Game game= gameService.getGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         Long gameId=MBgame.getId();
         if(!game.getIsActive(principal).isActiveMojBroj()){
@@ -148,7 +148,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public String getSolution(Principal principal) throws Exception {
-        Game game=gameService.getOnePlayerGame(principal);
+        Game game=gameService.getGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         return MBgame.getSolution();
     }
@@ -180,7 +180,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         int result = 0;
         try {
             solution = getSolution(principal);
-            game=gameService.getOnePlayerGame(principal);
+            game=gameService.getGame(principal);
             result = eval(request.getExpression());
         } catch (Exception e) {
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);

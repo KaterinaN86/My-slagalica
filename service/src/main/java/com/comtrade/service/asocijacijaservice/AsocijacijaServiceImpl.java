@@ -61,7 +61,7 @@ public class AsocijacijaServiceImpl {
     //creating new Asocijacija game instance
     public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
         try{
-            Game game=gameService.getOnePlayerGame(principal);
+            Game game=gameService.getGame(principal);
             game.getIsActive(principal).setActiveAsocijacije(true);
             log.info("Creating new Asocijacija game instance");
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
@@ -110,7 +110,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getValueOfSpecificField(String fieldName,Principal principal){
         try{
-            Game game = gameService.getOnePlayerGame(principal);
+            Game game = gameService.getGame(principal);
             Points points=game.getPoints(principal);
             if(ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeAsocijacije(), LocalTime.now())>=120){
                 finishGame(principal);
@@ -189,7 +189,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord, Principal principal){
         try{
-            Game game = gameService.getOnePlayerGame(principal);
+            Game game = gameService.getGame(principal);
             AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
             Points points = game.getPoints(principal);
             if(ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeAsocijacije(), LocalTime.now())>=120){
@@ -227,7 +227,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getNumberOfPoints(Long gameId, Principal principal){
         try{
-            Game game = gameService.getOnePlayerGame(principal);
+            Game game = gameService.getGame(principal);
             AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
             Points points = game.getPoints(principal);
             if(points.getNumOfPointsAsocijacije()<0){
@@ -253,7 +253,7 @@ public class AsocijacijaServiceImpl {
     }
 
     public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
-        Game game = gameService.getOnePlayerGame(principal);
+        Game game = gameService.getGame(principal);
         AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
         Points points = game.getPoints(principal);
         if(!game.getIsActive(principal).isActiveAsocijacije()){

@@ -77,4 +77,9 @@ public class OnePlayerGame implements Game{
     public void setIsActive(Principal principal, IsActive isActive) {
         this.isActive=isActive;
     }
+
+    @Override
+    public void setFinished(Boolean finished) {
+        this.finished=finished;
+    }
 }

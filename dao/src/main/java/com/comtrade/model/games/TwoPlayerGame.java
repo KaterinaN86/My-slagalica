@@ -62,19 +62,21 @@ public class TwoPlayerGame implements Game{
 
     @Override
     public Points getPoints(Principal principal) {
-        if (user1.getUserName() == principal.getName()){
+        if (user1.getUserName().equals(principal.getName()) ){
             return points1;
-        } else if (user2.getUserName() == principal.getName()) {
+        } else if (user2.getUserName().equals(principal.getName())) {
             return points2;
         }
+        System.out.println(user1.getUserName()+" "+ principal.getName());
+        System.out.println(user2.getUserName()+" "+ principal.getName());
         throw new RuntimeException("User is not in this game");
     }
 
     @Override
     public void setPoints(Principal principal, Points points) {
-        if (user1.getUserName() == principal.getName()){
+        if (user1.getUserName().equals(principal.getName())){
             this.points1 = points;
-        } else if (user2.getUserName() == principal.getName()) {
+        } else if (user2.getUserName().equals(principal.getName())) {
             this.points2 = points;
         }
         throw new RuntimeException("User is not in this game");
@@ -83,9 +85,9 @@ public class TwoPlayerGame implements Game{
 
     @Override
     public Timers getTimers(Principal principal) {
-        if (user1.getUserName()==principal.getName()){
+        if (user1.getUserName().equals(principal.getName())){
             return timers1;
-        } else if (user2.getUserName()==principal.getName()) {
+        } else if (user2.getUserName().equals(principal.getName())) {
             return timers2;
         }
         throw new RuntimeException("User is not in this game");
@@ -93,9 +95,9 @@ public class TwoPlayerGame implements Game{
 
     @Override
     public void setTimers(Principal principal, Timers timers) {
-        if (user1.getUserName() == principal.getName()){
+        if (user1.getUserName().equals(principal.getName())){
             this.timers1=timers;
-        } else if (user2.getUserName() == principal.getName()) {
+        } else if (user2.getUserName().equals(principal.getName())) {
             this.timers2=timers;
 
         }
@@ -104,9 +106,9 @@ public class TwoPlayerGame implements Game{
 
     @Override
     public IsActive getIsActive(Principal principal) {
-        if (user1.getUserName() == principal.getName()){
+        if (user1.getUserName().equals(principal.getName())){
             return isActive1;
-        } else if (user2.getUserName() == principal.getName()) {
+        } else if (user2.getUserName().equals(principal.getName())) {
             return isActive2;
         }
         throw new RuntimeException("User is not in this game");
@@ -114,9 +116,9 @@ public class TwoPlayerGame implements Game{
 
     @Override
     public void setIsActive(Principal principal, IsActive isActive) {
-        if (user1.getUserName() == principal.getName()){
+        if (user1.getUserName().equals(principal.getName())){
             this.isActive1 = isActive;
-        } else if (user2.getUserName() == principal.getName()) {
+        } else if (user2.getUserName().equals(principal.getName())) {
             this.isActive2 = isActive2;
         }
         throw new RuntimeException("User is not in this game");
