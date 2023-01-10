@@ -46,6 +46,5 @@ function goBack(){
     if(confirm("If you exit game will be finished.\nAre you sure you want to leave?")){
         fetch('http://' + window.location.host + '/OnePlayer/finishGame')
         history.back()
-
     }
 }

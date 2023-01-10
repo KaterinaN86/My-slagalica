@@ -1,9 +1,12 @@
 package com.comtrade.service.slagalicaservice;
 
 
+import com.comtrade.model.games.Game;
 import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.slagalicamodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
+import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
 import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
@@ -19,22 +22,24 @@ import java.util.stream.Collectors;
 public class SlagalicaServiceImp implements SlagalicaService {
 
     private final OnePlayerGameRepository onePlayerGameRepository;
+    private final TwoPlayerGameRepository twoPlayerGameRepository;
     private final SlagalicaRepository slagalicaRepository;
     private final DictionaryWordRepository dictionaryWordRepository;
 
     @Autowired
     private OnePlayerOnePlayerGameServiceImpl gameService;
 
-    public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, SlagalicaRepository slagalicaRepository,
+    public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, SlagalicaRepository slagalicaRepository,
                                DictionaryWordRepository dictionaryWordRepository) {
         this.onePlayerGameRepository = onePlayerGameRepository;
+        this.twoPlayerGameRepository = twoPlayerGameRepository;
         this.slagalicaRepository = slagalicaRepository;
         this.dictionaryWordRepository = dictionaryWordRepository;
     }
 
     @Override
     public LettersResponse saveLetterForFindingWords(Principal principal) {
-        OnePlayerGame game=null;
+        Game game=null;
         try {
             game=gameService.getGame(principal);
         } catch (Exception e) {
@@ -45,12 +50,17 @@ public class SlagalicaServiceImp implements SlagalicaService {
         }
         SlagalicaGame slagalicaGame = new SlagalicaGame();
         slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
-        game.getIsActive().setActiveSlagalica(true);
+        game.getIsActive(principal).setActiveSlagalica(true);
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
-        game.getTimers().setStartTimeSlagalica(LocalTime.now());
+        game.getTimers(principal).setStartTimeSlagalica(LocalTime.now());
         game.getGames().setSlagalicaGame(Sgame);
-        onePlayerGameRepository.save(game);
+        if(game.getClass()==OnePlayerGame.class){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        //if(game.getClass()== TwoPlayerGame.class){
+        //    twoPlayerGameRepository.save((TwoPlayerGame) game);
+        //}
         return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
     }
 
@@ -205,8 +215,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
     @Override
     public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
-        OnePlayerGame game=gameService.getGame(principal);
-        if(!game.getIsActive().isActiveSlagalica()){
+        Game game=gameService.getGame(principal);
+        if(!game.getIsActive(principal).isActiveSlagalica()){
             return new SubmitResponse("",0);
         }
         int finalResult = 0;
@@ -232,9 +242,14 @@ public class SlagalicaServiceImp implements SlagalicaService {
         }
 
         finalResult = result;
-        game.getPoints().setNumOfPointsSlagalica(finalResult);
-        game.getIsActive().setActiveSlagalica(false);
-        onePlayerGameRepository.save(game);
+        game.getPoints(principal).setNumOfPointsSlagalica(finalResult);
+        game.getIsActive(principal).setActiveSlagalica(false);
+        if(game.getClass()==OnePlayerGame.class){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game.getClass()== TwoPlayerGame.class){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
 
 
         return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),finalResult);
