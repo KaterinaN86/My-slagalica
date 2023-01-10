@@ -1,13 +1,16 @@
 package com.comtrade.service.mojbrojservice;
 
 
+import com.comtrade.model.games.Game;
 import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
+import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -26,24 +29,31 @@ import java.util.Optional;
 public class MojBrojServiceImpl implements MojBrojService{
     private final MojBrojRepository mojBrojRepository;
     private final OnePlayerGameRepository onePlayerGameRepository;
+    private final TwoPlayerGameRepository twoPlayerGameRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
-    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, OnePlayerGameRepository onePlayerGameRepository) {
+    private GameServiceImpl gameService;
+    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.mojBrojRepository = mojBrojRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
+        this.twoPlayerGameRepository = twoPlayerGameRepository;
     }
 
     @Override
     public MojBrojGame getGame(Principal principal) throws Exception {
-        OnePlayerGame game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         if(game.getGames().getMojBrojGame()!=null){
             return game.getGames().getMojBrojGame();
         }else{
             MojBrojGame MBgame=createNewGame();
-            game.getTimers().setStartTimeMojBroj(LocalTime.now());
+            game.getTimers(principal).setStartTimeMojBroj(LocalTime.now());
             game.getGames().setMojBrojGame(MBgame);
-            onePlayerGameRepository.save(game);
+            if(game.getClass()==OnePlayerGame.class){
+                onePlayerGameRepository.save((OnePlayerGame) game);
+            }
+            if(game.getClass()== TwoPlayerGame.class){
+                twoPlayerGameRepository.save((TwoPlayerGame) game);
+            }
             return MBgame;
         }
     }
@@ -121,16 +131,16 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public Integer userSolutionDiff(String expression, Principal principal) throws Exception {
-        OnePlayerGame game= gameService.getGame(principal);
+        Game game= gameService.getOnePlayerGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         Long gameId=MBgame.getId();
-        if(!game.getIsActive().isActiveMojBroj()){
+        if(!game.getIsActive(principal).isActiveMojBroj()){
             throw new Exception("You can submit only once");
         }
         if(!validateExpression(expression,gameId)){
             throw new Exception("Bad expression");
         }
-        game.getIsActive().setActiveMojBroj(false);
+        game.getIsActive(principal).setActiveMojBroj(false);
         mojBrojRepository.save(MBgame);
         int target=MBgame.getNumbers().get(0);
         return Math.abs(eval(expression)-target);
@@ -138,7 +148,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public String getSolution(Principal principal) throws Exception {
-        OnePlayerGame game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         return MBgame.getSolution();
     }
@@ -165,18 +175,23 @@ public class MojBrojServiceImpl implements MojBrojService{
                 break;
         }
         String solution = null;
-        OnePlayerGame game=null;
+        Game game=null;
         String msg = "";
         int result = 0;
         try {
             solution = getSolution(principal);
-            game=gameService.getGame(principal);
+            game=gameService.getOnePlayerGame(principal);
             result = eval(request.getExpression());
         } catch (Exception e) {
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);
         }
-        game.getPoints().setNumOfPointsMojBroj(numOfPoints);
-        onePlayerGameRepository.save(game);
+        game.getPoints(principal).setNumOfPointsMojBroj(numOfPoints);
+        if(game.getClass()==OnePlayerGame.class){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game.getClass()== TwoPlayerGame.class){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
 
         return new MojBrojSubmitResponse(msg, solution, numOfPoints, result);
     }

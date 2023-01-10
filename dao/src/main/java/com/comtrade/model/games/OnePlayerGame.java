@@ -11,13 +11,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.security.Principal;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class OnePlayerGame {
+public class OnePlayerGame implements Game{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,5 +46,35 @@ public class OnePlayerGame {
         this.timers=timers;
         finished=false;
         this.isActive = isActive;
+    }
+
+    @Override
+    public Points getPoints(Principal principal) {
+        return points;
+    }
+
+    @Override
+    public void setPoints(Principal principal, Points points) {
+        this.points=points;
+    }
+
+    @Override
+    public Timers getTimers(Principal principal) {
+        return timers;
+    }
+
+    @Override
+    public void setTimers(Principal principal, Timers timers) {
+        this.timers=timers;
+    }
+
+    @Override
+    public IsActive getIsActive(Principal principal) {
+        return isActive;
+    }
+
+    @Override
+    public void setIsActive(Principal principal, IsActive isActive) {
+        this.isActive=isActive;
     }
 }

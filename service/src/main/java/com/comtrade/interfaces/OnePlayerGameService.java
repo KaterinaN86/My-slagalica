@@ -7,8 +7,9 @@ import java.security.Principal;
 import java.util.List;
 
 public interface OnePlayerGameService {
-    OnePlayerGame createNewGame(Principal principal) throws Exception;
-    OnePlayerGame getGame(Principal principal) throws Exception;
-    OnePlayerInitResponse getInitData(Principal principal) throws Exception;
-    List<OnePlayerGame> getTopTen();
+    OnePlayerGame createNewOnePlayerGame(Principal principal) throws Exception;
+    OnePlayerGame getOnePlayerGame(Principal principal) throws Exception;
+    OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception;
+    List<OnePlayerGame> getTopTenOnePlayerGames();
+    void finishOnePlayerGame(Principal principal) throws Exception;
 }
