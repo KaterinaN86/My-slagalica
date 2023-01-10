@@ -13,6 +13,7 @@ import org.testng.Assert;
 import org.testng.Reporter;
 import pages.HomePage;
 import pages.LoginPage;
+import pages.SinglePlayerGamePage;
 import utility.VerifyBrokenLink;
 
 import java.io.FileInputStream;
@@ -73,6 +74,10 @@ public class TestBase {
      * Locator object for menu elements.
      */
     By menuLoc = By.xpath("//div[contains(@class,'col-md-12 p-3')]");
+    /**
+     * Back button locator object. Used in multiple pages.
+     */
+    By backBtnLoc = new By.ByXPath("//*[@class='bi bi-arrow-left']//parent::button");
     /**
      * Variable used for storing page title.
      */
@@ -154,6 +159,15 @@ public class TestBase {
      */
     public By getRegisterBtnLoc() {
         return registerBtnLoc;
+    }
+
+    /**
+     * Getter method for "Back" button (left arrow button) locator.
+     *
+     * @return
+     */
+    public By getBackBtnLoc() {
+        return backBtnLoc;
     }
 
     /**
@@ -311,7 +325,7 @@ public class TestBase {
         System.out.println("All menu elements are displayed.");
     }
 
-    public TestBase verifyTitlesAndMenuElements(String configTitle, String menuContainerTitle){
+    public TestBase verifyTitlesAndMenuElements(String configTitle, String menuContainerTitle) {
         setConfigTitle(configTitle);
         setPageTitle(driver.getTitle());
         verifyPageTitle();
@@ -377,6 +391,21 @@ public class TestBase {
         Reporter.log("Number of valid links matches expected.");
         System.out.println("Number of valid links matches expected.");
         return verifyPageObjectInitialized(this);
+    }
+
+    /**
+     * Method used to go back to HomePage or SinglePlayerGamePage
+     * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
+     */
+    public TestBase goBack() {
+        Reporter.log("Click back button.");
+        System.out.println("Click back button.");
+        driver.findElement(getBackBtnLoc()).click();
+        if (this instanceof SinglePlayerGamePage) {
+            return (HomePage) verifyPageObjectInitialized(new HomePage());
+        } else {
+            return (SinglePlayerGamePage) verifyPageObjectInitialized(new SinglePlayerGamePage());
+        }
     }
 
     /**

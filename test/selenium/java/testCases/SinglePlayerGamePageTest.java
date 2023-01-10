@@ -19,6 +19,7 @@ public class SinglePlayerGamePageTest extends TestBase {
     public SinglePlayerGamePageTest() {
         super();
     }
+
     /**
      * Method executed before the first test in the class.
      */
@@ -26,20 +27,32 @@ public class SinglePlayerGamePageTest extends TestBase {
     public void setup() {
         //Calling parent class init method to initialize properties and drivers.
         init();
-        this.singlePlayerGamePage=new SinglePlayerGamePage();
+        this.singlePlayerGamePage = new SinglePlayerGamePage();
     }
 
     /**
      * Open login page, login with user adis (user needs to be registered first), click on button for single player game and verify elements on single player game page after open.
      */
     @Test(priority = 0)
-    public void verifyOpen(){
-        this.singlePlayerGamePage= (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).clickSinglePlayerGame().verifyTitlesAndMenuElements(prop.getProperty("singlePlayerGamePageTitle"),prop.getProperty("singlePlayerGamePageContainerTitle"));
+    public void verifyOpen() {
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).clickSinglePlayerGame().verifyTitlesAndMenuElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
     }
+
     @Test(priority = 1)
-    public void verifyLinks(){
-        this.singlePlayerGamePage= (SinglePlayerGamePage) this.singlePlayerGamePage.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("singlePlayerGamePageLinksNumber")));
+    public void verifyLinks() {
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.singlePlayerGamePage.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("singlePlayerGamePageLinksNumber")));
     }
+    @Test(priority=2)
+    public void openMojBrojTest(){
+
+    }
+
+    @Test(priority = 7)
+    public void goBackAndLogOutTest() {
+        HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
+        homePage.logout();
+    }
+
     @AfterClass
     public void tearDown() {
         close();
