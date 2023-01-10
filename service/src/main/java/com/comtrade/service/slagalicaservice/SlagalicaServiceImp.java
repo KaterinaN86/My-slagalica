@@ -9,7 +9,7 @@ import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     private final DictionaryWordRepository dictionaryWordRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
+    private GameServiceImpl gameService;
 
     public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, SlagalicaRepository slagalicaRepository,
                                DictionaryWordRepository dictionaryWordRepository) {
@@ -41,7 +41,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     public LettersResponse saveLetterForFindingWords(Principal principal) {
         Game game=null;
         try {
-            game=gameService.getGame(principal);
+            game=gameService.getOnePlayerGame(principal);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -215,7 +215,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
     @Override
     public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
-        Game game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         if(!game.getIsActive(principal).isActiveSlagalica()){
             return new SubmitResponse("",0);
         }

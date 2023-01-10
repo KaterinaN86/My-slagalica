@@ -10,7 +10,7 @@ import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -32,7 +32,7 @@ public class MojBrojServiceImpl implements MojBrojService{
     private final TwoPlayerGameRepository twoPlayerGameRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
+    private GameServiceImpl gameService;
     public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.mojBrojRepository = mojBrojRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
@@ -41,7 +41,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public MojBrojGame getGame(Principal principal) throws Exception {
-        Game game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         if(game.getGames().getMojBrojGame()!=null){
             return game.getGames().getMojBrojGame();
         }else{
@@ -131,7 +131,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public Integer userSolutionDiff(String expression, Principal principal) throws Exception {
-        Game game= gameService.getGame(principal);
+        Game game= gameService.getOnePlayerGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         Long gameId=MBgame.getId();
         if(!game.getIsActive(principal).isActiveMojBroj()){
@@ -148,7 +148,7 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     @Override
     public String getSolution(Principal principal) throws Exception {
-        Game game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         MojBrojGame MBgame=game.getGames().getMojBrojGame();
         return MBgame.getSolution();
     }
@@ -180,7 +180,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         int result = 0;
         try {
             solution = getSolution(principal);
-            game=gameService.getGame(principal);
+            game=gameService.getOnePlayerGame(principal);
             result = eval(request.getExpression());
         } catch (Exception e) {
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);

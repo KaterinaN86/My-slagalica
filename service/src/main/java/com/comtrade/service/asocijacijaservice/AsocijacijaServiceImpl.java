@@ -11,7 +11,7 @@ import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class AsocijacijaServiceImpl {
     private final TimersRepository timersRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
+    private GameServiceImpl gameService;
 
     public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, PointsRepository pointsRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.asocijacijaRepository = asocijacijaRepository;
@@ -61,7 +61,7 @@ public class AsocijacijaServiceImpl {
     //creating new Asocijacija game instance
     public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
         try{
-            Game game=gameService.getGame(principal);
+            Game game=gameService.getOnePlayerGame(principal);
             game.getIsActive(principal).setActiveAsocijacije(true);
             log.info("Creating new Asocijacija game instance");
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
@@ -110,7 +110,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getValueOfSpecificField(String fieldName,Principal principal){
         try{
-            Game game = gameService.getGame(principal);
+            Game game = gameService.getOnePlayerGame(principal);
             Points points=game.getPoints(principal);
             if(ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeAsocijacije(), LocalTime.now())>=120){
                 finishGame(principal);
@@ -189,7 +189,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord, Principal principal){
         try{
-            Game game = gameService.getGame(principal);
+            Game game = gameService.getOnePlayerGame(principal);
             AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
             Points points = game.getPoints(principal);
             if(ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeAsocijacije(), LocalTime.now())>=120){
@@ -227,7 +227,7 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getNumberOfPoints(Long gameId, Principal principal){
         try{
-            Game game = gameService.getGame(principal);
+            Game game = gameService.getOnePlayerGame(principal);
             AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
             Points points = game.getPoints(principal);
             if(points.getNumOfPointsAsocijacije()<0){
@@ -253,7 +253,7 @@ public class AsocijacijaServiceImpl {
     }
 
     public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
-        Game game = gameService.getGame(principal);
+        Game game = gameService.getOnePlayerGame(principal);
         AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
         Points points = game.getPoints(principal);
         if(!game.getIsActive(principal).isActiveAsocijacije()){

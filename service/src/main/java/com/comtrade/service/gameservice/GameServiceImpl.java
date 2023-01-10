@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.*;
 
 @Service
-public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
+public class GameServiceImpl implements OnePlayerGameService {
 
     private final OnePlayerGameRepository onePlayerGameRepository;
     private final UserRepository userRepository;
@@ -25,7 +25,7 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
     private final TimersRepository timersRepository;
     private final IsActiveRepository isActiveRepository;
 
-    public OnePlayerOnePlayerGameServiceImpl(OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository, PointsRepository pointsRepository, TimersRepository timersRepository, IsActiveRepository isActiveRepository) {
+    public GameServiceImpl(OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository, PointsRepository pointsRepository, TimersRepository timersRepository, IsActiveRepository isActiveRepository) {
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.userRepository = userRepository;
         this.gamesRepository = gamesRepository;
@@ -35,7 +35,7 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
     }
 
     @Override
-    public OnePlayerGame createNewGame(Principal principal) throws Exception {
+    public OnePlayerGame createNewOnePlayerGame(Principal principal) throws Exception {
         Optional<User> user=userRepository.findByUserName(principal.getName());
         if(user.isEmpty()){
             throw new Exception("User not found");
@@ -55,16 +55,16 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
     }
 
     @Override
-    public OnePlayerGame getGame(Principal principal) throws Exception {
+    public OnePlayerGame getOnePlayerGame(Principal principal) throws Exception {
         List<OnePlayerGame> games = onePlayerGameRepository.findAllByUserUserNameAndFinishedFalse(principal.getName());
         if (!games.isEmpty()){
             return games.get(0);
         }
-        return createNewGame(principal);
+        return createNewOnePlayerGame(principal);
     }
     @Override
-    public OnePlayerInitResponse getInitData(Principal principal) throws Exception {
-        OnePlayerGame game=getGame(principal);
+    public OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception {
+        OnePlayerGame game= getOnePlayerGame(principal);
         OnePlayerInitResponse response=new OnePlayerInitResponse();
         response.setMsg("");
 
@@ -88,16 +88,15 @@ public class OnePlayerOnePlayerGameServiceImpl implements OnePlayerGameService {
     }
 
     @Override
-    public List<OnePlayerGame> getTopTen() {
+    public List<OnePlayerGame> getTopTenOnePlayerGames() {
         ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) onePlayerGameRepository.findAllOrderedBySumOfPoints();
         return lisOfGames;
     }
 
-    public void finishedGame(Principal principal) throws Exception {
-
-        OnePlayerGame game = getGame(principal);
+    @Override
+    public void finishOnePlayerGame(Principal principal) throws Exception {
+        OnePlayerGame game = getOnePlayerGame(principal);
         game.setFinished(true);
         onePlayerGameRepository.save(game);
-
     }
 }

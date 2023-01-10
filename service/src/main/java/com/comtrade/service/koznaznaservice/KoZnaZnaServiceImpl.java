@@ -12,7 +12,7 @@ import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.koznaznarepository.KoZnaZnaRepository;
 import com.comtrade.repository.koznaznarepository.QuestionRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         private final TwoPlayerGameRepository twoPlayerGameRepository;
 
         @Autowired
-        private OnePlayerOnePlayerGameServiceImpl gameService;
+        private GameServiceImpl gameService;
 
     public KoZnaZnaServiceImpl(QuestionRepository questionRepository, KoZnaZnaRepository koZnaZnaRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.questionRepository = questionRepository;
@@ -44,17 +44,17 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
 
     @Override
     public KoZnaZnaGame getGame(Principal principal) throws Exception {
-        Game game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         if(game.getGames().getKoZnaZnaGame()!=null){
             return game.getGames().getKoZnaZnaGame();
         }else{
             KoZnaZnaGame koZnaZnaGame=this.createNewGame(principal);
             game.getGames().setKoZnaZnaGame(koZnaZnaGame);
             game.getTimers(principal).setStartTimeKoZnaZna(LocalTime.now());
-            if(game.getClass()==OnePlayerGame.class){
+            if(game instanceof OnePlayerGame){
                 onePlayerGameRepository.save((OnePlayerGame) game);
             }
-            if(game.getClass()== TwoPlayerGame.class){
+            else if(game instanceof TwoPlayerGame){
                 twoPlayerGameRepository.save((TwoPlayerGame) game);
             }
             return koZnaZnaGame;
@@ -64,7 +64,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     @Override
     public KoZnaZnaGame createNewGame(Principal principal) throws Exception {
             KoZnaZnaGame koZnaZnaGame=new KoZnaZnaGame();
-            Game game = gameService.getGame(principal);
+            Game game = gameService.getOnePlayerGame(principal);
             koZnaZnaGame.setQuestions(getRandomQuestions());
             game.getIsActive(principal).setActiveKoZnaZna(true);
             koZnaZnaGame.setIndexOfTheCurrentQuestion(0);
@@ -107,7 +107,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         }
 
         public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws Exception {
-            Game game = gameService.getGame(principal);
+            Game game = gameService.getOnePlayerGame(principal);
             KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
             long numberOfSeconds = ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeKoZnaZna(), LocalTime.now());
             if(numberOfSeconds>=120){
@@ -139,13 +139,13 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
 
     @Override
     public Integer getNumberOfPoints(Principal principal) throws Exception {
-        Game game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         return game.getPoints(principal).getNumOfPointsKoZnaZna();
     }
 
     @Override
     public ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion, Principal principal) throws Exception {
-        Game game = gameService.getGame(principal);
+        Game game = gameService.getOnePlayerGame(principal);
         KoZnaZnaGame koZnaZnaGame=this.getGame(nextQuestion.getGameId());
         if (!game.getIsActive(principal).isActiveKoZnaZna()) {
             return ResponseEntity.notFound()
@@ -160,7 +160,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
 
     @Override
     public ResponseEntity<Response> finishGame( Principal principal) throws Exception {
-        Game game=gameService.getGame(principal);
+        Game game=gameService.getOnePlayerGame(principal);
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
         game.getIsActive(principal).setActiveKoZnaZna(false);
         //game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());

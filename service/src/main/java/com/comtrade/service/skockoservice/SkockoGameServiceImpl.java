@@ -7,7 +7,7 @@ import com.comtrade.model.skockomodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     private final TwoPlayerGameRepository twoPlayerGameRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
+    private GameServiceImpl gameService;
 
     public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.skockoGameRepository = skockoGameRepository;
@@ -39,7 +39,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     public SkockoGame getGame(Principal principal) {
         Game game=null;
         try {
-            game=gameService.getGame(principal);
+            game=gameService.getOnePlayerGame(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -75,7 +75,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         SkockoResponse skockoResponse;
         Game game=null;
         try {
-            game=gameService.getGame(principal);
+            game=gameService.getOnePlayerGame(principal);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -158,7 +158,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     public ResponseEntity<List<Integer>> getCombination(Principal principal){
         Game game=null;
         try {
-            game=gameService.getGame(principal);
+            game=gameService.getOnePlayerGame(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
