@@ -2,20 +2,27 @@ package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import org.testng.Reporter;
+import pages.HomePage;
 import pages.LoginPage;
+import pages.SinglePlayerGamePage;
+import utility.Locators;
+import utility.VerifyBrokenLink;
+import utility.VerifyMethods;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -32,14 +39,6 @@ public class TestBase {
      */
     public static Properties prop;
     /**
-     * Base URL (the one the browser opens initially).
-     */
-    public static String baseUrl;
-    /**
-     * Current URL.
-     */
-    public static String currentUrl;
-    /**
      * WebDriverWait object used for explicit wait.
      */
     public static WebDriverWait wait;
@@ -48,27 +47,26 @@ public class TestBase {
      */
     public static LoginPage loginPage;
     /**
-     * Username and password text input elements locators
+     * Locators instance, used to access locators for web elements
      */
-    By usernameTextInputLoc = By.xpath("//input[@placeholder='Username']");
-    By passwordTextInputLoc = By.xpath("//input[@placeholder='Password']");
+    public static Locators locators;
+
+    public static VerifyMethods verifyMethods;
     /**
-     * Register button locator
+     * Variable that specifies which browser is used for testing.
      */
-    By registerBtnLoc = By.xpath("//input[@value='Register']");
+    public static String browserName;
     /**
-     * Variable used for storing username data.
+     * Current URL.
      */
-    private String username;
-    /**
-     * Variable used for storing password data.
-     */
-    private String password;
+    public static String currentUrl;
     /**
      * Variable used for storing page title.
      */
     private String pageTitle;
-    //Initializing variable with page title from config file (used for title verification).
+    /**
+     * Variable used for storing page title value from config file (used for title verification).
+     */
     private String configTitle;
 
     /**
@@ -76,6 +74,10 @@ public class TestBase {
      */
     public TestBase() {
 
+    }
+
+    public static WebDriver getDriver() {
+        return driver;
     }
 
     /**
@@ -98,7 +100,7 @@ public class TestBase {
         /**
          * Defining browser used for testing.
          */
-        String browserName = prop.getProperty("browser");
+        this.browserName = prop.getProperty("browser");
         /**
          * Initializing driver object depending on chosen browser
          */
@@ -114,8 +116,15 @@ public class TestBase {
         }
         //Initializing wait driver
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        //Initializing LoginPage object
-        this.loginPage=new LoginPage();
+        //Initializing LoginPage object.
+        this.loginPage = new LoginPage();
+        //Initializing Locators object.
+        this.locators = new Locators();
+        this.verifyMethods=verifyMethods;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
     }
 
     /**
@@ -125,6 +134,10 @@ public class TestBase {
      */
     public void setPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
+    }
+
+    public String getConfigTitle() {
+        return configTitle;
     }
 
     /**
@@ -137,17 +150,9 @@ public class TestBase {
     }
 
     /**
-     * Getter method for "Register" button locator.
-     *
-     * @return
-     */
-    public By getRegisterBtnLoc() {
-        return registerBtnLoc;
-    }
-
-    /**
      * Method that gets called right after a page is open.
      * Used to set up driver and page title.
+     *
      * @param url (String containing the url of page to be opened).
      */
     public void openSetup(String url) {
@@ -156,111 +161,86 @@ public class TestBase {
         //Manage window size and cookies using driver object
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
-        //Set page title variable
-        setPageTitle(driver.getTitle());
         //Log data regarding opened page
         Reporter.log("Web browser launched, " + pageTitle + " page at: " + url + " opened.");
         System.out.println("Web browser launched, " + pageTitle + " page at: " + url + " opened.");
     }
 
-    /**
-     * Verifying current page title matches specified.
-     */
-    public void verifyPageTitle() {
-        Reporter.log("Verifying page title.");
-        System.out.println("Check if page title matches specified.");
-        Assert.assertEquals(pageTitle, configTitle, "Page title '" + pageTitle + "' is not equal to expected '");
-        Reporter.log("Page title '" + pageTitle + "' is equal to expected '" + configTitle + "'.");
-        System.out.println("Page title '" + pageTitle + "' is equal to expected.");
-    }
 
     /**
-     * Verifying form title matches specified.
-     * @param formTitle (String containing actual title of form element
-     * @param configTitle (String containing form title specified in config.properties file).
-     */
-    public void verifyFormTitle(String formTitle, String configTitle) {
-        Reporter.log("Verifying page title.");
-        System.out.println("Check if page title matches specified.");
-        Assert.assertEquals(formTitle, configTitle, "Form title: " + formTitle + " does not match specified title: " + configTitle + ".");
-        Reporter.log("Page title matches specified.");
-        System.out.println("Page form title verified.");
-    }
-
-    /**
-     * Verifying username and password text input fields are displayed.
-     */
-    public void verifyUsernamePasswordDisplayed() {
-        //Initializing WebElement objects for username and password text input elements.
-        WebElement usernameEl = driver.findElement(usernameTextInputLoc);
-        WebElement passwordEl = driver.findElement(passwordTextInputLoc);
-        Reporter.log("Verifying username and password elements are displayed.");
-        System.out.println("Check if username and password are displayed.");
-        Assert.assertTrue(usernameEl.isDisplayed(), "Username text input element not displayed!");
-        Assert.assertTrue(passwordEl.isDisplayed(), "Password text input element not displayed!");
-        Reporter.log("Username and password text input elements are displayed.");
-        System.out.println("Username and password text input elements are displayed.");
-    }
-
-    /**
-     * Verify register button is displayed.
-     */
-    public void verifyRegisterDisplayed() {
-        Reporter.log("Verify register button is displayed.");
-        System.out.println("Check if register button is displayed.");
-        //Log corresponding message depending on isDsiplayed method result for register button WebElement object.
-        Assert.assertTrue(driver.findElement(registerBtnLoc).isDisplayed(), "Register button not displayed!");
-        Reporter.log("Register button verified!");
-        System.out.println("Register button is displayed.");
-    }
-
-    /**
-     * Verify object representing a specific page has been initialized.
-     *
-     * @param page (TestBase object that can be of any page class type)
-     * @return (TestBase object passed as parameter)
-     */
-    public TestBase verifyPageObjectInitialized(TestBase page) {
-        //Verifying page object successfully initialized.
-        Assert.assertNotNull(page, "Page object not initialized!");
-        System.out.println("Successfully initialized instance of " + page.getClass() + " class.");
-        Reporter.log("Successfully initialized instance of " + page.getClass() + " class.");
-        return page;
-    }
-
-    /**
-     * Verifying page title and elements found on multiple pages.
-     */
-    public void verifyStateAfterOpen() {
-        verifyPageTitle();
-        verifyUsernamePasswordDisplayed();
-        verifyRegisterDisplayed();
-    }
-
-    /**
-     * Helper method for sending username and password values to corresponding text input field elements.
+     * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
      *
      * @param username
      * @param password
      */
     public void setUsernameAndPassword(String username, String password) {
-        driver.findElement(usernameTextInputLoc).sendKeys(username);
+        //Initializing username and password web elements.
+        WebElement usernameEl = driver.findElement(locators.getUsernameTextInputLoc());
+        WebElement passwordEl = driver.findElement(locators.getPasswordTextInputLoc());
+        //Deleting existing data in text input fields (CTRL+delete).
+        usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        usernameEl.sendKeys(Keys.DELETE);
+        passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        passwordEl.sendKeys(Keys.DELETE);
+        //Sending new values for username and password. Logging entered data.
+        usernameEl.sendKeys(username);
         Reporter.log("Entered username: " + username);
         System.out.println("Entered username: " + username);
-        driver.findElement(passwordTextInputLoc).sendKeys(password);
+        passwordEl.sendKeys(password);
         Reporter.log("Entered password: " + password);
         System.out.println("Entered password: " + password);
     }
 
     /**
-     * Verifies message displayed in alert window.
-     * @param message (String containing actual alert window message).
-     * @param property (String containing alert message specified in config.properties file).
+     * Creates a list of all link elements in page. After verifying each link a list of active links is created.
+     *
+     * @return int (Number of active links on page).
      */
-    public void verifyAlertMessage(String message, String property) {
-        Assert.assertEquals(message, property, "Wrong message displayed!");
-        Reporter.log("Message: " + message + " is displayed and matches specified.");
-        System.out.println("Message: " + message + " is displayed and matches specified.");
+    public int getValidLinkNumber() {
+        //Utility class object used for verifying links.
+        VerifyBrokenLink verifyBrokenLink = new VerifyBrokenLink();
+        //List of all links on page.
+        List<WebElement> linkElementsList = driver.findElements(By.tagName("a"));
+        //Initializing list of active links.
+        List<WebElement> validLinkElementsList = new ArrayList<WebElement>();
+        // Number of total links.
+        int total = linkElementsList.size();
+        System.out.println("Number of total links: " + total);
+        //Looping over every link to verify href attribute.
+        for (WebElement el : linkElementsList) {
+            //Variable that stores value of href attribute.
+            String url = el.getAttribute("href");
+            //Links with no href attribute or href that leads to script are ignored.
+            if (url != null && !url.contains("javascript")) {
+                //Every link that passes previous condition is verified using VerifyBrokenLink object.
+                if (verifyBrokenLink.verifyLink(url)) {
+                    //Adding link to active links list.
+                    validLinkElementsList.add(el);
+                }
+            }
+        }
+        //Logging number of total links as well as valid and invalid link number for current page.
+        Reporter.log("Number of total links on page: " + total);
+        Reporter.log("Number of invalid links on page: " + verifyBrokenLink.invalidLinkNumber);
+        System.out.println("Number of total links on page: " + total);
+        System.out.println("Number of invalid links on page: " + verifyBrokenLink.invalidLinkNumber);
+        //Return the number of active links.
+        return validLinkElementsList.size();
+    }
+    /**
+     * Method used to go back to HomePage or SinglePlayerGamePage
+     *
+     * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
+     */
+    public TestBase goBack() {
+        Reporter.log("Click back button.");
+        System.out.println("Click back button.");
+        driver.findElement(locators.getBackBtnLoc()).click();
+        if (this instanceof SinglePlayerGamePage) {
+            return new HomePage();
+        } else {
+            return new SinglePlayerGamePage();
+        }
     }
 
     /**

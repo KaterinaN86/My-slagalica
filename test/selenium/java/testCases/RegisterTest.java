@@ -4,10 +4,13 @@ import base.TestBase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import pages.LoginPage;
 import pages.RegisterPage;
+import utility.VerifyMethods;
 
 public class RegisterTest extends TestBase {
     RegisterPage registerPage;
+    LoginPage loginPage;
 
     public RegisterTest() {
         super();
@@ -16,7 +19,8 @@ public class RegisterTest extends TestBase {
     @BeforeClass
     public void setup() {
         init();
-        this.registerPage = new RegisterPage();
+        this.registerPage= new RegisterPage();
+        this.verifyMethods=new VerifyMethods(this.registerPage);
     }
 
     @Test(priority = 0)
@@ -26,7 +30,16 @@ public class RegisterTest extends TestBase {
 
     @Test(priority = 1)
     public void registerNewUserTest(){
-       this.registerPage=this.registerPage.register(prop.getProperty("userTestRegisterUsername"),prop.getProperty("userTestRegisterPassword"));
+     this.loginPage= (LoginPage) this.registerPage.register(prop.getProperty("userTestRegisterUsername"),prop.getProperty("userTestRegisterPassword"), prop.getProperty("registerSuccessMsg"));
+    }
+    @Test(priority = 2)
+    public void registerExistingUserTest(){
+       this.registerPage=(RegisterPage) this.loginPage.clickRegister().register(prop.getProperty("userTestRegisterUsername"),prop.getProperty("userTestRegisterPassword"), prop.getProperty("registerTakenMsg"));
+    }
+
+    @Test(priority = 3)
+    public void registerInvalidUserTest(){
+        this.registerPage.register(prop.getProperty("userTestInvalidUsername"),prop.getProperty("userTestInvalidPassword"), prop.getProperty("registerFailMsg"));
     }
 
 @AfterClass
