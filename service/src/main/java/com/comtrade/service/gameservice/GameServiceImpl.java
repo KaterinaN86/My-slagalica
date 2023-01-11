@@ -73,7 +73,7 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         else if(!twoPlayerGames.isEmpty()){
             return twoPlayerGames.get(0);
         }
-        return createNewOnePlayerGame(principal);
+        throw new Exception("Game not found!");
     }
     @Override
     public OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception {
@@ -118,7 +118,6 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         return lisOfGames;
     }
 
-    @Override
     public void finishGame(Principal principal) throws Exception {
         Game game = getGame(principal);
         game.setFinished(true);
@@ -126,7 +125,7 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        if(game instanceof TwoPlayerGameRepository){
+        else if(game instanceof TwoPlayerGame){
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
     }
@@ -134,8 +133,10 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     @Override
     public boolean addPlayerToQueue(Principal principal) {
         if (isInGame(principal)){
-            log.info("Korinsik je vec u gejmu");
-            return false;
+            try {
+                finishGame(principal);
+                finishGame(principal);//twice because there could be one single player and one two player game not finished
+            } catch (Exception e) {}
         }
         Optional<User> optUser=userRepository.findByUserName(principal.getName());
         if (!playerQueue.contains(optUser.get())){
