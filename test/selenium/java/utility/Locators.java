@@ -31,7 +31,7 @@ public class Locators {
     /**
      * Timer element locator object. Used in MojBrojPage and SlagalicaPage.
      */
-    By timerLoc = new By.ById("timer");
+    By timerLoc = new By.ByXPath("//div[@id='timer']");
 
     public By getUsernameTextInputLoc() {
         return usernameTextInputLoc;
