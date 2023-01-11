@@ -30,16 +30,23 @@ public class SlagalicaPageTest extends TestBase {
     public void verifyOpen() {
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"),
                 prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
-        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
-        this.slagalicaPage = (SlagalicaPage) singlePlayerGamePage.openSlagalicaPage();
+        this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }
 
-    @Test
+    @Test(priority = 10)
     public void goBackAndLogOutTest() {
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
         HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
         homePage.logout();
     }
+
+    @Test(priority = 2)
+    public void verifyTimerStart() {
+        verifyMethods.verifyTimerStartValue(prop.getProperty("slagalicaPageTimerStart"));
+    }
+
+    @Test(priority = 3)
+    public void verifyStopButton(){this.slagalicaPage.verifyThatStopButtonIsClicked();}
 
     @AfterClass
     public void tearDown() {close();}

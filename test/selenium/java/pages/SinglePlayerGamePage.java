@@ -46,7 +46,10 @@ public class SinglePlayerGamePage extends TestBase {
     }
 
     public SlagalicaPage openSlagalicaPage(){
+        Reporter.log("Click \"Slagalica\" button");
+        System.out.println("Click \"Slagalica\" button");
         driver.findElement(slagalicaBtnLoc).click();
+        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
         return  (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
     }
 

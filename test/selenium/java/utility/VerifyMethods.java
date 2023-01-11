@@ -6,7 +6,9 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.Reporter;
 import pages.HomePage;
+import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
+import pages.SlagalicaPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +170,7 @@ public class VerifyMethods {
         }
         Reporter.log("Verified all button div elements.");
         System.out.println("All divs for button elements are displayed.");
-        if (!(this.base instanceof HomePage) && !(this.base instanceof SinglePlayerGamePage)) {
+        if ((this.base instanceof MojBrojPage) || (this.base instanceof SlagalicaPage)) {
            verifyTimerAndBackElements();
         }
     }
