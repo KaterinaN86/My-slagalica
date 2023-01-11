@@ -2,8 +2,6 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import org.testng.Reporter;
 
 /**
@@ -35,13 +33,13 @@ public class HomePage extends TestBase {
         Reporter.log("Logging out active user.");
         driver.findElement(logOutLoc).click();
         System.out.println("User logged out.");
-        return (LoginPage) verifyPageObjectInitialized(new LoginPage());
+        return (LoginPage) verifyMethods.verifyPageObjectInitialized(new LoginPage());
     }
 
     public SinglePlayerGamePage clickSinglePlayerGame() {
         Reporter.log("Clicking single player option.");
         driver.findElement(singlePlayerLoc).click();
         System.out.println("Single player game page option clicked.");
-        return (SinglePlayerGamePage) verifyPageObjectInitialized(new SinglePlayerGamePage());
+        return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
 }

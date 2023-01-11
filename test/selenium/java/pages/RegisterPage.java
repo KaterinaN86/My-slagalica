@@ -60,12 +60,11 @@ public class RegisterPage extends TestBase {
      */
     public RegisterPage openRegisterPage() {
         openSetup(prop.getProperty("registerUrl"));
-        setConfigTitle(prop.getProperty("registerPageTitle"));
-        verifyStateAfterOpen();
+        verifyMethods.verifyStateAfterOpen(prop.getProperty("registerPageTitle"));
         verifyRegisterFormDisplayed();
-        verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
+        verifyMethods.verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
         verifyLogInDisplayed();
-        return (RegisterPage) verifyPageObjectInitialized(this);
+        return (RegisterPage) verifyMethods.verifyPageObjectInitialized(this);
     }
 
     /**
@@ -78,7 +77,7 @@ public class RegisterPage extends TestBase {
         Alert registerAlert = driver.switchTo().alert();
         Reporter.log("Verify successful register or fail.");
         System.out.println("Checking if register succeeded.");
-        verifyAlertMessage(registerAlert.getText(), message);
+        verifyMethods.verifyAlertMessage(registerAlert.getText(), message);
         //click on OK button on displayed alert window
         registerAlert.accept();
     }
@@ -100,17 +99,17 @@ public class RegisterPage extends TestBase {
         Reporter.log("Registering user: " + username + " with password: " + password);
         System.out.println("Registering user: " + username + " with password: " + password);
         //Perform register action.
-        driver.findElement(getRegisterBtnLoc()).click();
+        driver.findElement(locators.getRegisterBtnLoc()).click();
         //In firefox browser alert is not shown when user is successfully registered.
         if (browserName.equals("firefox") && message.equals(success)) {
             Reporter.log("User successfully registered.");
             System.out.println("User successfully registered.");
-            return (LoginPage) verifyPageObjectInitialized(new LoginPage());
+            return (LoginPage) verifyMethods.verifyPageObjectInitialized(new LoginPage());
         }
         //Check if alert response message matches specified.
         alertResponse(message);
         //Return corresponding instance.
-        return message.equals(success) ? (LoginPage) verifyPageObjectInitialized(new LoginPage()) : this;
+        return message.equals(success) ? (LoginPage) verifyMethods.verifyPageObjectInitialized(new LoginPage()) : this;
     }
 
 }

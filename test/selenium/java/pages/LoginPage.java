@@ -24,6 +24,7 @@ public class LoginPage extends TestBase {
      * Sign in button locator
      */
     By signInBtnLoc = By.xpath("//input[@value='Sign in']");
+
     /**
      * Empty constructor.
      */
@@ -63,21 +64,20 @@ public class LoginPage extends TestBase {
     public LoginPage openLoginPage() {
         //Calling method declared in TestBase class. Opens specified page and sets up driver and page title.
         openSetup(prop.getProperty("loginUrl"));
-        //Setting up title using value in config.properties file.
-        setConfigTitle(prop.getProperty("loginPageTitle"));
-        //Verifying elements found on multiple pages and page title
-        verifyStateAfterOpen();
+        //Verifying page elements.
+        verifyMethods.verifyStateAfterOpen(prop.getProperty("loginPageTitle"));
         //Verifying register form title
-        verifyFormTitle(driver.findElement(loginFormTitleLoc).getText(), prop.getProperty("loginFormTitle"));
+        verifyMethods.verifyFormTitle(driver.findElement(loginFormTitleLoc).getText(), prop.getProperty("loginFormTitle"));
         //Verifying elements found on register page only.
         verifyLoginFormDisplayed();
         verifySignInDisplayed();
         //Return LoginPage instance after not null verification.
-        return (LoginPage) verifyPageObjectInitialized(this);
+        return (LoginPage) verifyMethods.verifyPageObjectInitialized(this);
     }
 
     /**
      * Login method for user specified with parameters.
+     *
      * @param username (String containing username specified on method call).
      * @param password (String containing password specified on method call)
      * @return new HomePage instance after not null verification.
@@ -89,7 +89,7 @@ public class LoginPage extends TestBase {
         driver.findElement(signInBtnLoc).click();
         Reporter.log("Clicked \"Sign in\" button in login form.");
         System.out.println("Clicked \"Sign in\" button in login form.");
-        return (HomePage) verifyPageObjectInitialized(new HomePage());
+        return (HomePage) verifyMethods.verifyPageObjectInitialized(new HomePage());
     }
 
     /**
@@ -107,17 +107,18 @@ public class LoginPage extends TestBase {
         Alert invalidLoginAlert = driver.switchTo().alert();
         Reporter.log("Verify error message on invalid user login.");
         System.out.println("Check error message in alert for invalid user login.");
-        verifyAlertMessage(invalidLoginAlert.getText(), prop.getProperty("invalidLoginErrorMsg"));
+        verifyMethods.verifyAlertMessage(invalidLoginAlert.getText(), prop.getProperty("invalidLoginErrorMsg"));
         //Click on "OK" button in alert window.
         invalidLoginAlert.accept();
         Reporter.log("Clicked \"OK\" button in alert window.");
         System.out.println("Clicked \"OK\" button in alert window.");
-        return (LoginPage) verifyPageObjectInitialized(this);
+        return this;
     }
-    public RegisterPage clickRegister(){
+
+    public RegisterPage clickRegister() {
         Reporter.log("Click register button.");
         System.out.println("Click register button.");
-        driver.findElement(getRegisterBtnLoc()).click();
-        return (RegisterPage) verifyPageObjectInitialized(new RegisterPage());
+        driver.findElement(locators.getRegisterBtnLoc()).click();
+        return (RegisterPage) verifyMethods.verifyPageObjectInitialized(new RegisterPage());
     }
 }
