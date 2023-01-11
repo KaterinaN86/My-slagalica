@@ -3,6 +3,7 @@ package com.comtrade.controller;
 import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.games.OnePlayerInitResponse;
 import com.comtrade.model.games.RangListResponse;
+import com.comtrade.model.games.TwoPlayerInitResponse;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,6 +33,11 @@ public class Gamecontroler {
         }
     }
 
+    @GetMapping("/TwoPlayer/init")
+    public TwoPlayerInitResponse initTwoPlayer(Principal principal) {
+        return gameservice.getTwoPlayerInitData(principal);
+    }
+
     @GetMapping("/GetRangList")
     public ResponseEntity<List<RangListResponse>> getRangList(){
         List<OnePlayerGame> listOfGames=gameservice.getTopTenOnePlayerGames();
@@ -47,9 +53,9 @@ public class Gamecontroler {
         }
     }
 
-    @GetMapping("OnePlayer/finishGame")
-    public String newOnePlayerGame(Principal principal) throws Exception {
-        gameservice.finishOnePlayerGame(principal);
+    @GetMapping("/finishGame")
+    public String newGame(Principal principal) throws Exception {
+        gameservice.finishGame(principal);
         return "chooseGameOnePlayer.html";
     }
 

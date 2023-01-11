@@ -4,12 +4,9 @@ import com.comtrade.interfaces.MultiPlayerService;
 import com.comtrade.interfaces.OnePlayerGameService;
 import com.comtrade.model.Games;
 import com.comtrade.model.IsActive;
-import com.comtrade.model.games.Game;
-import com.comtrade.model.games.OnePlayerGame;
-import com.comtrade.model.games.OnePlayerInitResponse;
+import com.comtrade.model.games.*;
 import com.comtrade.model.Points;
 import com.comtrade.model.Timers;
-import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.user.User;
 import com.comtrade.repository.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
@@ -106,13 +103,18 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     }
 
     @Override
+    public TwoPlayerInitResponse getTwoPlayerInitData(Principal principal) {
+        return new TwoPlayerInitResponse();
+    }
+
+    @Override
     public List<OnePlayerGame> getTopTenOnePlayerGames() {
         ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) onePlayerGameRepository.findAllOrderedBySumOfPoints();
         return lisOfGames;
     }
 
     @Override
-    public void finishOnePlayerGame(Principal principal) throws Exception {
+    public void finishGame(Principal principal) throws Exception {
         Game game = getGame(principal);
         game.setFinished(true);
 
@@ -123,10 +125,6 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
     }
-
-
-
-
 
     @Override
     public boolean addPlayerToQueue(Principal principal) {

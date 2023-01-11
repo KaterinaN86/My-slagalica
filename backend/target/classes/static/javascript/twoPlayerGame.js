@@ -11,6 +11,7 @@ function init(){
 
                 response.json().then((responseData) => {
                     data=responseData
+                    console.log(data)
                     document.getElementById("numOfPoints").innerText=data.numOfPointsSum
                     document.getElementById("numOfPointsSlagalica").innerText=data.numOfPointsSlagalica
                     document.getElementById("numOfPointsMojBroj").innerText=data.numOfPointsMojBroj
@@ -33,4 +34,11 @@ function rematch() {
     }).catch((error) => {
         console.log(error);
     })
+}
+
+function goBack(){
+    if(confirm("If you exit game will be finished.\nAre you sure you want to leave?")){
+        fetch('http://' + window.location.host + '/finishGame')
+        history.back()
+    }
 }

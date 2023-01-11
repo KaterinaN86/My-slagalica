@@ -1,5 +1,7 @@
 package com.comtrade.interfaces;
 
+import com.comtrade.model.games.TwoPlayerInitResponse;
+
 import java.security.Principal;
 
 public interface MultiPlayerService {
@@ -8,4 +10,5 @@ public interface MultiPlayerService {
     boolean removePlayerFromQueue(Principal principal);
     void createTwoPlayerGame();
     boolean isInGame(Principal principal);
+    TwoPlayerInitResponse getTwoPlayerInitData(Principal principal);
 }

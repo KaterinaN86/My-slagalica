@@ -12,5 +12,5 @@ public interface OnePlayerGameService {
     Game getGame(Principal principal) throws Exception;
     OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception;
     List<OnePlayerGame> getTopTenOnePlayerGames();
-    void finishOnePlayerGame(Principal principal) throws Exception;
+    void finishGame(Principal principal) throws Exception;
 }
