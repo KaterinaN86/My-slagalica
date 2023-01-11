@@ -34,7 +34,7 @@ public class Gamecontroler {
     }
 
     @GetMapping("/TwoPlayer/init")
-    public TwoPlayerInitResponse initTwoPlayer(Principal principal) {
+    public TwoPlayerInitResponse initTwoPlayer(Principal principal) throws Exception {
         return gameservice.getTwoPlayerInitData(principal);
     }
 

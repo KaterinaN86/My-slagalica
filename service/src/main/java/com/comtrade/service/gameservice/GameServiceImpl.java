@@ -67,8 +67,6 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     public Game getGame(Principal principal) throws Exception {
         List<OnePlayerGame> onePlayerGames = onePlayerGameRepository.findAllByUserUserNameAndFinishedFalse(principal.getName());
         List<TwoPlayerGame> twoPlayerGames = twoPlayerGameRepository.findByUserName(principal.getName());
-        System.out.println(onePlayerGames);
-        System.out.println(twoPlayerGames);
         if (!onePlayerGames.isEmpty()){
             return onePlayerGames.get(0);
         }
@@ -103,8 +101,15 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     }
 
     @Override
-    public TwoPlayerInitResponse getTwoPlayerInitData(Principal principal) {
-        return new TwoPlayerInitResponse();
+    public TwoPlayerInitResponse getTwoPlayerInitData(Principal principal) throws Exception {
+        TwoPlayerGame game = (TwoPlayerGame) getGame(principal);
+        Points points1 = game.getPoints1();
+        Points points2 = game.getPoints2();
+        IsActive isActive = game.getIsActive(principal);
+        String username1 = game.getUser1().getUserName();
+        String username2 = game.getUser2().getUserName();
+
+        return new TwoPlayerInitResponse(points1, isActive, points2 ,username1,username2);
     }
 
     @Override

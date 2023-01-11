@@ -67,8 +67,6 @@ public class TwoPlayerGame implements Game{
         } else if (user2.getUserName().equals(principal.getName())) {
             return points2;
         }
-        System.out.println(user1.getUserName()+" "+ principal.getName());
-        System.out.println(user2.getUserName()+" "+ principal.getName());
         throw new RuntimeException("User is not in this game");
     }
 

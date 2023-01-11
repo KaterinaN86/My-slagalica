@@ -28,7 +28,7 @@ body {
     flex-direction: row;
 }
 
-.allPoints {
+.allPoints,.username {
     background-color: white;
     border-radius: 10px;
     width: 70px;

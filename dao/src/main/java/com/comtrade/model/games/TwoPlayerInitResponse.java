@@ -1,5 +1,7 @@
 package com.comtrade.model.games;
 
+import com.comtrade.model.IsActive;
+import com.comtrade.model.Points;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +12,9 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class TwoPlayerInitResponse {
+
+    String username1;
+    String username2;
 
     int numOfPointsSum1;
     int numOfPointsSlagalica1;
@@ -33,6 +38,35 @@ public class TwoPlayerInitResponse {
     boolean isActiveSpojnice;
     boolean isActiveKoZnaZna;
     boolean isActiveAsocijacije;
+
+    public TwoPlayerInitResponse(Points points1, IsActive isActive, Points points2, String username1,String username2) {
+
+        this.username1=username1;
+        this.username2=username2;
+
+        this.numOfPointsSum1 = points1.getSumOfPoints();
+        this.numOfPointsSlagalica1 = points1.getNumOfPointsSlagalica();
+        this.numOfPointsMojBroj1 = points1.getNumOfPointsMojBroj();
+        this.numOfPointsSkocko1 = points1.getNumOfPointsSkocko();
+        this.numOfPointsSpojnice1 = points1.getNumOfPointsSpojnice();
+        this.numOfPointsKoZnaZna1 = points1.getNumOfPointsKoZnaZna();
+        this.numOfPointsAsocijacija1 = (int) points1.getNumOfPointsAsocijacije();
+
+        this.numOfPointsSum2 = points2.getSumOfPoints();
+        this.numOfPointsSlagalica2 = points2.getNumOfPointsSlagalica();
+        this.numOfPointsMojBroj2 = points2.getNumOfPointsMojBroj();
+        this.numOfPointsSkocko2 = points2.getNumOfPointsSkocko();
+        this.numOfPointsSpojnice2 = points2.getNumOfPointsSpojnice();
+        this.numOfPointsKoZnaZna2 = points2.getNumOfPointsKoZnaZna();
+        this.numOfPointsAsocijacija2 = (int) points2.getNumOfPointsAsocijacije();
+
+        this.isActiveSlagalica = isActive.isActiveSlagalica();
+        this.isActiveMojBroj = isActive.isActiveMojBroj();
+        this.isActiveSkocko = isActive.isActiveSkocko();
+        this.isActiveSpojnice = isActive.isActiveSpojnice();
+        this.isActiveKoZnaZna = isActive.isActiveKoZnaZna();
+        this.isActiveAsocijacije = isActive.isActiveAsocijacije();
+    }
 
     public TwoPlayerInitResponse(){
         numOfPointsSum1 = 0;

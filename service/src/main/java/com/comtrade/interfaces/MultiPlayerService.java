@@ -10,5 +10,5 @@ public interface MultiPlayerService {
     boolean removePlayerFromQueue(Principal principal);
     void createTwoPlayerGame();
     boolean isInGame(Principal principal);
-    TwoPlayerInitResponse getTwoPlayerInitData(Principal principal);
+    TwoPlayerInitResponse getTwoPlayerInitData(Principal principal) throws Exception;
 }
