@@ -186,10 +186,10 @@ public class MojBrojServiceImpl implements MojBrojService{
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);
         }
         game.getPoints(principal).setNumOfPointsMojBroj(numOfPoints);
-        if(game.getClass()==OnePlayerGame.class){
+        if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        if(game.getClass()== TwoPlayerGame.class){
+        if(game instanceof TwoPlayerGame){
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
 

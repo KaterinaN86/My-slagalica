@@ -71,10 +71,10 @@ public class AsocijacijaServiceImpl {
             asocijacijaRepository.save(asocijacijaGame);
             if (game.getGames().getAsocijacijaGame()==null){
                 game.getGames().setAsocijacijaGame(asocijacijaGame);
-                if(game.getClass()==OnePlayerGame.class){
+                if(game instanceof OnePlayerGame){
                     onePlayerGameRepository.save((OnePlayerGame) game);
                 }
-                if(game.getClass()== TwoPlayerGame.class){
+                if(game instanceof TwoPlayerGame){
                     twoPlayerGameRepository.save((TwoPlayerGame) game);
                 }
             }
@@ -268,10 +268,10 @@ public class AsocijacijaServiceImpl {
             //asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
         }
         log.info("Number of points for Asocijacije game: "+ points.getNumOfPointsAsocijacije());
-        if(game.getClass()==OnePlayerGame.class){
+        if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        if(game.getClass()== TwoPlayerGame.class){
+        if(game instanceof TwoPlayerGame){
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
         pointsRepository.save(points);

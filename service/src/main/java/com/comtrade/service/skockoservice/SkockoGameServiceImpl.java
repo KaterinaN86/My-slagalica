@@ -50,10 +50,10 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             SkockoGame Sgame=createNewGame();
             game.getTimers(principal).setStartTimeSkocko(LocalTime.now());
             game.getGames().setSkockoGame(Sgame);
-            if(game.getClass()==OnePlayerGame.class){
+            if(game instanceof OnePlayerGame){
                 onePlayerGameRepository.save((OnePlayerGame) game);
             }
-            if(game.getClass()== TwoPlayerGame.class){
+            if(game instanceof TwoPlayerGame){
                 twoPlayerGameRepository.save((TwoPlayerGame) game);
             }
             return game.getGames().getSkockoGame();
@@ -89,10 +89,10 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             if (game.getIsActive(principal).isActiveSkocko()){
                 game.getPoints(principal).setNumOfPointsSkocko(numOfPoints);
                 game.getIsActive(principal).setActiveSkocko(false);
-                if(game.getClass()==OnePlayerGame.class){
+                if(game instanceof OnePlayerGame){
                     onePlayerGameRepository.save((OnePlayerGame) game);
                 }
-                if(game.getClass()== TwoPlayerGame.class){
+                if(game instanceof TwoPlayerGame){
                     twoPlayerGameRepository.save((TwoPlayerGame) game);
                 }
             }

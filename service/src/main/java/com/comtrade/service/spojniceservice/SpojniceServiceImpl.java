@@ -97,10 +97,10 @@ public class SpojniceServiceImpl implements SpojniceService{
             SpojniceGame spojniceGame= createNewSpojniceGame(principal);
             game.getGames().setSpojniceGame(spojniceGame);
             game.getTimers(principal).setStartTimeSpojnice(LocalTime.now());
-            if(game.getClass()==OnePlayerGame.class){
+            if(game instanceof OnePlayerGame){
                 onePlayerGameRepository.save((OnePlayerGame) game);
             }
-            if(game.getClass()== TwoPlayerGame.class){
+            if(game instanceof TwoPlayerGame){
                 twoPlayerGameRepository.save((TwoPlayerGame) game);
             }            return spojniceGame;
         }

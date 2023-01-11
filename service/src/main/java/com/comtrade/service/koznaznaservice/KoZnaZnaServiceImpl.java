@@ -164,10 +164,10 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
         game.getIsActive(principal).setActiveKoZnaZna(false);
         //game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());
-        if(game.getClass()==OnePlayerGame.class){
+        if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        if(game.getClass()== TwoPlayerGame.class){
+        if(game instanceof TwoPlayerGame){
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
         koZnaZnaRepository.save(koZnaZnaGame);

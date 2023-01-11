@@ -55,10 +55,10 @@ public class SlagalicaServiceImp implements SlagalicaService {
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
         game.getTimers(principal).setStartTimeSlagalica(LocalTime.now());
         game.getGames().setSlagalicaGame(Sgame);
-        if(game.getClass()==OnePlayerGame.class){
+        if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        if(game.getClass()== TwoPlayerGame.class){
+        if(game instanceof TwoPlayerGame){
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
         return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
@@ -244,10 +244,10 @@ public class SlagalicaServiceImp implements SlagalicaService {
         finalResult = result;
         game.getPoints(principal).setNumOfPointsSlagalica(finalResult);
         game.getIsActive(principal).setActiveSlagalica(false);
-        if(game.getClass()==OnePlayerGame.class){
+        if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
-        if(game.getClass()== TwoPlayerGame.class){
+        if(game instanceof TwoPlayerGame){
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
 
