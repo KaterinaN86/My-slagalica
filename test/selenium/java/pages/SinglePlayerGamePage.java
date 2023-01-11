@@ -44,4 +44,10 @@ public class SinglePlayerGamePage extends TestBase {
         driver.findElement(mojBrojBtnLoc).click();
         return (MojBrojPage) verifyMethods.verifyPageObjectInitialized(new MojBrojPage());
     }
+
+    public SlagalicaPage openSlagalicaPage(){
+        driver.findElement(slagalicaBtnLoc).click();
+        return  (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
+    }
+
 }
