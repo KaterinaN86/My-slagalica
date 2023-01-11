@@ -5,7 +5,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.HomePage;
+import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
+import utility.VerifyMethods;
 
 public class SinglePlayerGamePageTest extends TestBase {
     /**
@@ -28,6 +30,7 @@ public class SinglePlayerGamePageTest extends TestBase {
         //Calling parent class init method to initialize properties and drivers.
         init();
         this.singlePlayerGamePage = new SinglePlayerGamePage();
+        this.verifyMethods = new VerifyMethods(this.singlePlayerGamePage);
     }
 
     /**
@@ -35,21 +38,24 @@ public class SinglePlayerGamePageTest extends TestBase {
      */
     @Test(priority = 0)
     public void verifyOpen() {
-        this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).clickSinglePlayerGame().verifyTitlesAndMenuElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).clickSinglePlayerGame();
     }
 
     @Test(priority = 1)
-    public void verifyLinks() {
-        this.singlePlayerGamePage = (SinglePlayerGamePage) this.singlePlayerGamePage.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("singlePlayerGamePageLinksNumber")));
+    public void verifyElementsAndLinks() {
+        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
+        verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("singlePlayerGamePageLinksNumber")));
     }
-    @Test(priority=2)
-    public void openMojBrojTest(){
 
+    @Test(priority = 2)
+    public void openMojBrojTest() {
+        MojBrojPage mojBrojPage = this.singlePlayerGamePage.openMojBrojPage();
+        this.singlePlayerGamePage = (SinglePlayerGamePage) mojBrojPage.goBack();
     }
 
     @Test(priority = 7)
     public void goBackAndLogOutTest() {
-        HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
+        HomePage homePage = (HomePage) verifyMethods.verifyPageObjectInitialized(this.singlePlayerGamePage.goBack());
         homePage.logout();
     }
 

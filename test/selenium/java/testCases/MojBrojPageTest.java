@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import pages.HomePage;
 import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
+import utility.VerifyMethods;
 
 public class MojBrojPageTest extends TestBase {
     /**
@@ -23,7 +24,6 @@ public class MojBrojPageTest extends TestBase {
      */
     public MojBrojPageTest() {
         super();
-
     }
 
     /**
@@ -34,17 +34,38 @@ public class MojBrojPageTest extends TestBase {
         //Calling parent class init method to initialize properties and drivers.
         init();
         this.mojBrojPage = new MojBrojPage();
+        verifyMethods = new VerifyMethods(this.mojBrojPage);
     }
 
     @Test(priority = 0)
     public void verifyOpen() {
-        this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame().verifyTitlesAndMenuElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
-        this.mojBrojPage = (MojBrojPage) singlePlayerGamePage.openMojBrojPage();
+        this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
+        this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();
+    }
+
+    @Test(priority = 1)
+    public void verifyPageElements() {
+        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("mojBrojPageTitle"), prop.getProperty("mojBrojPageContainerTitle"));
+    }
+
+    @Test(priority = 2)
+    public void verifyTimerStart() {
+      verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
+    }
+
+    @Test(priority = 3)
+    public void verifyLinks() {
+       verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("mojBrojLinksNumber")));
+    }
+
+    @Test(priority = 4)
+    public void verifyTargetNumber() {
+        this.mojBrojPage.verifyTargetValueIsPositiveInteger();
     }
 
     @Test(priority = 7)
     public void goBackAndLogOutTest() {
-        this.singlePlayerGamePage = (SinglePlayerGamePage) this.mojBrojPage.goBack();
+        this.singlePlayerGamePage = (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(this.mojBrojPage.goBack());
         HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
         homePage.logout();
     }

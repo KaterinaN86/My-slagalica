@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.LoginPage;
 import pages.RegisterPage;
+import utility.VerifyMethods;
 
 public class RegisterTest extends TestBase {
     RegisterPage registerPage;
@@ -19,6 +20,7 @@ public class RegisterTest extends TestBase {
     public void setup() {
         init();
         this.registerPage= new RegisterPage();
+        this.verifyMethods=new VerifyMethods(this.registerPage);
     }
 
     @Test(priority = 0)

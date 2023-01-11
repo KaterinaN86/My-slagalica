@@ -5,6 +5,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.HomePage;
+import utility.VerifyMethods;
 
 public class HomePageTest extends TestBase {
     /**
@@ -23,14 +24,16 @@ public class HomePageTest extends TestBase {
         //Calling parent class init method to initialize properties and drivers.
         init();
         this.homePage=new HomePage();
+        verifyMethods = new VerifyMethods(this.homePage);
     }
     @Test(priority = 0)
     public void verifyOpen(){
-        this.homePage= (HomePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword")).verifyTitlesAndMenuElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
+        this.homePage= (HomePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
+        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
     }
     @Test(priority = 1)
     public void verifyLinks(){
-        this.homePage= (HomePage) this.homePage.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
+       verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
     }
     @AfterClass
     public void tearDown() {

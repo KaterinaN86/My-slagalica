@@ -9,12 +9,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import org.testng.Reporter;
 import pages.HomePage;
 import pages.LoginPage;
 import pages.SinglePlayerGamePage;
+import utility.Locators;
 import utility.VerifyBrokenLink;
+import utility.VerifyMethods;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,14 +39,6 @@ public class TestBase {
      */
     public static Properties prop;
     /**
-     * Variable that specifies which browser is used for testing.
-     */
-    public static String browserName;
-    /**
-     * Current URL.
-     */
-    public static String currentUrl;
-    /**
      * WebDriverWait object used for explicit wait.
      */
     public static WebDriverWait wait;
@@ -54,30 +47,19 @@ public class TestBase {
      */
     public static LoginPage loginPage;
     /**
-     * Username and password text input elements locators, used LoginPage and RegisterPage.
+     * Locators instance, used to access locators for web elements
      */
-    By usernameTextInputLoc = By.xpath("//input[@placeholder='Username']");
-    By passwordTextInputLoc = By.xpath("//input[@placeholder='Password']");
+    public static Locators locators;
+
+    public static VerifyMethods verifyMethods;
     /**
-     * Register button locator, used in LoginPage and RegisterPage.
+     * Variable that specifies which browser is used for testing.
      */
-    By registerBtnLoc = By.xpath("//input[@value='Register']");
+    public static String browserName;
     /**
-     * Locator object for container element, used in HomePage and SinglePlayerGamePage.
+     * Current URL.
      */
-    By containerLoc = By.xpath("//div[@class='container p-5']");
-    /**
-     * Locator object for container title.
-     */
-    By containerTitleLoc = By.xpath("//h1[contains(@class,'text-center text-white')]");
-    /**
-     * Locator object for menu elements.
-     */
-    By menuLoc = By.xpath("//div[contains(@class,'col-md-12 p-3')]");
-    /**
-     * Back button locator object. Used in multiple pages.
-     */
-    By backBtnLoc = new By.ByXPath("//*[@class='bi bi-arrow-left']//parent::button");
+    public static String currentUrl;
     /**
      * Variable used for storing page title.
      */
@@ -92,6 +74,10 @@ public class TestBase {
      */
     public TestBase() {
 
+    }
+
+    public static WebDriver getDriver() {
+        return driver;
     }
 
     /**
@@ -130,8 +116,15 @@ public class TestBase {
         }
         //Initializing wait driver
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        //Initializing LoginPage object
+        //Initializing LoginPage object.
         this.loginPage = new LoginPage();
+        //Initializing Locators object.
+        this.locators = new Locators();
+        this.verifyMethods=verifyMethods;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
     }
 
     /**
@@ -143,6 +136,10 @@ public class TestBase {
         this.pageTitle = pageTitle;
     }
 
+    public String getConfigTitle() {
+        return configTitle;
+    }
+
     /**
      * Setter method for config title variable.
      *
@@ -150,24 +147,6 @@ public class TestBase {
      */
     public void setConfigTitle(String configTitle) {
         this.configTitle = configTitle;
-    }
-
-    /**
-     * Getter method for "Register" button locator.
-     *
-     * @return
-     */
-    public By getRegisterBtnLoc() {
-        return registerBtnLoc;
-    }
-
-    /**
-     * Getter method for "Back" button (left arrow button) locator.
-     *
-     * @return
-     */
-    public By getBackBtnLoc() {
-        return backBtnLoc;
     }
 
     /**
@@ -182,87 +161,11 @@ public class TestBase {
         //Manage window size and cookies using driver object
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
-        //Set page title variable
-        setPageTitle(driver.getTitle());
         //Log data regarding opened page
         Reporter.log("Web browser launched, " + pageTitle + " page at: " + url + " opened.");
         System.out.println("Web browser launched, " + pageTitle + " page at: " + url + " opened.");
     }
 
-    /**
-     * Verifying current page title matches specified.
-     */
-    public void verifyPageTitle() {
-        Reporter.log("Verifying page title.");
-        System.out.println("Check if page title matches specified.");
-        Assert.assertEquals(pageTitle, configTitle, "Page title '" + pageTitle + "' is not equal to expected '");
-        Reporter.log("Page title '" + pageTitle + "' is equal to expected '" + configTitle + "'.");
-        System.out.println("Page title '" + pageTitle + "' is equal to expected.");
-    }
-
-    /**
-     * Verifying form title matches specified.
-     *
-     * @param formTitle   (String containing actual title of form element
-     * @param configTitle (String containing form title specified in config.properties file).
-     */
-    public void verifyFormTitle(String formTitle, String configTitle) {
-        Reporter.log("Verifying page title.");
-        System.out.println("Check if page title matches specified.");
-        Assert.assertEquals(formTitle, configTitle, "Form title: " + formTitle + " does not match specified title: " + configTitle + ".");
-        Reporter.log("Page title matches specified.");
-        System.out.println("Page form title verified.");
-    }
-
-    /**
-     * Verifying username and password text input fields are displayed.
-     */
-    public void verifyUsernamePasswordDisplayed() {
-        //Initializing WebElement objects for username and password text input elements.
-        WebElement usernameEl = driver.findElement(usernameTextInputLoc);
-        WebElement passwordEl = driver.findElement(passwordTextInputLoc);
-        Reporter.log("Verifying username and password elements are displayed.");
-        System.out.println("Check if username and password are displayed.");
-        Assert.assertTrue(usernameEl.isDisplayed(), "Username text input element not displayed!");
-        Assert.assertTrue(passwordEl.isDisplayed(), "Password text input element not displayed!");
-        Reporter.log("Username and password text input elements are displayed.");
-        System.out.println("Username and password text input elements are displayed.");
-    }
-
-    /**
-     * Verify register button is displayed.
-     */
-    public void verifyRegisterDisplayed() {
-        Reporter.log("Verify register button is displayed.");
-        System.out.println("Check if register button is displayed.");
-        //Log corresponding message depending on isDsiplayed method result for register button WebElement object.
-        Assert.assertTrue(driver.findElement(registerBtnLoc).isDisplayed(), "Register button not displayed!");
-        Reporter.log("Register button verified!");
-        System.out.println("Register button is displayed.");
-    }
-
-    /**
-     * Verify object representing a specific page has been initialized.
-     *
-     * @param page (TestBase object that can be of any page class type)
-     * @return (TestBase object passed as parameter)
-     */
-    public TestBase verifyPageObjectInitialized(TestBase page) {
-        //Verifying page object successfully initialized.
-        Assert.assertNotNull(page, "Page object not initialized!");
-        System.out.println("Successfully initialized instance of " + page.getClass() + " class.");
-        Reporter.log("Successfully initialized instance of " + page.getClass() + " class.");
-        return page;
-    }
-
-    /**
-     * Verifying page title and elements found on multiple pages.
-     */
-    public void verifyStateAfterOpen() {
-        verifyPageTitle();
-        verifyUsernamePasswordDisplayed();
-        verifyRegisterDisplayed();
-    }
 
     /**
      * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
@@ -271,9 +174,9 @@ public class TestBase {
      * @param password
      */
     public void setUsernameAndPassword(String username, String password) {
-        //Initializing username and password we elements.
-        WebElement usernameEl = driver.findElement(usernameTextInputLoc);
-        WebElement passwordEl = driver.findElement(passwordTextInputLoc);
+        //Initializing username and password web elements.
+        WebElement usernameEl = driver.findElement(locators.getUsernameTextInputLoc());
+        WebElement passwordEl = driver.findElement(locators.getPasswordTextInputLoc());
         //Deleting existing data in text input fields (CTRL+delete).
         usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
         usernameEl.sendKeys(Keys.DELETE);
@@ -286,57 +189,6 @@ public class TestBase {
         passwordEl.sendKeys(password);
         Reporter.log("Entered password: " + password);
         System.out.println("Entered password: " + password);
-    }
-
-    /**
-     * Verifies message displayed in alert window.
-     *
-     * @param message  (String containing actual alert window message).
-     * @param property (String containing alert message specified in config.properties file).
-     */
-    public void verifyAlertMessage(String message, String property) {
-        Assert.assertEquals(message, property, "Wrong message displayed!");
-        Reporter.log("Message: " + message + " is displayed and matches specified.");
-        System.out.println("Message: " + message + " is displayed and matches specified.");
-    }
-
-    /**
-     * Verifies container element in pages with menus containing links (like HomePage and SinglePlayerGamePage).
-     */
-    public void verifyContainerDisplayed() {
-        Reporter.log("Verifying main container element is displayed.");
-        System.out.println("Verifying main container element is displayed.");
-        Assert.assertTrue(driver.findElement(containerLoc).isDisplayed(), "Main container element not displayed!");
-        Reporter.log("Main container element is displayed.");
-        System.out.println("Main container element is displayed.");
-    }
-
-    /**
-     * Verifies all menu items are displayed.
-     */
-    public void verifyMenuItems() {
-        Reporter.log("Checking all options in menu are displayed.");
-        System.out.println("Checking all options in menu are displayed.");
-        List<WebElement> menuList = driver.findElements(menuLoc);
-        for (WebElement el : menuList) {
-            Assert.assertTrue(el.isDisplayed(), "Menu element not displayed.");
-        }
-        Reporter.log("Verified all menu elements.");
-        System.out.println("All menu elements are displayed.");
-    }
-
-    public TestBase verifyTitlesAndMenuElements(String configTitle, String menuContainerTitle) {
-        setConfigTitle(configTitle);
-        setPageTitle(driver.getTitle());
-        verifyPageTitle();
-        verifyContainerDisplayed();
-        Reporter.log("Verifying menu title matches specified.");
-        Assert.assertEquals(driver.findElement(containerTitleLoc).getText(), menuContainerTitle, "Menu title doesn't match specified value!");
-        Reporter.log("Menu title verified.");
-        System.out.println("Menu title verified.");
-        Reporter.log("Verifying menu elements.");
-        verifyMenuItems();
-        return verifyPageObjectInitialized(this);
     }
 
     /**
@@ -375,36 +227,19 @@ public class TestBase {
         //Return the number of active links.
         return validLinkElementsList.size();
     }
-
-    /**
-     * Verifies number of valid links on page matches specified number
-     *
-     * @param actualNumber   (int value equal to number of valid links on current page).
-     * @param expectedNumber (int value equal to number specified in config.properties file).
-     */
-    public TestBase verifyValidLinkNumber(int actualNumber, int expectedNumber) {
-        Reporter.log("Number of valid links on page: " + actualNumber + "; Expected valid links number: " + expectedNumber + ".");
-        System.out.println("Number of valid links on page: " + actualNumber + "; Expected valid links number: " + expectedNumber + ".");
-        Reporter.log("Verifying number of valid links matches expected.");
-        System.out.println("Check number of valid links matches specified.");
-        Assert.assertEquals(expectedNumber, actualNumber, "Number of valid links doesn't match expected.");
-        Reporter.log("Number of valid links matches expected.");
-        System.out.println("Number of valid links matches expected.");
-        return verifyPageObjectInitialized(this);
-    }
-
     /**
      * Method used to go back to HomePage or SinglePlayerGamePage
+     *
      * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
      */
     public TestBase goBack() {
         Reporter.log("Click back button.");
         System.out.println("Click back button.");
-        driver.findElement(getBackBtnLoc()).click();
+        driver.findElement(locators.getBackBtnLoc()).click();
         if (this instanceof SinglePlayerGamePage) {
-            return (HomePage) verifyPageObjectInitialized(new HomePage());
+            return new HomePage();
         } else {
-            return (SinglePlayerGamePage) verifyPageObjectInitialized(new SinglePlayerGamePage());
+            return new SinglePlayerGamePage();
         }
     }
 

@@ -5,6 +5,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.HomePage;
+import utility.VerifyMethods;
 
 /**
  * Class with test methods for Login page. Inherits TestBase fields and methods.
@@ -31,6 +32,7 @@ public class LoginTest extends TestBase {
     public void setup() {
         //Calling parent class init method to initialize properties and drivers.
         init();
+        this.verifyMethods=new VerifyMethods(this.loginPage);
     }
 
     @Test(priority = 0)

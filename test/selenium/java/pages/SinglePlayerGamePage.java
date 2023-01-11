@@ -42,6 +42,6 @@ public class SinglePlayerGamePage extends TestBase {
         Reporter.log("Click \"Moj broj\" button.");
         System.out.println("Click \"Moj broj\" button.");
         driver.findElement(mojBrojBtnLoc).click();
-        return (MojBrojPage) verifyPageObjectInitialized(new MojBrojPage());
+        return (MojBrojPage) verifyMethods.verifyPageObjectInitialized(new MojBrojPage());
     }
 }
