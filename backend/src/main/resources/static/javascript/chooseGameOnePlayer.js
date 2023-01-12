@@ -34,7 +34,7 @@ function init(){
 }
 
 function newGame() {
-    fetch('http://' + window.location.host + '/OnePlayer/finishGame').then(r => {
+    fetch('http://' + window.location.host + '/finishGame').then(r => {
         window.location.reload()
         console.log(r);
     }).catch((error) => {
