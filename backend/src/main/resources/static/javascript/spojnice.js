@@ -10,9 +10,7 @@ function init() {
     const sec=String(seconds%60).padStart(2,0);
     display.textContent=`${min} : ${sec}`;
     timer();
-    document.getElementById("exitBtn").addEventListener("click",()=>{
-        window.location.href="/OnePlayer"
-    })
+
     fetch('http://' + window.location.host + '/spojnice/start').then((response) => {
         response.json().then((data) => {
             document.getElementById("submitBtn").addEventListener("click", submitData)

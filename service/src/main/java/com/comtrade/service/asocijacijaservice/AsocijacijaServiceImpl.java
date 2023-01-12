@@ -1,14 +1,17 @@
 package com.comtrade.service.asocijacijaservice;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.Game;
+import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.*;
+import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.repository.PointsRepository;
 import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
 import com.comtrade.repository.asocijacijarepository.WordRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +26,24 @@ import java.util.*;
 @Service
 @Slf4j
 public class AsocijacijaServiceImpl {
+
+    private final OnePlayerGameRepository onePlayerGameRepository;
+    private final TwoPlayerGameRepository twoPlayerGameRepository;
     private final AsocijacijaRepository asocijacijaRepository;
     private final WordRepository wordRepository;
     private final PointsRepository pointsRepository;
     private final TimersRepository timersRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
+    private GameServiceImpl gameService;
 
-    private final OnePlayerGameRepository onePlayerGameRepository;
-    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, PointsRepository pointsRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository) {
+    public AsocijacijaServiceImpl(AsocijacijaRepository asocijacijaRepository, WordRepository wordRepository, PointsRepository pointsRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.asocijacijaRepository = asocijacijaRepository;
         this.wordRepository = wordRepository;
         this.pointsRepository = pointsRepository;
         this.timersRepository = timersRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
+        this.twoPlayerGameRepository = twoPlayerGameRepository;
     }
     private WordModel getRandomWordModel() throws NoSuchElementException{
         int randomId = (int)(Math.floor((Math.random()*wordRepository.count()+1)));
@@ -55,17 +61,22 @@ public class AsocijacijaServiceImpl {
     //creating new Asocijacija game instance
     public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
         try{
-            OnePlayerGame game=gameService.getGame(principal);
-            game.getIsActive().setActiveAsocijacije(true);
+            Game game=gameService.getGame(principal);
+            game.getIsActive(principal).setActiveAsocijacije(true);
             log.info("Creating new Asocijacija game instance");
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
-            game.getTimers().setStartTimeAsocijacije(LocalTime.now());
-            timersRepository.save(game.getTimers());
+            game.getTimers(principal).setStartTimeAsocijacije(LocalTime.now());
+            timersRepository.save(game.getTimers(principal));
             asocijacijaRepository.save(asocijacijaGame);
             if (game.getGames().getAsocijacijaGame()==null){
                 game.getGames().setAsocijacijaGame(asocijacijaGame);
-                onePlayerGameRepository.save(game);
+                if(game instanceof OnePlayerGame){
+                    onePlayerGameRepository.save((OnePlayerGame) game);
+                }
+                if(game instanceof TwoPlayerGame){
+                    twoPlayerGameRepository.save((TwoPlayerGame) game);
+                }
             }
             AsocijacijaGame savedAsocijacijaGame = game.getGames().getAsocijacijaGame();
             log.info("Asocijacija game instance with id: " + savedAsocijacijaGame.getId() + " created.");
@@ -99,14 +110,14 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> getValueOfSpecificField(String fieldName,Principal principal){
         try{
-            OnePlayerGame onePlayerGame = gameService.getGame(principal);
-            Points points=onePlayerGame.getPoints();
-            if(ChronoUnit.SECONDS.between(onePlayerGame.getTimers().getStartTimeAsocijacije(), LocalTime.now())>=120){
+            Game game = gameService.getGame(principal);
+            Points points=game.getPoints(principal);
+            if(ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeAsocijacije(), LocalTime.now())>=120){
                 finishGame(principal);
             }
-            AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
+            AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
             long gameId=asocijacijaGame.getId();
-            boolean isGameActive = onePlayerGame.getIsActive().isActiveAsocijacije();
+            boolean isGameActive = game.getIsActive(principal).isActiveAsocijacije();
             String fieldNameUpperCase = fieldName.toUpperCase();
 
             if(isGameActive && (fieldName.contains("5") || fieldName.contains("final"))){
@@ -178,10 +189,10 @@ public class AsocijacijaServiceImpl {
 
     public ResponseEntity<Response> checkSubmittedWord(Long gameId, String fieldName, String submittedWord, Principal principal){
         try{
-            OnePlayerGame onePlayerGame = gameService.getGame(principal);
-            AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
-            Points points = onePlayerGame.getPoints();
-            if(ChronoUnit.SECONDS.between(onePlayerGame.getTimers().getStartTimeAsocijacije(), LocalTime.now())>=120){
+            Game game = gameService.getGame(principal);
+            AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
+            Points points = game.getPoints(principal);
+            if(ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeAsocijacije(), LocalTime.now())>=120){
                 finishGame(principal);
             }
             String submittedWordUpperCase = submittedWord.toUpperCase();
@@ -189,7 +200,7 @@ public class AsocijacijaServiceImpl {
             log.info("Checking submit for game id: " + gameId);
             if(submittedWordUpperCase.equals(referenceWordUpperCase)){
                 if(fieldName.contains("final")){
-                    onePlayerGame.getIsActive().setActiveAsocijacije(false);
+                    game.getIsActive(principal).setActiveAsocijacije(false);
                     points.setNumOfPointsAsocijacije(points.getNumOfPointsAsocijacije() + 14);
                     pointsRepository.save(points);
                 }else{
@@ -207,18 +218,18 @@ public class AsocijacijaServiceImpl {
         }
     }
 
-    public void change(Long gameId){
-        OnePlayerGame game = null;
+    public void change(Long gameId, Principal principal){
+        Game game = null;
         AsocijacijaGame asocijacijaGame = findSpecificGame(gameId);
-        game.getIsActive().setActiveAsocijacije(false);
+        game.getIsActive(principal).setActiveAsocijacije(false);
         asocijacijaRepository.save(asocijacijaGame);
     }
 
     public ResponseEntity<Response> getNumberOfPoints(Long gameId, Principal principal){
         try{
-            OnePlayerGame onePlayerGame = gameService.getGame(principal);
-            AsocijacijaGame asocijacijaGame = onePlayerGame.getGames().getAsocijacijaGame();
-            Points points = onePlayerGame.getPoints();
+            Game game = gameService.getGame(principal);
+            AsocijacijaGame asocijacijaGame = game.getGames().getAsocijacijaGame();
+            Points points = game.getPoints(principal);
             if(points.getNumOfPointsAsocijacije()<0){
                 points.setNumOfPointsAsocijacije(0);
             }
@@ -227,7 +238,7 @@ public class AsocijacijaServiceImpl {
             }
             asocijacijaRepository.save(asocijacijaGame);
             pointsRepository.save(points);
-            if(!onePlayerGame.getIsActive().isActiveAsocijacije()){
+            if(!game.getIsActive(principal).isActiveAsocijacije()){
                 return ResponseEntity.ok()
                         .body(new ResponseWithNumberOfPoints(points.getNumOfPointsAsocijacije()));
             }else{
@@ -242,13 +253,13 @@ public class AsocijacijaServiceImpl {
     }
 
     public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
-        OnePlayerGame game = gameService.getGame(principal);
+        Game game = gameService.getGame(principal);
         AsocijacijaGame asocijacijaGame=game.getGames().getAsocijacijaGame();
-        Points points = game.getPoints();
-        if(!game.getIsActive().isActiveAsocijacije()){
+        Points points = game.getPoints(principal);
+        if(!game.getIsActive(principal).isActiveAsocijacije()){
             return ResponseEntity.ok().build();
         }
-        game.getIsActive().setActiveAsocijacije(false);
+        game.getIsActive(principal).setActiveAsocijacije(false);
         if(points.getNumOfPointsAsocijacije()<=0){
             points.setNumOfPointsAsocijacije(0);
         }
@@ -257,7 +268,12 @@ public class AsocijacijaServiceImpl {
             //asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
         }
         log.info("Number of points for Asocijacije game: "+ points.getNumOfPointsAsocijacije());
-        onePlayerGameRepository.save(game);
+        if(game instanceof OnePlayerGame){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game instanceof TwoPlayerGame){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
         pointsRepository.save(points);
         return ResponseEntity.ok().build();
     }

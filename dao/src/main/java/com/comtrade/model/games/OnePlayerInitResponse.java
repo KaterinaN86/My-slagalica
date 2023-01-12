@@ -1,4 +1,4 @@
-package com.comtrade.model.OnePlayerGame;
+package com.comtrade.model.games;
 
 import lombok.*;
 

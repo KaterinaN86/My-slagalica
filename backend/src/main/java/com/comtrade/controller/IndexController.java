@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
+
     @Autowired
     MyUserDetailService myUserDetailService;
 
@@ -35,11 +36,6 @@ public class IndexController {
     @GetMapping("OnePlayer")
     public String onePlayer(){
         return "chooseGameOnePlayer.html";
-    }
-
-    @GetMapping("TwoPlayers")
-    public String TwoPlayers(){
-        return "chooseGameTwoPlayers.html";
     }
 
     @GetMapping("RangList")
@@ -87,4 +83,15 @@ public class IndexController {
         String msg=myUserDetailService.addUser(userToRegister.getUserName(),userToRegister.getPassword());
         return ResponseEntity.ok().body(new RegistrationResponse(msg));
     }
+
+    @GetMapping("/findingGame")
+    public String findingGamePage() {
+        return "findingGame.html";
+    }
+
+    @GetMapping("/twoPlayerGame")
+    public String twoPlayerGame() {
+        return "twoPlayerGame.html";
+    }
+
 }

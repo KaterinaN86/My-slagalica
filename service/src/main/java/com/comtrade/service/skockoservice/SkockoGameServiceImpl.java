@@ -1,10 +1,13 @@
 package com.comtrade.service.skockoservice;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
+import com.comtrade.model.games.Game;
+import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.skockomodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
+import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +24,20 @@ public class SkockoGameServiceImpl implements SkockoGameService{
 
     private final SkockoGameRepository skockoGameRepository;
     private final OnePlayerGameRepository onePlayerGameRepository;
+    private final TwoPlayerGameRepository twoPlayerGameRepository;
 
     @Autowired
-    private OnePlayerOnePlayerGameServiceImpl gameService;
+    private GameServiceImpl gameService;
 
-    public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository, OnePlayerGameRepository onePlayerGameRepository) {
+    public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.skockoGameRepository = skockoGameRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
+        this.twoPlayerGameRepository = twoPlayerGameRepository;
     }
 
     @Override
     public SkockoGame getGame(Principal principal) {
-        OnePlayerGame game=null;
+        Game game=null;
         try {
             game=gameService.getGame(principal);
         } catch (Exception e) {
@@ -43,9 +48,14 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         }
         else{
             SkockoGame Sgame=createNewGame();
-            game.getTimers().setStartTimeSkocko(LocalTime.now());
+            game.getTimers(principal).setStartTimeSkocko(LocalTime.now());
             game.getGames().setSkockoGame(Sgame);
-            onePlayerGameRepository.save(game);
+            if(game instanceof OnePlayerGame){
+                onePlayerGameRepository.save((OnePlayerGame) game);
+            }
+            if(game instanceof TwoPlayerGame){
+                twoPlayerGameRepository.save((TwoPlayerGame) game);
+            }
             return game.getGames().getSkockoGame();
         }
 
@@ -63,7 +73,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     public ResponseEntity<SkockoResponse> handleSubmit(SkockoSubmit submit,Principal principal) {
         boolean isWinningCombination;
         SkockoResponse skockoResponse;
-        OnePlayerGame game=null;
+        Game game=null;
         try {
             game=gameService.getGame(principal);
         } catch (Exception e) {
@@ -74,12 +84,17 @@ public class SkockoGameServiceImpl implements SkockoGameService{
 
         isWinningCombination = isWinningCombination(Sgame.getCombination(), submit.getCombination());
 
-        if(isWinningCombination && ChronoUnit.SECONDS.between(game.getTimers().getStartTimeSkocko(), LocalTime.now())<120){
+        if(isWinningCombination && ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeSkocko(), LocalTime.now())<120){
             int numOfPoints=numberOfPoints(submit.getAttempt());
-            if (game.getIsActive().isActiveSkocko()){
-                game.getPoints().setNumOfPointsSkocko(numOfPoints);
-                game.getIsActive().setActiveSkocko(false);
-                onePlayerGameRepository.save(game);
+            if (game.getIsActive(principal).isActiveSkocko()){
+                game.getPoints(principal).setNumOfPointsSkocko(numOfPoints);
+                game.getIsActive(principal).setActiveSkocko(false);
+                if(game instanceof OnePlayerGame){
+                    onePlayerGameRepository.save((OnePlayerGame) game);
+                }
+                if(game instanceof TwoPlayerGame){
+                    twoPlayerGameRepository.save((TwoPlayerGame) game);
+                }
             }
 
             skockoResponse = new SkockoResponseWithNumberOfPoints(isWinningCombination,numOfPoints, Sgame.getCombination());
@@ -141,14 +156,14 @@ public class SkockoGameServiceImpl implements SkockoGameService{
     }
     @Override
     public ResponseEntity<List<Integer>> getCombination(Principal principal){
-        OnePlayerGame game=null;
+        Game game=null;
         try {
             game=gameService.getGame(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         SkockoGame Sgame=game.getGames().getSkockoGame();
-        game.getIsActive().setActiveSkocko(false);
+        game.getIsActive(principal).setActiveSkocko(false);
 
         log.info("Returning combination for game id: " + Sgame.getId());
         return ResponseEntity.ok().body(Sgame.getCombination());

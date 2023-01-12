@@ -41,7 +41,7 @@ class SlagalicaOnePlayerGameServiceImpTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        slagalicaService = new SlagalicaServiceImp(onePlayerGameRepository, slagalicaRepository, dictionaryWordRepository);
+        slagalicaService = new SlagalicaServiceImp(onePlayerGameRepository, twoPlayerGameRepository, slagalicaRepository, dictionaryWordRepository);
         slagalicaRepository.save(SlagalicaGame.builder()
                 .lettersForFindingTheWord("IMAASIRKENKJ")
                 .computerLongestWord("MASKE").build());

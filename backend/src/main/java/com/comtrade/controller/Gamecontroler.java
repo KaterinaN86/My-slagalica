@@ -1,9 +1,10 @@
 package com.comtrade.controller;
 
-import com.comtrade.model.OnePlayerGame.OnePlayerGame;
-import com.comtrade.model.OnePlayerGame.OnePlayerInitResponse;
-import com.comtrade.model.OnePlayerGame.RangListResponse;
-import com.comtrade.service.gameservice.OnePlayerOnePlayerGameServiceImpl;
+import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.OnePlayerInitResponse;
+import com.comtrade.model.games.RangListResponse;
+import com.comtrade.model.games.TwoPlayerInitResponse;
+import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,24 +18,29 @@ import java.util.List;
 @CrossOrigin
 public class Gamecontroler {
 
-    private final OnePlayerOnePlayerGameServiceImpl gameservice;
+    private final GameServiceImpl gameservice;
 
-    public Gamecontroler(OnePlayerOnePlayerGameServiceImpl gameservice) {
+    public Gamecontroler(GameServiceImpl gameservice ) {
         this.gameservice = gameservice;
     }
 
     @GetMapping("/OnePlayer/init")
     public OnePlayerInitResponse init(Principal principal){
         try {
-            return gameservice.getInitData(principal);
+            return gameservice.getOnePlayerGameInitData(principal);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    @GetMapping("/TwoPlayer/init")
+    public TwoPlayerInitResponse initTwoPlayer(Principal principal) throws Exception {
+        return gameservice.getTwoPlayerInitData(principal);
+    }
+
     @GetMapping("/GetRangList")
     public ResponseEntity<List<RangListResponse>> getRangList(){
-        List<OnePlayerGame> listOfGames=gameservice.getTopTen();
+        List<OnePlayerGame> listOfGames=gameservice.getTopTenOnePlayerGames();
         List<RangListResponse> rangListResponses=new ArrayList<>();
         for (OnePlayerGame game:   listOfGames) {
             rangListResponses.add(new RangListResponse(game));
@@ -47,12 +53,26 @@ public class Gamecontroler {
         }
     }
 
-    @GetMapping("OnePlayer/newGame")
+    @GetMapping("/finishGame")
     public String newGame(Principal principal) throws Exception {
-        gameservice.finishedGame(principal);
+        gameservice.finishGame(principal);
         return "chooseGameOnePlayer.html";
     }
 
+    @GetMapping("/queue")
+    public ResponseEntity<Boolean> queue(Principal principal) {
+        return ResponseEntity.ok(gameservice.addPlayerToQueue(principal));
+    }
+
+    @GetMapping("/dequeue")
+    public ResponseEntity<Boolean> dequeue(Principal principal) {
+        return ResponseEntity.ok(gameservice.removePlayerFromQueue(principal));
+    }
+
+    @GetMapping("/isInGame")
+    public ResponseEntity<Boolean> isInGame(Principal principal) {
+        return ResponseEntity.ok(gameservice.isInGame(principal));
+    }
 
 
 }

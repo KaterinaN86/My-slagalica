@@ -1,4 +1,4 @@
-package com.comtrade.model.OnePlayerGame;
+package com.comtrade.model.games;
 
 import com.comtrade.model.Games;
 import com.comtrade.model.IsActive;
@@ -9,16 +9,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
 
 import javax.persistence.*;
+import java.security.Principal;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class OnePlayerGame {
+public class OnePlayerGame implements Game{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,4 +48,38 @@ public class OnePlayerGame {
         this.isActive = isActive;
     }
 
+    @Override
+    public Points getPoints(Principal principal) {
+        return points;
+    }
+
+    @Override
+    public void setPoints(Principal principal, Points points) {
+        this.points=points;
+    }
+
+    @Override
+    public Timers getTimers(Principal principal) {
+        return timers;
+    }
+
+    @Override
+    public void setTimers(Principal principal, Timers timers) {
+        this.timers=timers;
+    }
+
+    @Override
+    public IsActive getIsActive(Principal principal) {
+        return isActive;
+    }
+
+    @Override
+    public void setIsActive(Principal principal, IsActive isActive) {
+        this.isActive=isActive;
+    }
+
+    @Override
+    public void setFinished(Boolean finished) {
+        this.finished=finished;
+    }
 }

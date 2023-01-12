@@ -147,7 +147,7 @@ const sendSubmit = async () =>{
 }
 
 function showAll(){
-    let buttons = document.getElementsByTagName("button");
+    let buttons = document.getElementsByClassName('disable');
     for(let button of buttons){
         button.disabled=true;
         button.classList.add("modalColor")

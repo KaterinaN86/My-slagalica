@@ -39,8 +39,8 @@ public class AsocijacijaController {
     //Only for testing purpose
     //To check its imposible to get final word when game is active
     @GetMapping("/asocijacija/change/{gameId}")
-    public void change(@PathVariable Long gameId){
-        asocijacijaService.change(gameId);
+    public void change(@PathVariable Long gameId, Principal principal){
+        asocijacijaService.change(gameId, principal);
     }
 
     @GetMapping("/asocijacija/getNumberOfPoints/{gameId}")
