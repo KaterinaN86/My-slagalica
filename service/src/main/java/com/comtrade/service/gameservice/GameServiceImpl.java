@@ -77,7 +77,16 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     }
     @Override
     public OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception {
-        Game game= getGame(principal);
+        Game game= null;
+        try {
+            game = getGame(principal);
+            if (game instanceof TwoPlayerGame){
+                finishGame(principal);
+                game = createNewOnePlayerGame(principal);
+            }
+        } catch (Exception e) {
+            game = createNewOnePlayerGame(principal);
+        }
         OnePlayerInitResponse response=new OnePlayerInitResponse();
         response.setMsg("");
 
@@ -126,6 +135,7 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
         else if(game instanceof TwoPlayerGame){
+            //todo set game winer
             twoPlayerGameRepository.save((TwoPlayerGame) game);
         }
     }
