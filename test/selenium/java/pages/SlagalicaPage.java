@@ -54,19 +54,23 @@ public class SlagalicaPage extends TestBase {
     }
 
     public void verifyThatFirstListIsDisplayed(){
-        driver.findElement((firstListLocator)).isDisplayed();
+        WebElement firstlist = driver.findElement((firstListLocator));
+        Assert.assertTrue(firstlist.isDisplayed(), "First list not displayed!");
         Reporter.log("First list is displayed.");
         System.out.println("First list is displayed.");
     }
 
     public void verifyThatSecondListIsDisplayed(){
-        driver.findElement((secondListLocator)).isDisplayed();
+        WebElement secondlist = driver.findElement((secondListLocator));
+        Assert.assertTrue(secondlist.isDisplayed(), "Second list not displayed!");
         Reporter.log("First list is displayed.");
         System.out.println("First list is displayed.");
     }
 
     public void verifyPopUpDialog(){
-        driver.findElement((popUpDialog)).isDisplayed();
+        wait.until(ExpectedConditions.elementToBeClickable(popUpDialog));
+        WebElement popup = driver.findElement((popUpDialog));
+        Assert.assertTrue(popup.isDisplayed(), "Popup dialog not displayed!");
         Reporter.log("Dialog is displayed.");
         System.out.println("Dialog is displayed.");
     }
