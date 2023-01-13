@@ -20,7 +20,10 @@ public class AsocijacijaController {
 
     @GetMapping("/asocijacija/play")
     @CrossOrigin
-    public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
+    public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal) throws Exception {
+        if(!asocijacijaService.isActiveGame(principal)){
+            return ResponseEntity.notFound().build();
+        }
         return asocijacijaService.createNewAsocijacijaGame(principal);
     }
 
