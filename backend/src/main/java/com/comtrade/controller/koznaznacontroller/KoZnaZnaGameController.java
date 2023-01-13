@@ -22,6 +22,9 @@ public class KoZnaZnaGameController {
     @GetMapping("/play")
     @CrossOrigin
     public ResponseEntity<Response> getNewGame(Principal principal) throws Exception {
+        if(!koZnaZnaService.isActiveGame(principal)){
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok()
                 .body(new ResponseGameWithoutAnswers(koZnaZnaService.getGame(principal)));
     }

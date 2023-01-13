@@ -163,7 +163,6 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         Game game=gameService.getGame(principal);
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
         game.getIsActive(principal).setActiveKoZnaZna(false);
-        //game.setNumOfPoints(game.getNumOfPoints()+koZnaZnaGame.getNumOfPoints());
         if(game instanceof OnePlayerGame){
             onePlayerGameRepository.save((OnePlayerGame) game);
         }
@@ -172,5 +171,10 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         }
         koZnaZnaRepository.save(koZnaZnaGame);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public boolean isActiveGame(Principal principal) throws Exception {
+        return gameService.getGame(principal).getIsActive(principal).isActiveKoZnaZna();
     }
 }
