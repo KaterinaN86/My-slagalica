@@ -50,6 +50,7 @@ public class SlagalicaPage extends TestBase {
         driver.findElement((locators.getBackBtnLoc())).click();
         Reporter.log("Back button is clicked.");
         System.out.println("Back button is clicked.");
+        goBack();
         return new SinglePlayerGamePage();
     }
 
@@ -81,6 +82,20 @@ public class SlagalicaPage extends TestBase {
         Reporter.log("Dialog is displayed.");
         System.out.println("Dialog is displayed.");
 
+    }
+
+    public HomePage goBack() {
+        Reporter.log("Click back button.");
+        System.out.println("Click back button.");
+        this.wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert = this.driver.switchTo().alert();
+        Reporter.log("Alert popup displayed with message: " + alert.getText() + " displayed.");
+        System.out.println("Alert popup displayed with message: " + alert.getText() + " displayed.");
+        //click on OK button on displayed alert window
+        alert.accept();
+        Reporter.log("Verify accept option in alert popup.");
+        System.out.println("Checking if player can accept to leave game.");
+        return new HomePage();
     }
 
 
