@@ -21,6 +21,9 @@ public class SpojniceController {
 
     @GetMapping("/start")
     public ResponseEntity<List<String>> getWords(Principal principal) throws Exception {
+        if(!spojniceServiceImpl.isActiveGame(principal)){
+            return ResponseEntity.notFound().build();
+        }
         return new ResponseEntity<>(spojniceServiceImpl.getWords(principal), HttpStatus.OK);
     }
 

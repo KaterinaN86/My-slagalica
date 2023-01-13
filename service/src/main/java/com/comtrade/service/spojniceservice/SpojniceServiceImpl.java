@@ -151,6 +151,9 @@ public class SpojniceServiceImpl implements SpojniceService{
         return onePlayerGame.getPoints(principal).getNumOfPointsSpojnice();
     }
 
+    public boolean isActiveGame(Principal principal) throws Exception {
+        return gameService.getGame(principal).getIsActive(principal).isActiveSpojnice();
+    }
 
 }
 

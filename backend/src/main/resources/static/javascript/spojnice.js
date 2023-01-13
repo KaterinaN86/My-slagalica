@@ -12,6 +12,13 @@ function init() {
     timer();
 
     fetch('http://' + window.location.host + '/spojnice/start').then((response) => {
+        if(response.status == 404){
+            history.back()
+        }
+        else if (response.status !== 200) {
+            console.log('Error: ' + response.status);
+            return;
+        }
         response.json().then((data) => {
             document.getElementById("submitBtn").addEventListener("click", submitData)
             console.log(data);
@@ -55,6 +62,24 @@ function init() {
     })
 }
 
+function goBack() {
+    if(!isActiveGame){
+        history.back()
+    }
+    if(confirm("Do you want to finish the game?")){
+           submitAndGetPoints().then(function(){
+             history.back()
+           })
+    }
+}
+
+function leaveGame(){
+    timer("stop");
+    submitAndGetPoints().then(function(){
+        history.back()
+    })
+}
+
 function submitData(event){
     event.target.disabled=true;
     timer("stop");
@@ -80,6 +105,7 @@ async function submitAndGetPoints(){
                console.log(data)
                alert("Score : "+data);
                timer("stop");
+               isActiveGame=false;
            });
         }).catch((error) => {
             console.log(error)
