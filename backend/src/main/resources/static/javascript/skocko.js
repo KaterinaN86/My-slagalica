@@ -11,6 +11,7 @@ var numberOfAttempts = 0;
 var addedSendButton = false;
 var clickedButton;
 var gameId;
+var isActiveGame=true;
 
 // User picked combination to be filled with symbols from the buttons clicked
 var combination = [];
@@ -28,7 +29,10 @@ const handleNewGame = () =>{
     fetch('http://' + window.location.host + '/skocko/play')
     .then(
         (response) => {
-            if (response.status !== 200) {
+            if(response.status == 404){
+                history.back()
+            }
+            else if (response.status !== 200) {
                 console.log('Error: ' + response.status);
                 return;
             }
@@ -45,8 +49,34 @@ const handleNewGame = () =>{
 }
 
 function goBack() {
-    window.location.href = "OnePlayer";
+    if(!isActiveGame){
+        history.back();
+    }
+    if(confirm("Do you want to finish the game?")){
+        finishGame().then(function () {
+            history.back();
+        });
+    }
 }
+
+async function finishGame(){
+    const response = await fetch('http://' + window.location.host + '/skocko/finishGame', {
+            method: 'PUT'
+        });
+        if (response.status !== 200) {
+            console.log('Error: ' + response.status);
+            return;
+        }
+        isActiveGame=false;
+}
+
+function leaveGame(){
+    timer("stop");
+    finishGame().then(function(){
+       history.back();
+    })
+}
+
 
 function displaySymbol(object) {
     var text = object.innerHTML;
@@ -263,6 +293,7 @@ const printMessages = (isWinning, points) =>{
 const timer = (order) => {
 	if (order == "stop") {
 		clearInterval(countdown);
+		isActiveGame=false;
 		seconds = 120;
 	} else {
 		countdown = setInterval(function() {
