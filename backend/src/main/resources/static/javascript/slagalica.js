@@ -8,10 +8,13 @@ function $(id) {
 }
 var mainTimer=$('timer');
 var stopButton=$('stopButton');
+var backButton=$('backButton');
+var isActiveGame=true;
 let time=90;
 
+backButton.addEventListener("click", goBack);
 document.addEventListener("DOMContentLoaded", () => {
-    stopButton.style.visibility = "hidden";
+    stopButton.disabled = true;
     fastAlphabetSwitch();
     handleNewGame();
 });
@@ -21,16 +24,18 @@ const handleNewGame = () => {
     fetch('http://' + window.location.host + '/slagalica/play')
         .then(
             (response) => {
-                if (response.status !== 200) {
+                if(response.status == 404){
+                    history.back()
+                }
+                else if (response.status !== 200) {
                     console.log('Error: ' + response.status);
-
                     return;
                 }
 
                 response.json().then((data) => {
                     gameLetters = data.lettersForFindingTheWord
                     console.log(gameLetters)
-                    stopButton.style.visibility = "visible";
+                    stopButton.disabled=false;
                     setLettersToButtons(data)
                 });
 
@@ -86,7 +91,31 @@ const submitUserWord = async (submitedUserWord, lettersForUserWord) => {
 }
 
 function goBack() {
-    window.location.href = "OnePlayer";
+     if(!isActiveGame){
+            history.back();
+    }
+    if(confirm("Do you want to finish the game?")){
+            finishGame().then(function () {
+                history.back();
+            });
+    }
+}
+async function finishGame(){
+    const response = await fetch('http://' + window.location.host + '/slagalica/finishGame', {
+        method: 'PUT'
+    });
+    if (response.status !== 200) {
+        console.log('Error: ' + response.status);
+        return;
+    }
+    isActiveGame=false;
+}
+
+function leaveGame(){
+    startTimer("stop");
+    finishGame().then(function(){
+        history.back();
+    })
 }
 
 function handleResponse() {

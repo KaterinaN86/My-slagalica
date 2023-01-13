@@ -11,6 +11,7 @@ import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -253,6 +254,24 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
 
         return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),finalResult);
+    }
+    @Override
+    public ResponseEntity finishGame(Principal principal) throws Exception {
+        Game game=gameService.getGame(principal);
+        SlagalicaGame slagalicaGame=game.getGames().getSlagalicaGame();
+        game.getIsActive(principal).setActiveSlagalica(false);
+        if(game instanceof OnePlayerGame){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game instanceof TwoPlayerGame){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
+        slagalicaRepository.save(slagalicaGame);
+        return ResponseEntity.ok().build();
+    }
+    @Override
+    public boolean isActiveGame(Principal principal) throws Exception {
+        return gameService.getGame(principal).getIsActive(principal).isActiveSlagalica();
     }
 
 
