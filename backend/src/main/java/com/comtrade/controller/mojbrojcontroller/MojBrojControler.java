@@ -20,9 +20,12 @@ public class MojBrojControler {
 
     @GetMapping("/Init")
     @CrossOrigin
-    public MojBrojGame getNewGame(Principal principal){
+    public ResponseEntity<MojBrojGame> getNewGame(Principal principal){
         try {
-            return mojBrojService.getGame(principal);
+            if(!mojBrojService.isActiveGame(principal)){
+                return ResponseEntity.notFound().build();
+            }
+            return  ResponseEntity.ok().body(mojBrojService.getGame(principal));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -33,5 +36,10 @@ public class MojBrojControler {
     public ResponseEntity<MojBrojSubmitResponse> submit(@RequestBody MojBrojSubmitRequest submit, Principal principal) {
         return ResponseEntity.ok().body(mojBrojService.submit(submit,principal));
     }
+    @PutMapping("/finishGame")
+    public ResponseEntity finishGame(Principal principal) throws Exception {
+        return mojBrojService.finishGame(principal);
+    }
+
 
 }

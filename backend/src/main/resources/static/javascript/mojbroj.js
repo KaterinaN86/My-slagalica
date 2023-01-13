@@ -9,12 +9,18 @@ var selectedNumber = [];
 var symbols = ['(', ')', '-', '+', '/', '*']
 let time=100;
 var isActiveGame=true;
+var backButton=document.getElementById('backButton');
+
+backButton.addEventListener("click", goBack);
 
 function handleNewGame(){
     fetch('http://' + window.location.host + '/MojBroj/Init')
         .then(
             (response) => {
-                if (response.status !== 200) {
+                if(response.status == 404){
+                    history.back()
+                }
+                else if (response.status !== 200) {
                     console.log('Error: ' + response.status);
                     return;
                 }
@@ -89,6 +95,38 @@ async function submit(){
             console.log(error)
         }
 }
+function goBack() {
+    if(!isActiveGame){
+        history.back()
+    }
+    if(confirm("Do you want to finish the game?")){
+            finishGame().then(function () {
+                window.location.href = "OnePlayer";
+            });
+    }
+}
+
+async function finishGame(){
+    const response = await fetch('http://' + window.location.host + '/MojBroj/finishGame', {
+            method: 'PUT'
+        });
+        if (response.status !== 200) {
+            console.log('Error: ' + response.status);
+            return;
+        }
+        isActiveGame=false;
+}
+
+function leaveGame(){
+    if(!isActiveGame){
+        history.back()
+    }
+    startTimer("stop");
+    finishGame().then(function(){
+        history.back();
+    })
+}
+
 const startTimer = (order) => {
     if (order == "stop") {
         clearInterval(timerInterval);
