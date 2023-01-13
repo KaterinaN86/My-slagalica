@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded",()=>{
+    getQuestions();
     startTimer();
-    getQuizSet(0);
+    defaultOptionColors();
 })
 var questionCount = 0;
 var selectedOption=0;
@@ -31,15 +32,17 @@ let time=120;
 function getQuestions(){
     fetch('http://' + window.location.host + '/koZnaZna/play').then(
         (response) => {
-                    if (response.status !== 200) {
-                        console.log('Error: ' + response.status);
-                        return;
-                    }
-
-                    response.json().then((data) => {
-                        setGameInfo(data.koZnaZnaGame);
-                        setQuestions(data.koZnaZnaGame.questions);
-                    });
+                if(response.status == 404){
+                   history.back()
+               }
+               else if (response.status !== 200) {
+                   console.log('Error: ' + response.status);
+                   return;
+               }
+                response.json().then((data) => {
+                    setGameInfo(data.koZnaZnaGame);
+                    setQuestions(data.koZnaZnaGame.questions);
+                });
                 }
         )
 }
@@ -128,8 +131,9 @@ function nextQuestionSelect(){
     defaultOptionColors();
     selectedOptionIndex=0;
     if(questionCount==9){
-       getNumberOfPoints();
-       finishGame();
+       finishGame().then(function () {
+        getNumberOfPoints()
+       });
     }
     else if(questionCount==8){
         questionCount++;
@@ -145,15 +149,35 @@ async function finishGame(){
     const response = await fetch('http://' + window.location.host + '/koZnaZna/finishGame', {
             method: 'PUT'
         });
+        startTimer("stop");
+        isActiveGame=false;
         if (response.status !== 200) {
             console.log('Error: ' + response.status);
-            startTimer("stop");
             return;
         }
-        else{
-            startTimer("stop");
-        }
 }
+
+function goBack() {
+    if(!isActiveGame){
+            history.back()
+    }
+    if(confirm("Do you want to finish the game?")){
+            finishGame().then(function () {
+                 history.back()
+            });
+    }
+}
+
+
+function leaveGame(){
+    if(!isActiveGame){
+            history.back()
+    }
+    finishGame().then(function () {
+         history.back()
+    });
+}
+
 
 async function updateQuestionNumber(){
     var submitQuestionNUmber={
@@ -201,10 +225,6 @@ function defaultOptionColors() {
 	button4.style.backgroundColor = "gray";
 }
 
-function getQuizSet(questionNumber){
-    defaultOptionColors();
-    getQuestions();
-}
 
 const startTimer = (order) => {
     if (order == "stop") {
@@ -225,5 +245,4 @@ const startTimer = (order) => {
             }
         },1000)
     }
-
 }

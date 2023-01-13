@@ -28,6 +28,11 @@ window.onclick = function(event) {
         closeModal();
       }
 }
+window.addEventListener('beforeunload', (event) => {
+    event.preventDefault();
+    event.returnValue = 'Do you want to finish the game?';
+});
+
 
 const closeModal = () =>{
       modal.style.display = "none";
@@ -41,6 +46,7 @@ var pressedButtonId;
 var numberOfOpenedFields=0;
 
 document.addEventListener("DOMContentLoaded", ()=>{
+    displayTimer.textContent='120';
     handleNewGame();
 });
 
@@ -48,7 +54,10 @@ const handleNewGame = () =>{
     fetch('http://' + window.location.host + '/asocijacija/play')
     .then(
         (response) => {
-            if (response.status !== 200) {
+            if(response.status == 404){
+                history.back();
+            }
+            else if (response.status !== 200) {
                 console.log('Error: ' + response.status);
                 return;
             }
@@ -62,6 +71,29 @@ const handleNewGame = () =>{
     )
     .catch((error) => {
         console.log('Fetch error: ', error);
+    })
+}
+
+function goBack() {
+    if(!isActiveGame){
+             window.location.href = "OnePlayer";
+        }
+    else if(confirm("Do you want to finish the game?")){
+       finishGame().then(function(){
+
+ //        window.removeEventListener('beforeunload')
+         history.back();
+       })
+    }
+}
+
+function leaveGame(){
+     if(!isActiveGame){
+         history.back();
+     }
+    timer("stop");
+    finishGame().then(function(){
+        history.back();
     })
 }
 
@@ -163,6 +195,7 @@ async function finishGame(){
         console.log('Error: ' + response.status);
         return;
     }
+    isActiveGame=false;
     closeModal();
 }
 

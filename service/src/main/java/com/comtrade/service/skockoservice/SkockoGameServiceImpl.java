@@ -3,6 +3,7 @@ package com.comtrade.service.skockoservice;
 import com.comtrade.model.games.Game;
 import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.games.TwoPlayerGame;
+import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.model.skockomodel.*;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
@@ -168,5 +169,23 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         log.info("Returning combination for game id: " + Sgame.getId());
         return ResponseEntity.ok().body(Sgame.getCombination());
 
+    }
+    @Override
+    public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
+        Game game=gameService.getGame(principal);
+        SkockoGame skockoGame=game.getGames().getSkockoGame();
+        game.getIsActive(principal).setActiveSkocko(false);
+        if(game instanceof OnePlayerGame){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game instanceof TwoPlayerGame){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
+        skockoGameRepository.save(skockoGame);
+        return ResponseEntity.ok().build();
+    }
+    @Override
+    public boolean isActiveGame(Principal principal) throws Exception {
+        return gameService.getGame(principal).getIsActive(principal).isActiveSkocko();
     }
 }

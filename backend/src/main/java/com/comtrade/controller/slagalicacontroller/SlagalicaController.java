@@ -27,13 +27,20 @@ public class SlagalicaController {
 
     @RequestMapping("/play")
     @CrossOrigin
-    public LettersResponse getNewGame(Principal principal){
-        return slagalicaService.saveLetterForFindingWords(principal);
+    public ResponseEntity<LettersResponse> getNewGame(Principal principal) throws Exception {
+        if(!slagalicaService.isActiveGame(principal)){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(slagalicaService.saveLetterForFindingWords(principal));
     }
 
     @PostMapping("/wordSubmit")
     @CrossOrigin
     public SubmitResponse slagalicaGame(@RequestBody SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
         return slagalicaService.userWordProcessing(slagalicaUserWordSubmit, principal);
+    }
+    @PutMapping("/finishGame")
+    public ResponseEntity finishGame(Principal principal) throws Exception {
+        return slagalicaService.finishGame(principal);
     }
 }

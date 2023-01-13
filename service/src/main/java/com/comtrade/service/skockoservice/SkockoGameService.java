@@ -1,6 +1,7 @@
 package com.comtrade.service.skockoservice;
 
 
+import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.model.skockomodel.SkockoGame;
 import com.comtrade.model.skockomodel.SkockoResponse;
 import com.comtrade.model.skockomodel.SkockoSubmit;
@@ -22,4 +23,8 @@ public interface SkockoGameService {
     int getNumberOfMisplacedSymbolsInCombination(List<Integer> winningCombination, List<Integer> submittedCombinatio);
 
     Integer numberOfPoints(Integer numberOfAttempts);
+
+    ResponseEntity<Response> finishGame(Principal principal) throws Exception;
+
+    boolean isActiveGame(Principal principal) throws Exception;
 }

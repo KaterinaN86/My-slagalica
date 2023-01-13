@@ -22,4 +22,6 @@ public interface KoZnaZnaGameService {
     Integer getNumberOfPoints(Principal principal) throws Exception;
     ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion, Principal principal) throws Exception;
     ResponseEntity<Response> finishGame( Principal principal) throws Exception;
+
+    boolean isActiveGame(Principal principal) throws Exception;
 }

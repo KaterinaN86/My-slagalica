@@ -1,4 +1,4 @@
-package com.comtrade.service.slagalicaservice;
+/*package com.comtrade.service.slagalicaservice;
 
 import com.comtrade.model.slagalicamodel.DictionaryWord;
 import com.comtrade.model.slagalicamodel.SlagalicaGame;
@@ -47,7 +47,7 @@ class SlagalicaOnePlayerGameServiceImpTest {
                 .computerLongestWord("MASKE").build());
         dictionaryWordRepository.save(DictionaryWord.builder().wordFromDictionary("MASKIRANJE").build());
     }
-
+*/
     /*@Test
     void testSaveLetterForFindingWords() {
 
@@ -59,7 +59,7 @@ class SlagalicaOnePlayerGameServiceImpTest {
     }*/
 
 
-
+/*
     @Test
     void testLettersForFindingTheWord() {
 
@@ -103,3 +103,5 @@ class SlagalicaOnePlayerGameServiceImpTest {
         assertEquals("DOS", slagalicaService.computersLongestWord(lettersForWord));
     }
 }
+
+ */

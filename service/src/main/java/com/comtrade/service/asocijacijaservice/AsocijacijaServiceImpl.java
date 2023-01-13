@@ -277,4 +277,8 @@ public class AsocijacijaServiceImpl {
         pointsRepository.save(points);
         return ResponseEntity.ok().build();
     }
+
+    public boolean isActiveGame(Principal principal) throws Exception {
+        return gameService.getGame(principal).getIsActive(principal).isActiveAsocijacije();
+    }
 }

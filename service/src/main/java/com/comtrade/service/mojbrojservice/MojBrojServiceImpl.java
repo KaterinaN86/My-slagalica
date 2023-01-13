@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.script.ScriptException;
@@ -194,5 +195,23 @@ public class MojBrojServiceImpl implements MojBrojService{
         }
 
         return new MojBrojSubmitResponse(msg, solution, numOfPoints, result);
+    }
+
+    @Override
+    public ResponseEntity finishGame(Principal principal) throws Exception {
+        Game game=gameService.getGame(principal);
+        MojBrojGame mojBrojGame=game.getGames().getMojBrojGame();
+        game.getIsActive(principal).setActiveMojBroj(false);
+        if(game instanceof OnePlayerGame){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game instanceof TwoPlayerGame){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
+        mojBrojRepository.save(mojBrojGame);
+        return ResponseEntity.ok().build();
+    }
+    public boolean isActiveGame(Principal principal) throws Exception {
+        return gameService.getGame(principal).getIsActive(principal).isActiveMojBroj();
     }
 }

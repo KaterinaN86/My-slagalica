@@ -2,6 +2,7 @@ package com.comtrade.controller.skockocontroller;
 
 
 
+import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.model.skockomodel.SkockoGame;
 import com.comtrade.model.skockomodel.SkockoResponse;
 import com.comtrade.model.skockomodel.SkockoSubmit;
@@ -24,8 +25,11 @@ public class SkockoGameController {
 
     @GetMapping("/play")
     @CrossOrigin
-    public SkockoGame getNewGame(Principal principal){
-        return skockoGameService.getGame(principal);
+    public ResponseEntity<SkockoGame> getNewGame(Principal principal) throws Exception {
+        if(!skockoGameService.isActiveGame(principal)){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(skockoGameService.getGame(principal));
     }
 
     @PostMapping("/submit")
@@ -38,5 +42,9 @@ public class SkockoGameController {
     @CrossOrigin
     public ResponseEntity<List<Integer>> getCombination(Principal principal){
         return skockoGameService.getCombination(principal);
+    }
+    @PutMapping("/finishGame")
+    public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
+        return skockoGameService.finishGame(principal);
     }
 }
