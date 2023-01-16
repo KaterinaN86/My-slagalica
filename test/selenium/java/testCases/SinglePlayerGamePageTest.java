@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
+import pages.SlagalicaPage;
 import utility.VerifyMethods;
 
 public class SinglePlayerGamePageTest extends TestBase {
@@ -73,10 +74,26 @@ public class SinglePlayerGamePageTest extends TestBase {
         this.singlePlayerGamePage.verifyMojBrojBtnNotClickable();
     }
 
+    @Test(priority = 4)
+    public void openSlagalicaTestAndGoBack() throws Exception {
+        SlagalicaPage slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
+        this.singlePlayerGamePage = (SinglePlayerGamePage) slagalicaPage.goBack();
+        takeSnapShot(prop.getProperty("screenShotAdisOnePlayerPath"));
+        this.singlePlayerGamePage.verifySlagalicaButtonIsNotClickable();
+    }
+
+    @Test(priority = 5)
+    public void openSlagalicaGoBackAndClickNewGame() throws Exception {
+        this.singlePlayerGamePage.verifyThatNewGameBtnIsClickable();
+        this.singlePlayerGamePage.clickNewGameButton();
+        this.singlePlayerGamePage.verifySlagalicaButtonIsClickable();
+        takeSnapShot(prop.getProperty("screenShotAdisOnePlayerPath"));
+    }
+
     /**
      * Verifies go back button (left pointing arrow) is clickable.
      */
-    @Test(priority = 4)
+    @Test(priority =6)
     public void varifyGoBackBtn() {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
     }
