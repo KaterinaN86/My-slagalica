@@ -32,7 +32,6 @@ public class LoginTest extends TestBase {
     public void setup() {
         //Calling parent class init method to initialize properties and drivers.
         init();
-        this.verifyMethods=new VerifyMethods(this.loginPage);
     }
 
     @Test(priority = 0)

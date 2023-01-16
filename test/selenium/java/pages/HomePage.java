@@ -30,8 +30,11 @@ public class HomePage extends TestBase {
      * @return LoginPage (new instance of LoginPage, after verification).
      */
     public LoginPage logout() {
+        this.verifyMethods.verifyButtonIsClickable(logOutLoc);
         Reporter.log("Logging out active user.");
+        System.out.println("Logging out active user.");
         driver.findElement(logOutLoc).click();
+        Reporter.log("User logged out.");
         System.out.println("User logged out.");
         return (LoginPage) verifyMethods.verifyPageObjectInitialized(new LoginPage());
     }
