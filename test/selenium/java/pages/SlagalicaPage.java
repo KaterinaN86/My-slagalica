@@ -46,13 +46,6 @@ public class SlagalicaPage extends TestBase {
         System.out.println("Izbrisi button is clicked.");
     }
 
-    public SinglePlayerGamePage verifyThatBackButtonIsClicked(){
-        driver.findElement((locators.getBackBtnLoc())).click();
-        Reporter.log("Back button is clicked.");
-        System.out.println("Back button is clicked.");
-        return new SinglePlayerGamePage();
-    }
-
     public void verifyThatFirstListIsDisplayed(){
         WebElement firstlist = driver.findElement((firstListLocator));
         Assert.assertTrue(firstlist.isDisplayed(), "First list not displayed!");
@@ -78,24 +71,10 @@ public class SlagalicaPage extends TestBase {
     public void verifyCloseButtonIsClicked(){
         wait.until(ExpectedConditions.elementToBeClickable(closeButton));
         driver.findElement((closeButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getBackBtnLoc()));
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getTimerLoc()));
         Reporter.log("Dialog is displayed.");
         System.out.println("Dialog is displayed.");
-
     }
-
-//    public SinglePlayerGamePage goBack() {
-//        Reporter.log("Click back button.");
-//        System.out.println("Click back button.");
-//        this.wait.until(ExpectedConditions.alertIsPresent());
-//        Alert alert = this.driver.switchTo().alert();
-//        Reporter.log("Alert popup displayed with message: " + alert.getText() + " displayed.");
-//        System.out.println("Alert popup displayed with message: " + alert.getText() + " displayed.");
-//        //click on OK button on displayed alert window
-//        alert.accept();
-//        Reporter.log("Verify accept option in alert popup.");
-//        System.out.println("Checking if player can accept to leave game.");
-//        return new SinglePlayerGamePage();
-//    }
-
 
 }
