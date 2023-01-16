@@ -2,6 +2,7 @@ package testCases;
 
 import base.TestBase;
 import org.apache.commons.lang3.builder.ToStringExclude;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -23,7 +24,7 @@ public class SlagalicaPageTest extends TestBase {
     }
 
     @BeforeClass
-    public void setup(){
+    public void setup() {
         init();
         this.slagalicaPage = new SlagalicaPage();
         verifyMethods = new VerifyMethods(this.slagalicaPage);
@@ -36,12 +37,13 @@ public class SlagalicaPageTest extends TestBase {
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }
 
-//    @Test(priority = 20)
-//    public void goBackAndLogOutTest() {
-//        this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
+    @Test(priority = 20)
+    public void goBackAndLogOutTest() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getTimerLoc()));
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
 //        HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
 //        homePage.logout();
-//    }
+    }
 
     @Test(priority = 1)
     public void verifyTimerStart() {
@@ -49,30 +51,47 @@ public class SlagalicaPageTest extends TestBase {
     }
 
     @Test(priority = 3)
-    public void verifyFirstList() {this.slagalicaPage.verifyThatFirstListIsDisplayed();}
+    public void verifyFirstList() {
+        this.slagalicaPage.verifyThatFirstListIsDisplayed();
+    }
 
     @Test(priority = 4)
-    public void verifySecondList() {this.slagalicaPage.verifyThatSecondListIsDisplayed();}
+    public void verifySecondList() {
+        this.slagalicaPage.verifyThatSecondListIsDisplayed();
+    }
 
     @Test(priority = 5)
-    public void verifyDeleteButton() {this.slagalicaPage.verifyThatIzbrisiButtonIsClicked();}
+    public void verifyDeleteButton() {
+        this.slagalicaPage.verifyThatIzbrisiButtonIsClicked();
+    }
 
     @Test(priority = 6)
-    public void verifyStopButton(){this.slagalicaPage.verifyThatStopButtonIsClicked();}
+    public void verifyStopButton() {
+        this.slagalicaPage.verifyThatStopButtonIsClicked();
+    }
 
     @Test(priority = 7)
-    public void verifyPotvrdiButton() {this.slagalicaPage.verifyThatPotvrdiButtonIsClicked();}
+    public void verifyPotvrdiButton() {
+        this.slagalicaPage.verifyThatPotvrdiButtonIsClicked();
+    }
 
     @Test(priority = 8)
-    public void verifyDialog() {this.slagalicaPage.verifyPopUpDialog();}
+    public void verifyDialog() {
+        this.slagalicaPage.verifyPopUpDialog();
+    }
 
     @Test(priority = 9)
-    public void verifyCloseButtonClicked() {this.slagalicaPage.verifyCloseButtonIsClicked();}
+    public void verifyCloseButtonClicked() {
+        this.slagalicaPage.verifyCloseButtonIsClicked();
+    }
 
     @Test(priority = 11)
-    public void verifyBackButton() {this.singlePlayerGamePage = this.slagalicaPage.verifyThatBackButtonIsClicked();}
-
+    public void verifyBackButton() {
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
+    }
 
     @AfterClass
-    public void tearDown() {close();}
+    public void tearDown() {
+        close();
+    }
 }
