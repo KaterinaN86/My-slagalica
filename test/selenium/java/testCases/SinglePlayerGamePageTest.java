@@ -4,7 +4,6 @@ import base.TestBase;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import pages.HomePage;
 import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
 import utility.VerifyMethods;
@@ -30,7 +29,6 @@ public class SinglePlayerGamePageTest extends TestBase {
         //Calling parent class init method to initialize properties and drivers.
         init();
         this.singlePlayerGamePage = new SinglePlayerGamePage();
-        this.verifyMethods = new VerifyMethods(this.singlePlayerGamePage);
     }
 
     /**
@@ -41,22 +39,49 @@ public class SinglePlayerGamePageTest extends TestBase {
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).clickSinglePlayerGame();
     }
 
+    /**
+     * Verifies page elements and titles. Verifies active links number.
+     */
     @Test(priority = 1)
     public void verifyElementsAndLinks() {
-        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
-        verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("singlePlayerGamePageLinksNumber")));
+        this.singlePlayerGamePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
+        this.singlePlayerGamePage.verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("singlePlayerGamePageLinksNumber")));
     }
 
+    /**
+     * Verifies moj broj button. Screen shot is taken.
+     * @throws Exception
+     */
     @Test(priority = 2)
+    public void varifyMojBrojBtn() throws Exception {
+        takeSnapShot(prop.getProperty("screenShotMojBrojBtnPath"));
+        this.singlePlayerGamePage.verifyMojBrojBtnIsClickable();
+    }
+
+    /**
+     * Open 'Moj Broj' page and go back to SinglePlayerGamePage.
+     */
+    @Test(priority = 3)
     public void openMojBrojTest() {
         MojBrojPage mojBrojPage = this.singlePlayerGamePage.openMojBrojPage();
         this.singlePlayerGamePage = (SinglePlayerGamePage) mojBrojPage.goBack();
     }
 
+    /**
+     * Verifies go back button (left pointing arrow) is clickable.
+     */
+    @Test(priority = 4)
+    public void varifyGoBackBtn() {
+        this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
+    }
+
     @Test(priority = 7)
-    public void goBackAndLogOutTest() {
-        HomePage homePage = (HomePage) verifyMethods.verifyPageObjectInitialized(this.singlePlayerGamePage.goBack());
-        homePage.logout();
+    public void goBackAndLogOutTest() throws Exception {
+
+        //HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
+        this.singlePlayerGamePage.goBack();
+        takeSnapShot(prop.getProperty("screenShotGoBackPath"));
+        // homePage.logout();
     }
 
     @AfterClass

@@ -6,32 +6,32 @@ public class Locators {
     /**
      * Username and password text input elements locators, used LoginPage and RegisterPage.
      */
-    By usernameTextInputLoc = By.xpath("//input[@placeholder='Username']");
-    By passwordTextInputLoc = By.xpath("//input[@placeholder='Password']");
+    private By usernameTextInputLoc = By.xpath("//input[@placeholder='Username']");
+    private By passwordTextInputLoc = By.xpath("//input[@placeholder='Password']");
     /**
      * Register button locator, used in LoginPage and RegisterPage.
      */
-    By registerBtnLoc = By.xpath("//input[@value='Register']");
+    private By registerBtnLoc = By.xpath("//input[@value='Register']");
     /**
      * Locator object for container element, used in HomePage and SinglePlayerGamePage.
      */
-    By containerLoc = By.xpath("//div[@class='container p-5']");
+    private By containerLoc = By.xpath("//div[@class='container p-5']");
     /**
      * Locator object for container title.
      */
-    By containerTitleLoc = By.xpath("//h1[contains(@class,'text-center text-white')]");
+    private By containerTitleLoc = By.xpath("//h1[contains(@class,'text-center text-white')]");
     /**
      * Locator object for div container for button elements on pages HomePage, SinglePlayerGamePage, MojBrojPage and SlagalicaPage
      */
-    By allButtonDivsLoc = new By.ByXPath("//*[@class='row d-block text-center']//child::div");
+    private By allButtonDivsLoc = new By.ByXPath("//*[@class='row d-block text-center']//child::div");
     /**
      * Back button locator object. Used in multiple pages.
      */
-    By backBtnLoc = new By.ByXPath("//*[@class='bi bi-arrow-left']//parent::button");
+    private By backBtnLoc = new By.ByXPath("//*[@class='bi bi-arrow-left']//parent::button");
     /**
      * Timer element locator object. Used in MojBrojPage and SlagalicaPage.
      */
-    By timerLoc = new By.ByXPath("//div[@id='timer']");
+    private By timerLoc = new By.ByXPath("//div[@id='timer']");
 
     public By getUsernameTextInputLoc() {
         return usernameTextInputLoc;

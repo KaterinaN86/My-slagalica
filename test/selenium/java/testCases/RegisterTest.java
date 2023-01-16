@@ -20,7 +20,6 @@ public class RegisterTest extends TestBase {
     public void setup() {
         init();
         this.registerPage= new RegisterPage();
-        this.verifyMethods=new VerifyMethods(this.registerPage);
     }
 
     @Test(priority = 0)

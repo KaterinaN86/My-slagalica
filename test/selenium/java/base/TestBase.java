@@ -1,13 +1,12 @@
 package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import pages.HomePage;
@@ -17,6 +16,7 @@ import utility.Locators;
 import utility.VerifyBrokenLink;
 import utility.VerifyMethods;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,15 +43,13 @@ public class TestBase {
      */
     public static WebDriverWait wait;
     /**
-     * LoginPage instance, used in several classes.
-     */
-    public static LoginPage loginPage;
-    /**
      * Locators instance, used to access locators for web elements
      */
     public static Locators locators;
-
-    public static VerifyMethods verifyMethods;
+    /**
+     * Instance used to access methods for verification.
+     */
+    public VerifyMethods verifyMethods;
     /**
      * Variable that specifies which browser is used for testing.
      */
@@ -60,6 +58,10 @@ public class TestBase {
      * Current URL.
      */
     public static String currentUrl;
+    /**
+     * LoginPage instance, used in several classes.
+     */
+    public LoginPage loginPage;
     /**
      * Variable used for storing page title.
      */
@@ -73,9 +75,13 @@ public class TestBase {
      * Empty constructor.
      */
     public TestBase() {
-
+        this.verifyMethods = new VerifyMethods(this);
     }
 
+    /**
+     * Getter for WebDriver element.
+     * @return WebDriver element.
+     */
     public static WebDriver getDriver() {
         return driver;
     }
@@ -115,33 +121,38 @@ public class TestBase {
             driver = new EdgeDriver();
         }
         //Initializing wait driver
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         //Initializing LoginPage object.
         this.loginPage = new LoginPage();
         //Initializing Locators object.
         this.locators = new Locators();
-        this.verifyMethods=verifyMethods;
     }
 
+    /**
+     * Getter for page title.
+     * @return String (Value contains current page title.
+     */
     public String getPageTitle() {
-        return pageTitle;
+        return driver.getTitle();
     }
 
     /**
      * Setter method for pageTitle variable.
-     *
-     * @param pageTitle
      */
-    public void setPageTitle(String pageTitle) {
-        this.pageTitle = pageTitle;
+    public void setPageTitle() {
+        this.pageTitle = driver.getTitle();
     }
 
+    /**
+     * Getter method for expected page title value (read from config file).
+     * @return String (Variable contains expected page title).
+     */
     public String getConfigTitle() {
         return configTitle;
     }
 
     /**
-     * Setter method for config title variable.
+     * Setter method expected page title value (read from config file).
      *
      * @param configTitle
      */
@@ -165,7 +176,6 @@ public class TestBase {
         Reporter.log("Web browser launched, " + pageTitle + " page at: " + url + " opened.");
         System.out.println("Web browser launched, " + pageTitle + " page at: " + url + " opened.");
     }
-
 
     /**
      * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
@@ -227,22 +237,49 @@ public class TestBase {
         //Return the number of active links.
         return validLinkElementsList.size();
     }
+
     /**
      * Method used to go back to HomePage or SinglePlayerGamePage
      *
      * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
      */
     public TestBase goBack() {
-        Reporter.log("Click back button.");
-        System.out.println("Click back button.");
+        String page = this.getClass().getSimpleName();
+        Reporter.log("Click back button on page: " + page);
+        System.out.println("Click back button on page: " + page);
         driver.findElement(locators.getBackBtnLoc()).click();
+        wait.until(ExpectedConditions.alertIsPresent());
+        Reporter.log("Alert popup displayed.");
+        System.out.println("Alert popup displayed.");
+        Alert registerAlert = driver.switchTo().alert();
+        Reporter.log("Verify accept option in alert popup.");
+        System.out.println("Checking if player can accept to go back.");
+        //verifyMethods.verifyAlertMessage(registerAlert.getText(), message);
+        //click on OK button on displayed alert window
+        registerAlert.accept();
+        Reporter.log("User successfully accepted.");
+        System.out.println("User successfully accepted.");
         if (this instanceof SinglePlayerGamePage) {
-            return new HomePage();
-        } else {
-            return new SinglePlayerGamePage();
+            return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
+        return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
+    /**
+     * This method will take screenshot.
+     *
+     * @throws Exception
+     */
 
+    public static void takeSnapShot(String fileWithPath) throws Exception {
+        //Convert web driver object to TakeScreenshot
+        TakesScreenshot scrShot = ((TakesScreenshot) driver);
+        //Call getScreenshotAs method to create image file
+        File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+        //Move image file to new destination
+        File DestFile = new File(fileWithPath);
+        //Copy file at destination
+        FileUtils.copyFile(SrcFile, DestFile);
+    }
     /**
      * Closing web page.
      */

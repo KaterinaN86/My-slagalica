@@ -33,6 +33,25 @@ public class LoginPage extends TestBase {
     }
 
     /**
+     * Opens initial state URL using driver object, verifies all elements on page are displayed.
+     *
+     * @return new LoginPage object
+     */
+    public LoginPage openLoginPage() {
+        //Calling method declared in TestBase class. Opens specified page and sets up driver and page title.
+        openSetup(prop.getProperty("loginUrl"));
+        //Verifying page elements.
+        this.verifyMethods.verifyStateAfterOpen(prop.getProperty("loginPageTitle"));
+        //Verifying register form title
+        this.verifyMethods.verifyFormTitle(driver.findElement(loginFormTitleLoc).getText(), prop.getProperty("loginFormTitle"));
+        //Verifying elements found on register page only.
+        verifyLoginFormDisplayed();
+        verifySignInDisplayed();
+        //Return LoginPage instance after not null verification.
+        return (LoginPage) verifyMethods.verifyPageObjectInitialized(this);
+    }
+
+    /**
      * Verifies login from element is displayed.
      */
     public void verifyLoginFormDisplayed() {
@@ -54,25 +73,6 @@ public class LoginPage extends TestBase {
         Assert.assertTrue(driver.findElement(signInBtnLoc).isDisplayed(), "Sign in button not displayed!");
         Reporter.log("Sign in button verified!");
         System.out.println("Sign in button is displayed.");
-    }
-
-    /**
-     * Opens initial state URL using driver object, verifies all elements on page are displayed.
-     *
-     * @return new LoginPage object
-     */
-    public LoginPage openLoginPage() {
-        //Calling method declared in TestBase class. Opens specified page and sets up driver and page title.
-        openSetup(prop.getProperty("loginUrl"));
-        //Verifying page elements.
-        verifyMethods.verifyStateAfterOpen(prop.getProperty("loginPageTitle"));
-        //Verifying register form title
-        verifyMethods.verifyFormTitle(driver.findElement(loginFormTitleLoc).getText(), prop.getProperty("loginFormTitle"));
-        //Verifying elements found on register page only.
-        verifyLoginFormDisplayed();
-        verifySignInDisplayed();
-        //Return LoginPage instance after not null verification.
-        return (LoginPage) verifyMethods.verifyPageObjectInitialized(this);
     }
 
     /**

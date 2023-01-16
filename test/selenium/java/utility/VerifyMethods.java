@@ -3,14 +3,13 @@ package utility;
 import base.TestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
 import pages.HomePage;
 import pages.MojBrojPage;
-import pages.SinglePlayerGamePage;
 import pages.SlagalicaPage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class VerifyMethods {
@@ -28,6 +27,7 @@ public class VerifyMethods {
      * Verifying current page title matches specified.
      */
     public void verifyPageTitle() {
+        base.setPageTitle();
         Reporter.log("Verifying page title.");
         System.out.println("Check if page title matches specified.");
         Assert.assertEquals(base.getPageTitle(), base.getConfigTitle(), "Page title '" + base.getPageTitle() + "' is not equal to expected '");
@@ -95,7 +95,6 @@ public class VerifyMethods {
      */
     public void verifyStateAfterOpen(String configTitle) {
         base.setConfigTitle(configTitle);
-        base.setPageTitle(base.driver.getTitle());
         verifyPageTitle();
         verifyUsernamePasswordDisplayed();
         verifyRegisterDisplayed();
@@ -125,15 +124,11 @@ public class VerifyMethods {
     }
 
     /**
-     * Verifies page title, container (or menu) and container (or menu) title
+     * Helper method used by verifyTitlesAndOtherPageElements. Verifies main content container (or menu) title.
      *
-     * @param configTitle
-     * @param containerTitle
+     * @param containerTitle (String containing title specified in config.properties file.
      */
-    public void verifyTitles(String configTitle, String containerTitle) {
-        base.setConfigTitle(configTitle);
-        base.setPageTitle(base.driver.getTitle());
-        verifyPageTitle();
+    public void verifyContainerTitle(String containerTitle) {
         String actualContainerTitle = base.driver.findElement(base.locators.getContainerTitleLoc()).getText();
         Reporter.log("Verifying container title matches specified.");
         Assert.assertEquals(actualContainerTitle, containerTitle, "Container title doesn't match specified value!");
@@ -142,48 +137,77 @@ public class VerifyMethods {
     }
 
     /**
-     * Verifies timer element and go back button element.
+     * Helper method used by verifyTitlesAndOtherPageElements. Verifies timer element.
      */
-    public void verifyTimerAndBackElements() {
+    public void verifyTimerElement() {
         Reporter.log("Verifying timer element.");
         System.out.println("Verifying timer element.");
         Assert.assertTrue(base.driver.findElement(base.locators.getTimerLoc()).isDisplayed(), "Timer element not displayed!");
         Reporter.log("Timer verified.");
         System.out.println("Timer verified.");
-        Reporter.log("Verifying back button.");
-        System.out.println("Verifying back button.");
-        Assert.assertTrue(base.driver.findElement(base.locators.getBackBtnLoc()).isDisplayed(), "Go back button not displayed!");
+    }
+
+    /**
+     * Helper method used by verifyTitlesAndOtherPageElements. Verifies go back button element.
+     */
+    public void verifyGoBackButton() {
+        WebElement goBackButtonEl = base.driver.findElement(base.locators.getBackBtnLoc());
+        Reporter.log("Verifying back button on page " + this.base.getClass().getSimpleName() + ".");
+        System.out.println("Verifying back button on page " + this.base.getClass().getSimpleName() + ".");
+        Assert.assertTrue(goBackButtonEl.isDisplayed(), "Go back button not displayed!");
+        Assert.assertTrue(goBackButtonEl.isEnabled(), "Go back button not enabled!");
         Reporter.log("Back button verified.");
         System.out.println("Back button verified.");
     }
+
     /**
-     * Verifies titles, container and elements in menus or elements with buttons for playing game.
+     * Verifies page title, container title and menu elements or button elements used for playing game.
+     *
+     * @param configTitle
+     * @param containerTitle
      */
     public void verifyTitlesAndOtherPageElements(String configTitle, String containerTitle) {
-        verifyTitles(configTitle, containerTitle);
+        // Setting expected title value before calling verify method.
+        base.setConfigTitle(configTitle);
+        base.setPageTitle();
+        verifyPageTitle();
+        // Verify container and container title.
         verifyContainerDisplayed();
+        verifyContainerTitle(containerTitle);
+        // Verify all buttons on page.
         Reporter.log("Checking all button elements on page are displayed.");
         System.out.println("Checking buttons are displayed.");
+        //Creating a list of all div web elements on current page, that contain button elements.
         List<WebElement> buttonDivsList = base.driver.findElements(base.locators.getAllButtonDivsLoc());
+        //Iterating over divs list.
         for (WebElement el : buttonDivsList) {
-            Assert.assertTrue(el.isDisplayed(), "Menu element not displayed.");
+            this.base.wait.until(ExpectedConditions.visibilityOf(el));
+            //Creating an object for the button element inside the div element.
+            WebElement btnEl = el.findElement(By.tagName("button"));
+            Assert.assertTrue(btnEl.isDisplayed(), "Button element " + el.getText() + " not displayed.");
         }
-        Reporter.log("Verified all button div elements.");
-        System.out.println("All divs for button elements are displayed.");
+        Reporter.log("Verified all button elements.");
+        System.out.println("All button elements are displayed.");
+        // If current object is a MojBrojPage or SlagalicaPage instance, verify timer.
         if ((this.base instanceof MojBrojPage) || (this.base instanceof SlagalicaPage)) {
-           verifyTimerAndBackElements();
+            verifyTimerElement();
+        }
+        // If current object is not a HomePage instance, verify go back button.
+        if (!(this.base instanceof HomePage)) {
+            verifyGoBackButton();
         }
     }
 
     /**
      * Verifies starting value of timer on pages that have one.
+     *
      * @param startValue (String value specified in config file.)
      */
     public void verifyTimerStartValue(String startValue) {
         String actualValue = base.driver.findElement(base.locators.getTimerLoc()).getText();
         Reporter.log("Verifying timer element start value.");
         System.out.println("Verifying timer element start value.");
-        Assert.assertEquals(actualValue, startValue, "Timer start value "+ actualValue + " doesn't match expected " + startValue + ".");
+        Assert.assertEquals(actualValue, startValue, "Timer start value " + actualValue + " doesn't match expected " + startValue + ".");
         Reporter.log("Timer start value matches expected.");
         System.out.println("Timer start value matches expected.");
     }
@@ -199,8 +223,31 @@ public class VerifyMethods {
         System.out.println("Number of valid links on page: " + actualNumber + "; Expected valid links number: " + expectedNumber + ".");
         Reporter.log("Verifying number of valid links matches expected.");
         System.out.println("Check number of valid links matches specified.");
-        Assert.assertEquals(expectedNumber, actualNumber, "Number of valid links doesn't match expected.");
+        Assert.assertEquals(actualNumber, expectedNumber, actualNumber, "Number of valid links doesn't match expected.");
         Reporter.log("Number of valid links matches expected.");
         System.out.println("Number of valid links matches expected.");
+    }
+
+    /**
+     * Verifies specified button element is clickable.
+     *
+     * @param locator
+     */
+    public void verifyButtonIsClickable(By locator) {
+        //Initializing WebElement object for specified button element.
+        WebElement btnEl = this.base.driver.findElement(locator);
+        Reporter.log("Check if button " + btnEl.getText() + " is clickable.");
+        System.out.println("Check if button " + btnEl.getText() + " is clickable.");
+        Assert.assertTrue(btnEl.isEnabled(), "Button " + btnEl.getText() + " is not enabled!");
+        Reporter.log("Button " + btnEl.getText() + " is clickable.");
+        System.out.println("Button " + btnEl.getText() + " is clickable.");
+    }
+
+    public void verifyBackButtonIsClickable() {
+        Reporter.log("Check if go back button is clickable.");
+        System.out.println("Check if go back button is clickable.");
+        Assert.assertTrue(this.base.driver.findElement(this.base.locators.getBackBtnLoc()).isEnabled(), "Go back button is not enabled.");
+        Reporter.log("Go back button is clickable.");
+        System.out.println("Go back button is clickable.");
     }
 }

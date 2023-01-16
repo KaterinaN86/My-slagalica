@@ -2,6 +2,8 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.Assert;
 import org.testng.Reporter;
 
 /**
@@ -38,19 +40,24 @@ public class SinglePlayerGamePage extends TestBase {
         super();
     }
 
-    public MojBrojPage openMojBrojPage(){
+    public MojBrojPage openMojBrojPage() {
         Reporter.log("Click \"Moj broj\" button.");
         System.out.println("Click \"Moj broj\" button.");
+        wait.until(ExpectedConditions.elementToBeClickable(mojBrojBtnLoc));
         driver.findElement(mojBrojBtnLoc).click();
         return (MojBrojPage) verifyMethods.verifyPageObjectInitialized(new MojBrojPage());
     }
 
-    public SlagalicaPage openSlagalicaPage(){
+    public SlagalicaPage openSlagalicaPage() {
         Reporter.log("Click \"Slagalica\" button");
         System.out.println("Click \"Slagalica\" button");
         driver.findElement(slagalicaBtnLoc).click();
-        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
-        return  (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
+        this.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
+        return (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
+    }
+
+    public void verifyMojBrojBtnIsClickable() {
+        this.verifyMethods.verifyButtonIsClickable(mojBrojBtnLoc);
     }
 
 }

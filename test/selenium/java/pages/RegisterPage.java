@@ -60,9 +60,9 @@ public class RegisterPage extends TestBase {
      */
     public RegisterPage openRegisterPage() {
         openSetup(prop.getProperty("registerUrl"));
-        verifyMethods.verifyStateAfterOpen(prop.getProperty("registerPageTitle"));
+        this.verifyMethods.verifyStateAfterOpen(prop.getProperty("registerPageTitle"));
         verifyRegisterFormDisplayed();
-        verifyMethods.verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
+        this.verifyMethods.verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
         verifyLogInDisplayed();
         return (RegisterPage) verifyMethods.verifyPageObjectInitialized(this);
     }
@@ -77,7 +77,7 @@ public class RegisterPage extends TestBase {
         Alert registerAlert = driver.switchTo().alert();
         Reporter.log("Verify successful register or fail.");
         System.out.println("Checking if register succeeded.");
-        verifyMethods.verifyAlertMessage(registerAlert.getText(), message);
+        this.verifyMethods.verifyAlertMessage(registerAlert.getText(), message);
         //click on OK button on displayed alert window
         registerAlert.accept();
     }

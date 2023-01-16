@@ -1,6 +1,7 @@
 package testCases;
 
 import base.TestBase;
+import org.springframework.context.annotation.Primary;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,17 +25,22 @@ public class HomePageTest extends TestBase {
         //Calling parent class init method to initialize properties and drivers.
         init();
         this.homePage=new HomePage();
-        verifyMethods = new VerifyMethods(this.homePage);
     }
     @Test(priority = 0)
     public void verifyOpen(){
         this.homePage= (HomePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
-        verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
+        this.homePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
     }
     @Test(priority = 1)
     public void verifyLinks(){
-       verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
+       this.homePage.verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
     }
+
+    @Test(priority = 2)
+    public void verifyLogout(){
+        this.homePage.logout();
+    }
+
     @AfterClass
     public void tearDown() {
         close();
