@@ -3,7 +3,6 @@ package pages;
 import base.TestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
 import org.testng.Reporter;
 
 /**
@@ -58,6 +57,10 @@ public class SinglePlayerGamePage extends TestBase {
 
     public void verifyMojBrojBtnIsClickable() {
         this.verifyMethods.verifyButtonIsClickable(mojBrojBtnLoc);
+    }
+
+    public void verifyMojBrojBtnNotClickable() {
+        this.verifyMethods.verifyButtonNotClickable(mojBrojBtnLoc);
     }
 
 }

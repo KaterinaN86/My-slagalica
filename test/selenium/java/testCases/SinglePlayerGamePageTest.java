@@ -62,9 +62,15 @@ public class SinglePlayerGamePageTest extends TestBase {
      * Open 'Moj Broj' page and go back to SinglePlayerGamePage.
      */
     @Test(priority = 3)
-    public void openMojBrojTest() {
+    public void openMojBrojTestAndGoBack() {
         MojBrojPage mojBrojPage = this.singlePlayerGamePage.openMojBrojPage();
         this.singlePlayerGamePage = (SinglePlayerGamePage) mojBrojPage.goBack();
+        try {
+            takeSnapShot(prop.getProperty("screenShotOnePlayerPath"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        this.singlePlayerGamePage.verifyMojBrojBtnNotClickable();
     }
 
     /**
