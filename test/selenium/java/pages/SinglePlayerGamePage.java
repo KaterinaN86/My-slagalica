@@ -63,4 +63,23 @@ public class SinglePlayerGamePage extends TestBase {
         this.verifyMethods.verifyButtonNotClickable(mojBrojBtnLoc);
     }
 
+    public void verifySlagalicaButtonIsClickable() {
+        this.verifyMethods.verifyButtonIsClickable(slagalicaBtnLoc);
+    }
+
+    public void  verifySlagalicaButtonIsNotClickable() {
+        this.verifyMethods.verifyButtonNotClickable(slagalicaBtnLoc);
+    }
+
+    public void verifyThatNewGameBtnIsClickable() {
+        this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
+    }
+
+    public void clickNewGameButton() {
+        driver.findElement(newGameBtnLoc).click();
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
+        Reporter.log("New Game button is clicked");
+        System.out.println("New Game button is clicked");
+    }
+
 }
