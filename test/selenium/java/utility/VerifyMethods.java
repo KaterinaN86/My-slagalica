@@ -242,6 +242,20 @@ public class VerifyMethods {
         Reporter.log("Button " + btnEl.getText() + " is clickable.");
         System.out.println("Button " + btnEl.getText() + " is clickable.");
     }
+    /**
+     * Verifies specified button element is not clickable.
+     *
+     * @param locator
+     */
+    public void verifyButtonNotClickable(By locator) {
+        //Initializing WebElement object for specified button element.
+        WebElement btnEl = this.base.driver.findElement(locator);
+        Reporter.log("Check if button " + btnEl.getText() + " is clickable.");
+        System.out.println("Check if button " + btnEl.getText() + " is clickable.");
+        Assert.assertFalse(btnEl.isEnabled(), "Button " + btnEl.getText() + " is enabled!");
+        Reporter.log("Button " + btnEl.getText() + " is not clickable.");
+        System.out.println("Button " + btnEl.getText() + " is not clickable.");
+    }
 
     public void verifyBackButtonIsClickable() {
         Reporter.log("Check if go back button is clickable.");
