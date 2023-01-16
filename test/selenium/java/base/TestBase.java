@@ -270,13 +270,13 @@ public class TestBase {
      * @throws Exception
      */
 
-    public static void takeSnapShot(String fileWithPath) throws Exception {
+    public static void takeSnapShot(String imgName) throws Exception {
         //Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) driver);
         //Call getScreenshotAs method to create image file
         File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
         //Move image file to new destination
-        File DestFile = new File(fileWithPath);
+        File DestFile = new File(System.getProperty("user.dir") + "\\test\\selenium\\resources\\snapshots\\" + imgName);
         //Copy file at destination
         FileUtils.copyFile(SrcFile, DestFile);
     }

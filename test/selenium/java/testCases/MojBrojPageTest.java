@@ -39,6 +39,8 @@ public class MojBrojPageTest extends TestBase {
     public void verifyOpen() throws Exception {
         this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
         takeSnapShot(prop.getProperty("screenShotMojBrojBtnPath"));
+        this.singlePlayerGamePage.verifyThatNewGameBtnIsClickable();
+        this.singlePlayerGamePage.clickNewGameButton();
         this.singlePlayerGamePage.verifyMojBrojBtnIsClickable();
         this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();
     }
