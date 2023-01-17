@@ -47,14 +47,14 @@ public class MojBrojPageTest extends TestBase {
     }
 
     @Test(priority = 1)
-    public void verifyTimerStart() throws Exception{
+    public void verifyTimerStart() throws Exception {
         wait.until(ExpectedConditions.presenceOfElementLocated(this.mojBrojPage.locators.getContainerLoc()));
-        takeSnapShot("MojBroj\\verifyTimerStart",prop.getProperty("snapShotExtension"));
+        takeSnapShot("MojBroj\\verifyTimerStart", prop.getProperty("snapShotExtension"));
         this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
     }
 
     @Test(priority = 2)
-    public void verifyMojBrojPageElements()  {
+    public void verifyMojBrojPageElements() {
         this.mojBrojPage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("mojBrojPageTitle"), prop.getProperty("mojBrojPageContainerTitle"));
     }
 
@@ -78,7 +78,6 @@ public class MojBrojPageTest extends TestBase {
         this.mojBrojPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.mojBrojPage.goBack();
         wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getContainerLoc()));
-       takeSnapShot("MojBroj\\GoBackToSinglePlayerPage", prop.getProperty("snapShotExtension"));
     }
 
     @Test(priority = 7)
@@ -86,13 +85,13 @@ public class MojBrojPageTest extends TestBase {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         homePage = (HomePage) this.singlePlayerGamePage.goBack();
         wait.until(ExpectedConditions.presenceOfElementLocated(this.homePage.locators.getContainerLoc()));
-        takeSnapShot("MojBroj\\goBackToHomePage",prop.getProperty("snapShotExtension"));
+        takeSnapShot("MojBroj\\goBackToHomePage", prop.getProperty("snapShotExtension"));
     }
 
     @Test(priority = 8)
     public void logout() throws Exception {
         homePage.logout();
-        takeSnapShot("MojBroj\\logout",prop.getProperty("snapShotExtension"));
+        takeSnapShot("MojBroj\\logout", prop.getProperty("snapShotExtension"));
     }
 
     @AfterClass

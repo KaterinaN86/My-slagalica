@@ -78,6 +78,7 @@ public class SinglePlayerGamePageTest extends TestBase {
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
         wait.until(ExpectedConditions.presenceOfElementLocated(this.slagalicaPage.locators.getContainerLoc()));
         this.slagalicaPage.verifyMethods.verifyContainerDisplayed();
+        takeSnapShot("OnePlayer\\openSlagalicaTest",prop.getProperty("snapShotExtension"));
     }
 
     /**
@@ -97,7 +98,6 @@ public class SinglePlayerGamePageTest extends TestBase {
         wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getBackBtnLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage.goBack();
-        takeSnapShot("OnePlayer\\goBackTest",prop.getProperty("snapShotExtension"));
     }
 
     @AfterClass

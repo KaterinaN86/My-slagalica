@@ -84,7 +84,7 @@ public class SlagalicaPageTest extends TestBase {
 
     @Test(priority = 11)
     public void verifyBackButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(this.slagalicaPage.locators.getContainerLoc()));
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.slagalicaPage.locators.getBackBtnLoc()));
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
         wait.until(ExpectedConditions.elementToBeClickable(this.singlePlayerGamePage.locators.getContainerLoc()));
@@ -92,8 +92,8 @@ public class SlagalicaPageTest extends TestBase {
 
     @Test(priority = 12)
     public void goBackToHomePage() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getBackBtnLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
-        wait.until(ExpectedConditions.elementToBeClickable(this.singlePlayerGamePage.locators.getContainerLoc()));
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
     }
 
