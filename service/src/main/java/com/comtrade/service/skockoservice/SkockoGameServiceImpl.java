@@ -1,10 +1,10 @@
 package com.comtrade.service.skockoservice;
 
+import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
-import com.comtrade.model.games.OnePlayerGame;
-import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.model.skockomodel.*;
+import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.skockorepository.SkockoGameRepository;
@@ -24,16 +24,30 @@ import java.util.List;
 public class SkockoGameServiceImpl implements SkockoGameService{
 
     private final SkockoGameRepository skockoGameRepository;
+    private final TimersRepository timersRepository;
     private final OnePlayerGameRepository onePlayerGameRepository;
     private final TwoPlayerGameRepository twoPlayerGameRepository;
 
     @Autowired
     private GameServiceImpl gameService;
 
-    public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
+    public SkockoGameServiceImpl(SkockoGameRepository skockoGameRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.skockoGameRepository = skockoGameRepository;
+        this.timersRepository = timersRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.twoPlayerGameRepository = twoPlayerGameRepository;
+    }
+
+    @Override
+    public SkockoGame getInitData(Principal principal) throws Exception {
+        Game game = gameService.getGame(principal);
+        gameService.saveGame(game);
+        Timers timers = game.getTimers(principal);
+        timers.setStartTimeSkocko(LocalTime.now());
+        timersRepository.save(timers);
+        game.setTimers(principal, timers);
+        gameService.saveGame(game);
+        return getGame(principal);
     }
 
     @Override
@@ -51,12 +65,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             SkockoGame Sgame=createNewGame();
             game.getTimers(principal).setStartTimeSkocko(LocalTime.now());
             game.getGames().setSkockoGame(Sgame);
-            if(game instanceof OnePlayerGame){
-                onePlayerGameRepository.save((OnePlayerGame) game);
-            }
-            if(game instanceof TwoPlayerGame){
-                twoPlayerGameRepository.save((TwoPlayerGame) game);
-            }
+            gameService.saveGame(game);
             return game.getGames().getSkockoGame();
         }
 
@@ -90,12 +99,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
             if (game.getIsActive(principal).isActiveSkocko()){
                 game.getPoints(principal).setNumOfPointsSkocko(numOfPoints);
                 game.getIsActive(principal).setActiveSkocko(false);
-                if(game instanceof OnePlayerGame){
-                    onePlayerGameRepository.save((OnePlayerGame) game);
-                }
-                if(game instanceof TwoPlayerGame){
-                    twoPlayerGameRepository.save((TwoPlayerGame) game);
-                }
+                gameService.saveGame(game);
             }
 
             skockoResponse = new SkockoResponseWithNumberOfPoints(isWinningCombination,numOfPoints, Sgame.getCombination());
@@ -175,12 +179,7 @@ public class SkockoGameServiceImpl implements SkockoGameService{
         Game game=gameService.getGame(principal);
         SkockoGame skockoGame=game.getGames().getSkockoGame();
         game.getIsActive(principal).setActiveSkocko(false);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
         skockoGameRepository.save(skockoGame);
         return ResponseEntity.ok().build();
     }

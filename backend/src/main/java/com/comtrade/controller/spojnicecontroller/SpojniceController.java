@@ -24,7 +24,7 @@ public class SpojniceController {
         if(!spojniceServiceImpl.isActiveGame(principal)){
             return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(spojniceServiceImpl.getWords(principal), HttpStatus.OK);
+        return new ResponseEntity<>(spojniceServiceImpl.getInitData(principal), HttpStatus.OK);
     }
 
     @PostMapping("/submit")

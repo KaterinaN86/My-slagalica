@@ -20,5 +20,6 @@ public interface MojBrojService {
     String getSolution(Principal principal) throws Exception;
     MojBrojSubmitResponse submit(MojBrojSubmitRequest request, Principal principal);
     ResponseEntity finishGame(Principal principal) throws Exception;
+    MojBrojGame getInitData(Principal principal) throws Exception;
 
 }

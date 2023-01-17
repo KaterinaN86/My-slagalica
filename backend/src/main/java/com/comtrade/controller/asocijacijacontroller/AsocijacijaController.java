@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
+@CrossOrigin
 public class AsocijacijaController {
     private final AsocijacijaServiceImpl asocijacijaService;
 
@@ -19,22 +20,19 @@ public class AsocijacijaController {
     }
 
     @GetMapping("/asocijacija/play")
-    @CrossOrigin
     public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal) throws Exception {
         if(!asocijacijaService.isActiveGame(principal)){
             return ResponseEntity.notFound().build();
         }
-        return asocijacijaService.createNewAsocijacijaGame(principal);
+        return asocijacijaService.getInitData(principal);
     }
 
     @GetMapping("/asocijacija/getField/{fieldName}")
-    @CrossOrigin
     public ResponseEntity<Response> getFieldValue(@PathVariable String fieldName, Principal principal) {
         return asocijacijaService.getValueOfSpecificField(fieldName, principal);
     }
 
     @PostMapping("/asocijacija/submitWord")
-    @CrossOrigin
     public ResponseEntity<Response> submitWord(@RequestBody SubmitFieldValue submit, Principal principal){
         return asocijacijaService.checkSubmittedWord(submit.getGameId(), submit.getFieldName(), submit.getWord(),principal);
     }

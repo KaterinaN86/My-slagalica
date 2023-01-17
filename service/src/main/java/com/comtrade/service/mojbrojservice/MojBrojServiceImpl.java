@@ -1,12 +1,12 @@
 package com.comtrade.service.mojbrojservice;
 
 
+import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
-import com.comtrade.model.games.OnePlayerGame;
-import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
+import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
@@ -28,16 +28,31 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class MojBrojServiceImpl implements MojBrojService{
+
     private final MojBrojRepository mojBrojRepository;
+    private final TimersRepository timersRepository;
     private final OnePlayerGameRepository onePlayerGameRepository;
     private final TwoPlayerGameRepository twoPlayerGameRepository;
 
     @Autowired
     private GameServiceImpl gameService;
-    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
+    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.mojBrojRepository = mojBrojRepository;
+        this.timersRepository = timersRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.twoPlayerGameRepository = twoPlayerGameRepository;
+    }
+
+    @Override
+    public MojBrojGame getInitData(Principal principal) throws Exception {
+        Game game = gameService.getGame(principal);
+        gameService.saveGame(game);
+        Timers timers = game.getTimers(principal);
+        timers.setStartTimeMojBroj(LocalTime.now());
+        timersRepository.save(timers);
+        game.setTimers(principal, timers);
+        gameService.saveGame(game);
+        return getGame(principal);
     }
 
     @Override
@@ -47,14 +62,8 @@ public class MojBrojServiceImpl implements MojBrojService{
             return game.getGames().getMojBrojGame();
         }else{
             MojBrojGame MBgame=createNewGame();
-            game.getTimers(principal).setStartTimeMojBroj(LocalTime.now());
             game.getGames().setMojBrojGame(MBgame);
-            if(game.getClass()==OnePlayerGame.class){
-                onePlayerGameRepository.save((OnePlayerGame) game);
-            }
-            if(game.getClass()== TwoPlayerGame.class){
-                twoPlayerGameRepository.save((TwoPlayerGame) game);
-            }
+            gameService.saveGame(game);
             return MBgame;
         }
     }
@@ -187,12 +196,7 @@ public class MojBrojServiceImpl implements MojBrojService{
             new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);
         }
         game.getPoints(principal).setNumOfPointsMojBroj(numOfPoints);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
 
         return new MojBrojSubmitResponse(msg, solution, numOfPoints, result);
     }
@@ -202,12 +206,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         Game game=gameService.getGame(principal);
         MojBrojGame mojBrojGame=game.getGames().getMojBrojGame();
         game.getIsActive(principal).setActiveMojBroj(false);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
         mojBrojRepository.save(mojBrojGame);
         return ResponseEntity.ok().build();
     }

@@ -210,4 +210,13 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         }
         return false;
     }
+
+    public void saveGame(Game game) {
+        if(game instanceof OnePlayerGame){
+            onePlayerGameRepository.save((OnePlayerGame) game);
+        }
+        if(game instanceof TwoPlayerGame){
+            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        }
+    }
 }

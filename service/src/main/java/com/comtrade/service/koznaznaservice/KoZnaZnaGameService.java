@@ -4,6 +4,7 @@ import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.koznaznamodel.NextQuestion;
 import com.comtrade.model.koznaznamodel.Question;
 import com.comtrade.model.koznaznamodel.responses.Response;
+import liquibase.pro.packaged.E;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
@@ -24,4 +25,5 @@ public interface KoZnaZnaGameService {
     ResponseEntity<Response> finishGame( Principal principal) throws Exception;
 
     boolean isActiveGame(Principal principal) throws Exception;
+    KoZnaZnaGame getInitData(Principal principal) throws Exception;
 }

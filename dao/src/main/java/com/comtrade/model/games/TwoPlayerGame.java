@@ -45,10 +45,10 @@ public class TwoPlayerGame implements Game{
     Games games;
 
     @OneToOne
-    Timers timers1;
+    private Timers timers1;
 
     @OneToOne
-    Timers timers2;
+    private Timers timers2;
 
     public TwoPlayerGame(IsActive isActive1, IsActive isActive2, User user1, User user2, Games games, Timers timers1, Timers timers2) {
         this.isActive1 = isActive1;
@@ -84,8 +84,10 @@ public class TwoPlayerGame implements Game{
     @Override
     public Timers getTimers(Principal principal) {
         if (user1.getUserName().equals(principal.getName())){
+            System.out.println("timer 1");
             return timers1;
         } else if (user2.getUserName().equals(principal.getName())) {
+            System.out.println("timer 2");
             return timers2;
         }
         throw new RuntimeException("User is not in this game");
@@ -98,8 +100,9 @@ public class TwoPlayerGame implements Game{
         } else if (user2.getUserName().equals(principal.getName())) {
             this.timers2=timers;
 
+        } else {
+            throw new RuntimeException("User is not in this game");
         }
-        throw new RuntimeException("User is not in this game");
     }
 
     @Override

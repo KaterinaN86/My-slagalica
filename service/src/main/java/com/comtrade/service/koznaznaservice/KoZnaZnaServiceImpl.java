@@ -1,13 +1,13 @@
 package com.comtrade.service.koznaznaservice;
 
+import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
-import com.comtrade.model.games.OnePlayerGame;
-import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.koznaznamodel.NextQuestion;
 import com.comtrade.model.koznaznamodel.Question;
 import com.comtrade.model.koznaznamodel.responses.AnswerResponse;
 import com.comtrade.model.koznaznamodel.responses.Response;
+import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.koznaznarepository.KoZnaZnaRepository;
@@ -29,17 +29,31 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
 
         private final QuestionRepository questionRepository;
         private final KoZnaZnaRepository koZnaZnaRepository;
+        private final TimersRepository timersRepository;
         private final OnePlayerGameRepository onePlayerGameRepository;
         private final TwoPlayerGameRepository twoPlayerGameRepository;
 
         @Autowired
         private GameServiceImpl gameService;
 
-    public KoZnaZnaServiceImpl(QuestionRepository questionRepository, KoZnaZnaRepository koZnaZnaRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
+    public KoZnaZnaServiceImpl(QuestionRepository questionRepository, KoZnaZnaRepository koZnaZnaRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
         this.questionRepository = questionRepository;
         this.koZnaZnaRepository = koZnaZnaRepository;
+        this.timersRepository = timersRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.twoPlayerGameRepository = twoPlayerGameRepository;
+    }
+
+    @Override
+    public KoZnaZnaGame getInitData(Principal principal) throws Exception {
+        Game game = gameService.getGame(principal);
+        gameService.saveGame(game);
+        Timers timers = game.getTimers(principal);
+        timers.setStartTimeKoZnaZna(LocalTime.now());
+        timersRepository.save(timers);
+        game.setTimers(principal, timers);
+        gameService.saveGame(game);
+        return getGame(principal);
     }
 
     @Override
@@ -50,13 +64,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         }else{
             KoZnaZnaGame koZnaZnaGame=this.createNewGame(principal);
             game.getGames().setKoZnaZnaGame(koZnaZnaGame);
-            game.getTimers(principal).setStartTimeKoZnaZna(LocalTime.now());
-            if(game instanceof OnePlayerGame){
-                onePlayerGameRepository.save((OnePlayerGame) game);
-            }
-            else if(game instanceof TwoPlayerGame){
-                twoPlayerGameRepository.save((TwoPlayerGame) game);
-            }
+            gameService.saveGame(game);
             return koZnaZnaGame;
         }
     }
@@ -163,12 +171,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         Game game=gameService.getGame(principal);
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
         game.getIsActive(principal).setActiveKoZnaZna(false);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
         koZnaZnaRepository.save(koZnaZnaGame);
         return ResponseEntity.ok().build();
     }

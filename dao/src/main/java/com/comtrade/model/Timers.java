@@ -1,7 +1,6 @@
 package com.comtrade.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +9,9 @@ import javax.persistence.Id;
 import java.time.LocalTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 public class Timers {
     @Id
@@ -23,5 +24,5 @@ public class Timers {
     LocalTime startTimeSpojnice;
     LocalTime startTimeKoZnaZna;
     LocalTime startTimeAsocijacije;
-    
+
 }

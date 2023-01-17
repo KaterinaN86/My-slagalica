@@ -1,10 +1,12 @@
 package com.comtrade.service.asocijacijaservice;
 
+import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
 import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.Points;
 import com.comtrade.model.asocijacijamodel.*;
 import com.comtrade.model.games.TwoPlayerGame;
+import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.repository.PointsRepository;
 import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.asocijacijarepository.AsocijacijaRepository;
@@ -58,6 +60,17 @@ public class AsocijacijaServiceImpl {
         return randomWordModel.get();
     }
 
+    public ResponseEntity<Response> getInitData(Principal principal) throws Exception {
+        Game game = gameService.getGame(principal);
+        gameService.saveGame(game);
+        Timers timers = game.getTimers(principal);
+        timers.setStartTimeAsocijacije(LocalTime.now());
+        timersRepository.save(timers);
+        game.setTimers(principal, timers);
+        gameService.saveGame(game);
+        return createNewAsocijacijaGame(principal);
+    }
+
     //creating new Asocijacija game instance
     public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal){
         try{
@@ -66,17 +79,10 @@ public class AsocijacijaServiceImpl {
             log.info("Creating new Asocijacija game instance");
             AsocijacijaGame asocijacijaGame = new AsocijacijaGame();
             asocijacijaGame.setWordModel(getRandomWordModel());
-            game.getTimers(principal).setStartTimeAsocijacije(LocalTime.now());
-            timersRepository.save(game.getTimers(principal));
             asocijacijaRepository.save(asocijacijaGame);
             if (game.getGames().getAsocijacijaGame()==null){
                 game.getGames().setAsocijacijaGame(asocijacijaGame);
-                if(game instanceof OnePlayerGame){
-                    onePlayerGameRepository.save((OnePlayerGame) game);
-                }
-                if(game instanceof TwoPlayerGame){
-                    twoPlayerGameRepository.save((TwoPlayerGame) game);
-                }
+                gameService.saveGame(game);
             }
             AsocijacijaGame savedAsocijacijaGame = game.getGames().getAsocijacijaGame();
             log.info("Asocijacija game instance with id: " + savedAsocijacijaGame.getId() + " created.");
@@ -268,12 +274,7 @@ public class AsocijacijaServiceImpl {
             //asocijacijaGame.setNumOfPoints(asocijacijaGame.getNumOfPoints()+4);
         }
         log.info("Number of points for Asocijacije game: "+ points.getNumOfPointsAsocijacije());
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
         pointsRepository.save(points);
         return ResponseEntity.ok().build();
     }

@@ -16,4 +16,5 @@ public interface SlagalicaService {
 
     ResponseEntity finishGame(Principal principal) throws Exception;
     boolean isActiveGame(Principal principal) throws Exception;
+    LettersResponse getInitData(Principal principal) throws Exception;
 }

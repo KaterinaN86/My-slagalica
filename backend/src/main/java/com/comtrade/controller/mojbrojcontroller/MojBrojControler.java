@@ -25,7 +25,7 @@ public class MojBrojControler {
             if(!mojBrojService.isActiveGame(principal)){
                 return ResponseEntity.notFound().build();
             }
-            return  ResponseEntity.ok().body(mojBrojService.getGame(principal));
+            return  ResponseEntity.ok().body(mojBrojService.getInitData(principal));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
