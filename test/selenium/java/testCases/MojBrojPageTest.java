@@ -18,6 +18,8 @@ public class MojBrojPageTest extends TestBase {
      */
     SinglePlayerGamePage singlePlayerGamePage;
 
+    HomePage homePage;
+
     /**
      * Constructor
      */
@@ -36,24 +38,24 @@ public class MojBrojPageTest extends TestBase {
     }
 
     @Test(priority = 0)
-    public void verifyOpen() throws Exception {
+    public void verifyOpenMojBroj() throws Exception {
         this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
-        takeSnapShot(prop.getProperty("screenShotMojBrojBtnPath"));
+        takeSnapShot("MojBroj\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
         this.singlePlayerGamePage.verifyThatNewGameBtnIsClickable();
         this.singlePlayerGamePage.clickNewGameButton();
         this.singlePlayerGamePage.verifyMojBrojBtnIsClickable();
         this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();
     }
 
-    @Test(priority = 2)
-    public void verifyPageElements() throws Exception {
-        takeSnapShot(prop.getProperty("screenShotMojBrojPagePath"));
-        this.mojBrojPage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("mojBrojPageTitle"), prop.getProperty("mojBrojPageContainerTitle"));
-    }
-
     @Test(priority = 1)
     public void verifyTimerStart() {
-       this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
+        this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
+    }
+
+    @Test(priority = 2)
+    public void verifyMojBrojPageElements() throws Exception {
+        takeSnapShot("MojBroj\\verifyMojBrojPageElements",prop.getProperty("snapShotExtension"));
+        this.mojBrojPage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("mojBrojPageTitle"), prop.getProperty("mojBrojPageContainerTitle"));
     }
 
     @Test(priority = 3)
@@ -65,18 +67,29 @@ public class MojBrojPageTest extends TestBase {
     public void verifyTotalNumbers() {
         this.mojBrojPage.verifyNumberButtonsTotal();
     }
+
     @Test(priority = 5)
     public void verifyNumbers() {
         this.mojBrojPage.verifyNumbersValues();
     }
 
-    @Test(priority = 7)
-    public void goBackAndLogOutTest() throws Exception {
+    @Test(priority = 6)
+    public void GoBackToSinglePlayerPage() throws Exception {
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.mojBrojPage.goBack();
+       takeSnapShot("MojBroj\\GoBackToSinglePlayerPage", prop.getProperty("snapShotExtension"));
+    }
+
+    @Test(priority = 7)
+    public void goBackToHomePage() throws Exception {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
-        HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
-        takeSnapShot(prop.getProperty("screenShotLogoutPath"));
+        homePage = (HomePage) this.singlePlayerGamePage.goBack();
+        takeSnapShot("MojBroj\\goBackToHomePage",prop.getProperty("snapShotExtension"));
+    }
+
+    @Test(priority = 8)
+    public void logout() throws Exception {
         homePage.logout();
+        takeSnapShot("MojBroj\\logout",prop.getProperty("snapShotExtension"));
     }
 
     @AfterClass

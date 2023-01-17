@@ -39,7 +39,31 @@ public class SinglePlayerGamePage extends TestBase {
         super();
     }
 
+    public By getNewGameBtnLoc() {
+        return newGameBtnLoc;
+    }
+
+    public By getSlagalicaBtnLoc() {
+        return slagalicaBtnLoc;
+    }
+
+    public By getMojBrojBtnLoc() {
+        return mojBrojBtnLoc;
+    }
+
+    public void verifyNewGameButtonIsClickable(){
+        wait.until(ExpectedConditions.presenceOfElementLocated(newGameBtnLoc));
+        this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
+    }
+    public void clickNewGameButton() {
+        driver.findElement(newGameBtnLoc).click();
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
+        Reporter.log("New Game button is clicked");
+        System.out.println("New Game button is clicked");
+    }
+
     public MojBrojPage openMojBrojPage() {
+        clickNewGameButton();
         Reporter.log("Click \"Moj broj\" button.");
         System.out.println("Click \"Moj broj\" button.");
         wait.until(ExpectedConditions.elementToBeClickable(mojBrojBtnLoc));
@@ -48,8 +72,10 @@ public class SinglePlayerGamePage extends TestBase {
     }
 
     public SlagalicaPage openSlagalicaPage() {
+        clickNewGameButton();
         Reporter.log("Click \"Slagalica\" button");
         System.out.println("Click \"Slagalica\" button");
+        wait.until(ExpectedConditions.elementToBeClickable(slagalicaBtnLoc));
         driver.findElement(slagalicaBtnLoc).click();
         this.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("singlePlayerGamePageTitle"), prop.getProperty("singlePlayerGamePageContainerTitle"));
         return (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
@@ -73,13 +99,6 @@ public class SinglePlayerGamePage extends TestBase {
 
     public void verifyThatNewGameBtnIsClickable() {
         this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
-    }
-
-    public void clickNewGameButton() {
-        driver.findElement(newGameBtnLoc).click();
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
-        Reporter.log("New Game button is clicked");
-        System.out.println("New Game button is clicked");
     }
 
 }

@@ -1,19 +1,23 @@
 package testCases;
 
 import base.TestBase;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
 import pages.SlagalicaPage;
-import utility.VerifyMethods;
 
 public class SinglePlayerGamePageTest extends TestBase {
     /**
      * SinglePlayerGamePage object used in tests.
      */
     SinglePlayerGamePage singlePlayerGamePage;
+
+    MojBrojPage mojBrojPage;
+
+    SlagalicaPage slagalicaPage;
 
     /**
      * Constructor
@@ -50,61 +54,45 @@ public class SinglePlayerGamePageTest extends TestBase {
     }
 
     /**
-     * Verifies moj broj button. Screen shot is taken.
-     * @throws Exception
-     */
-    @Test(priority = 2)
-    public void varifyMojBrojBtn() throws Exception {
-        takeSnapShot(prop.getProperty("screenShotMojBrojBtnPath"));
-        this.singlePlayerGamePage.verifyMojBrojBtnIsClickable();
-    }
-
-    /**
      * Open 'Moj Broj' page and go back to SinglePlayerGamePage.
      */
-    @Test(priority = 3)
-    public void openMojBrojTestAndGoBack() {
-        MojBrojPage mojBrojPage = this.singlePlayerGamePage.openMojBrojPage();
-        this.singlePlayerGamePage = (SinglePlayerGamePage) mojBrojPage.goBack();
-        try {
-            takeSnapShot(prop.getProperty("screenShotOnePlayerPath"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        this.singlePlayerGamePage.verifyMojBrojBtnNotClickable();
+    @Test(priority = 2)
+    public void openMojBrojTest() {
+        this.mojBrojPage = this.singlePlayerGamePage.openMojBrojPage();
+        this.mojBrojPage.verifyMethods.verifyContainerDisplayed();
+
     }
 
-    @Test(priority = 4)
-    public void openSlagalicaTestAndGoBack() throws Exception {
-        SlagalicaPage slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
-        this.singlePlayerGamePage = (SinglePlayerGamePage) slagalicaPage.goBack();
-        takeSnapShot(prop.getProperty("screenShotAdisOnePlayerPath"));
-        this.singlePlayerGamePage.verifySlagalicaButtonIsNotClickable();
+    @Test(priority = 3)
+    public void mojBrojGoBackTest() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.mojBrojPage.getTargetNumberLoc()));
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.mojBrojPage.goBack();
     }
 
     @Test(priority = 5)
-    public void openSlagalicaGoBackAndClickNewGame() throws Exception {
-        this.singlePlayerGamePage.verifyThatNewGameBtnIsClickable();
-        this.singlePlayerGamePage.clickNewGameButton();
-        this.singlePlayerGamePage.verifySlagalicaButtonIsClickable();
-        takeSnapShot(prop.getProperty("screenShotAdisOnePlayerPath"));
+    public void openSlagalicaTest() throws Exception {
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.getSlagalicaBtnLoc()));
+        this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.slagalicaPage.locators.getContainerLoc()));
+        takeSnapShot("OnePlayer\\openSlagalicaTest", prop.getProperty("snapShotExtension"));
     }
 
     /**
      * Verifies go back button (left pointing arrow) is clickable.
      */
-    @Test(priority =6)
-    public void varifyGoBackBtn() {
-        this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
+    @Test(priority = 6)
+    public void slagalicaGoBackTest() {
+        this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.slagalicaPage.locators.getContainerLoc()));
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
     }
 
     @Test(priority = 7)
-    public void goBackAndLogOutTest() throws Exception {
-
-        //HomePage homePage = (HomePage) this.singlePlayerGamePage.goBack();
+    public void goBackTest() throws Exception {
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getContainerLoc()));
+        this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage.goBack();
-        takeSnapShot(prop.getProperty("screenShotGoBackPath"));
-        // homePage.logout();
+        takeSnapShot("OnePlayer\\goBackTest",prop.getProperty("snapShotExtension"));
     }
 
     @AfterClass
