@@ -262,8 +262,6 @@ public class VerifyMethods {
 
     public void verifyBackButtonIsClickable() {
         this.base.wait.until(ExpectedConditions.presenceOfElementLocated(this.base.locators.getContainerLoc()));
-        Actions act =  new Actions(this.base.driver);
-        act.moveToElement(this.base.driver.findElement(this.base.locators.getBackBtnLoc())).perform();
         Reporter.log("Check if go back button is clickable.");
         System.out.println("Check if go back button is clickable.");
         Assert.assertTrue(this.base.driver.findElement(this.base.locators.getBackBtnLoc()).isEnabled(), "Go back button is not enabled.");
