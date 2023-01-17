@@ -29,6 +29,10 @@ public class MojBrojPage extends TestBase {
         super();
     }
 
+    public By getTargetNumberLoc() {
+        return targetNumberLoc;
+    }
+
     public void verifyTargetValueIsPositiveInteger() {
         String value = driver.findElement(targetNumberLoc).getText();
         int intValue = Integer.parseInt(value);

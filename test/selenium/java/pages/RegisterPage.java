@@ -96,8 +96,8 @@ public class RegisterPage extends TestBase {
         //Filling in data for username and password.
         setUsernameAndPassword(username, password);
         //Logging entered data.
-        Reporter.log("Registering user: " + username + " with password: " + password);
-        System.out.println("Registering user: " + username + " with password: " + password);
+        Reporter.log("Registering user: " + username);
+        System.out.println("Registering user: " + username);
         //Perform register action.
         driver.findElement(locators.getRegisterBtnLoc()).click();
         //In firefox browser alert is not shown when user is successfully registered.

@@ -4,6 +4,7 @@ import base.TestBase;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -71,10 +72,12 @@ public class SlagalicaPage extends TestBase {
     public void verifyCloseButtonIsClicked(){
         wait.until(ExpectedConditions.elementToBeClickable(closeButton));
         driver.findElement((closeButton)).click();
+        Reporter.log("Close button clicked.");
+        System.out.println("Close button clicked.");
+    }
+
+    public void waitForPopuptoClose(){
         wait.until(ExpectedConditions.elementToBeClickable(locators.getBackBtnLoc()));
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getTimerLoc()));
-        Reporter.log("Dialog is displayed.");
-        System.out.println("Dialog is displayed.");
     }
 
 }

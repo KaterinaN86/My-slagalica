@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -47,10 +49,6 @@ public class TestBase {
      */
     public static Locators locators;
     /**
-     * Instance used to access methods for verification.
-     */
-    public VerifyMethods verifyMethods;
-    /**
      * Variable that specifies which browser is used for testing.
      */
     public static String browserName;
@@ -58,6 +56,10 @@ public class TestBase {
      * Current URL.
      */
     public static String currentUrl;
+    /**
+     * Instance used to access methods for verification.
+     */
+    public VerifyMethods verifyMethods;
     /**
      * LoginPage instance, used in several classes.
      */
@@ -80,10 +82,35 @@ public class TestBase {
 
     /**
      * Getter for WebDriver element.
+     *
      * @return WebDriver element.
      */
     public static WebDriver getDriver() {
         return driver;
+    }
+
+    /**
+     * This method will take screenshot.
+     *
+     * @throws Exception
+     */
+
+    public static void takeSnapShot(String methodName, String ext) throws Exception {
+        //Convert web driver object to TakeScreenshot
+        TakesScreenshot scrShot = ((TakesScreenshot) driver);
+        //Call getScreenshotAs method to create image file
+        File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss");
+        String date = dtf.format(LocalDateTime.now());
+        date = date.replace("/", "-");
+        date = date.replace(":", "-");
+        System.out.println("HELLO: " + date);
+        String imgName = methodName.concat(" ").concat("(" + date + ")").concat(ext);
+        System.out.println(imgName);
+        //Move image file to new destination
+        File DestFile = new File(System.getProperty("user.dir") + "\\test\\selenium\\resources\\snapshots\\" + imgName);
+        //Copy file at destination
+        FileUtils.copyFile(SrcFile, DestFile);
     }
 
     /**
@@ -130,6 +157,7 @@ public class TestBase {
 
     /**
      * Getter for page title.
+     *
      * @return String (Value contains current page title.
      */
     public String getPageTitle() {
@@ -145,6 +173,7 @@ public class TestBase {
 
     /**
      * Getter method for expected page title value (read from config file).
+     *
      * @return String (Variable contains expected page title).
      */
     public String getConfigTitle() {
@@ -197,8 +226,8 @@ public class TestBase {
         Reporter.log("Entered username: " + username);
         System.out.println("Entered username: " + username);
         passwordEl.sendKeys(password);
-        Reporter.log("Entered password: " + password);
-        System.out.println("Entered password: " + password);
+        Reporter.log("Entered password.");
+        System.out.println("Entered password.");
     }
 
     /**
@@ -244,10 +273,19 @@ public class TestBase {
      * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
      */
     public TestBase goBack() {
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
         driver.findElement(locators.getBackBtnLoc()).click();
+        dealWithAlert();
+        if (this instanceof SinglePlayerGamePage) {
+            return verifyMethods.verifyPageObjectInitialized(new HomePage());
+        }
+        return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
+    }
+
+    void dealWithAlert() {
         wait.until(ExpectedConditions.alertIsPresent());
         Reporter.log("Alert popup displayed.");
         System.out.println("Alert popup displayed.");
@@ -259,27 +297,8 @@ public class TestBase {
         registerAlert.accept();
         Reporter.log("User successfully accepted.");
         System.out.println("User successfully accepted.");
-        if (this instanceof SinglePlayerGamePage) {
-            return verifyMethods.verifyPageObjectInitialized(new HomePage());
-        }
-        return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
-    /**
-     * This method will take screenshot.
-     *
-     * @throws Exception
-     */
 
-    public static void takeSnapShot(String imgName) throws Exception {
-        //Convert web driver object to TakeScreenshot
-        TakesScreenshot scrShot = ((TakesScreenshot) driver);
-        //Call getScreenshotAs method to create image file
-        File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
-        //Move image file to new destination
-        File DestFile = new File(System.getProperty("user.dir") + "\\test\\selenium\\resources\\snapshots\\" + imgName);
-        //Copy file at destination
-        FileUtils.copyFile(SrcFile, DestFile);
-    }
     /**
      * Closing web page.
      */

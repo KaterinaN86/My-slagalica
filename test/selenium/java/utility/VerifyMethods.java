@@ -3,6 +3,7 @@ package utility;
 import base.TestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -140,6 +141,7 @@ public class VerifyMethods {
      * Helper method used by verifyTitlesAndOtherPageElements. Verifies timer element.
      */
     public void verifyTimerElement() {
+        this.base.wait.until(ExpectedConditions.elementToBeClickable(this.base.locators.getTimerLoc()));
         Reporter.log("Verifying timer element.");
         System.out.println("Verifying timer element.");
         Assert.assertTrue(base.driver.findElement(base.locators.getTimerLoc()).isDisplayed(), "Timer element not displayed!");
@@ -234,6 +236,7 @@ public class VerifyMethods {
      * @param locator
      */
     public void verifyButtonIsClickable(By locator) {
+        this.base.wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         //Initializing WebElement object for specified button element.
         WebElement btnEl = this.base.driver.findElement(locator);
         Reporter.log("Check if button " + btnEl.getText() + " is clickable.");
@@ -258,6 +261,9 @@ public class VerifyMethods {
     }
 
     public void verifyBackButtonIsClickable() {
+        this.base.wait.until(ExpectedConditions.presenceOfElementLocated(this.base.locators.getContainerLoc()));
+        Actions act =  new Actions(this.base.driver);
+        act.moveToElement(this.base.driver.findElement(this.base.locators.getBackBtnLoc())).perform();
         Reporter.log("Check if go back button is clickable.");
         System.out.println("Check if go back button is clickable.");
         Assert.assertTrue(this.base.driver.findElement(this.base.locators.getBackBtnLoc()).isEnabled(), "Go back button is not enabled.");

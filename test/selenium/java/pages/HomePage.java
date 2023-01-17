@@ -2,6 +2,7 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Reporter;
 
 /**
@@ -24,12 +25,17 @@ public class HomePage extends TestBase {
         super();
     }
 
+    public By getLogOutLoc() {
+        return logOutLoc;
+    }
+
     /**
      * Logs out active user.
      *
      * @return LoginPage (new instance of LoginPage, after verification).
      */
     public LoginPage logout() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(logOutLoc));
         this.verifyMethods.verifyButtonIsClickable(logOutLoc);
         Reporter.log("Logging out active user.");
         System.out.println("Logging out active user.");
@@ -45,4 +51,9 @@ public class HomePage extends TestBase {
         System.out.println("Single player game page option clicked.");
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
+
+    public void waitAfterAlert(){
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
+    }
+
 }
