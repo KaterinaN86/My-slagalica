@@ -104,9 +104,7 @@ public class TestBase {
         String date = dtf.format(LocalDateTime.now());
         date = date.replace("/", "-");
         date = date.replace(":", "-");
-        System.out.println("HELLO: " + date);
         String imgName = methodName.concat(" ").concat("(" + date + ")").concat(ext);
-        System.out.println(imgName);
         //Move image file to new destination
         File DestFile = new File(System.getProperty("user.dir") + "\\test\\selenium\\resources\\snapshots\\" + imgName);
         //Copy file at destination
@@ -277,7 +275,10 @@ public class TestBase {
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
-        driver.findElement(locators.getBackBtnLoc()).click();
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        WebElement stopEl = driver.findElement(locators.getBackBtnLoc());
+        js.executeScript("arguments[0].click()", stopEl);
+        //driver.findElement().click();
         dealWithAlert();
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());

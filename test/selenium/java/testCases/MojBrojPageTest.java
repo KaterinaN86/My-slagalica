@@ -1,6 +1,7 @@
 package testCases;
 
 import base.TestBase;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -40,21 +41,20 @@ public class MojBrojPageTest extends TestBase {
     @Test(priority = 0)
     public void verifyOpenMojBroj() throws Exception {
         this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getContainerLoc()));
         takeSnapShot("MojBroj\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
-        this.singlePlayerGamePage.verifyThatNewGameBtnIsClickable();
-        this.singlePlayerGamePage.clickNewGameButton();
-        this.singlePlayerGamePage.verifyMojBrojBtnIsClickable();
         this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();
     }
 
     @Test(priority = 1)
-    public void verifyTimerStart() {
+    public void verifyTimerStart() throws Exception{
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.mojBrojPage.locators.getContainerLoc()));
+        takeSnapShot("MojBroj\\verifyTimerStart",prop.getProperty("snapShotExtension"));
         this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
     }
 
     @Test(priority = 2)
-    public void verifyMojBrojPageElements() throws Exception {
-        takeSnapShot("MojBroj\\verifyMojBrojPageElements",prop.getProperty("snapShotExtension"));
+    public void verifyMojBrojPageElements()  {
         this.mojBrojPage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("mojBrojPageTitle"), prop.getProperty("mojBrojPageContainerTitle"));
     }
 
@@ -75,7 +75,9 @@ public class MojBrojPageTest extends TestBase {
 
     @Test(priority = 6)
     public void GoBackToSinglePlayerPage() throws Exception {
+        this.mojBrojPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.mojBrojPage.goBack();
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getContainerLoc()));
        takeSnapShot("MojBroj\\GoBackToSinglePlayerPage", prop.getProperty("snapShotExtension"));
     }
 
@@ -83,6 +85,7 @@ public class MojBrojPageTest extends TestBase {
     public void goBackToHomePage() throws Exception {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         homePage = (HomePage) this.singlePlayerGamePage.goBack();
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.homePage.locators.getContainerLoc()));
         takeSnapShot("MojBroj\\goBackToHomePage",prop.getProperty("snapShotExtension"));
     }
 

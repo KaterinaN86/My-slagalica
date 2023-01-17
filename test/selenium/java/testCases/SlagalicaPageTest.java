@@ -77,7 +77,8 @@ public class SlagalicaPageTest extends TestBase {
     }
 
     @Test(priority = 10)
-    public void verifyDialogClosed() {
+    public void verifyDialogClosed() throws Exception {
+        takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopuptoClose();
     }
 
