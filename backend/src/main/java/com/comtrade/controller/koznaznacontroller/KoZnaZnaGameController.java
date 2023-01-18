@@ -26,7 +26,7 @@ public class KoZnaZnaGameController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok()
-                .body(new ResponseGameWithoutAnswers(koZnaZnaService.getGame(principal)));
+                .body(new ResponseGameWithoutAnswers(koZnaZnaService.getInitData(principal)));
     }
 
     @GetMapping("/getCurrentQuestion/{gameId}")

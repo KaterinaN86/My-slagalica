@@ -27,4 +27,5 @@ public interface SkockoGameService {
     ResponseEntity<Response> finishGame(Principal principal) throws Exception;
 
     boolean isActiveGame(Principal principal) throws Exception;
+    SkockoGame getInitData(Principal principal) throws Exception;
 }

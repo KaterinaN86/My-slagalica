@@ -29,7 +29,7 @@ public class SkockoGameController {
         if(!skockoGameService.isActiveGame(principal)){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(skockoGameService.getGame(principal));
+        return ResponseEntity.ok().body(skockoGameService.getInitData(principal));
     }
 
     @PostMapping("/submit")

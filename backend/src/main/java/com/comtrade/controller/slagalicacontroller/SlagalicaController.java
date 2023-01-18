@@ -31,7 +31,7 @@ public class SlagalicaController {
         if(!slagalicaService.isActiveGame(principal)){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(slagalicaService.saveLetterForFindingWords(principal));
+        return ResponseEntity.ok().body(slagalicaService.getInitData(principal));
     }
 
     @PostMapping("/wordSubmit")

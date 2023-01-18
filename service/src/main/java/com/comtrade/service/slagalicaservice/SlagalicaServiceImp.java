@@ -1,10 +1,10 @@
 package com.comtrade.service.slagalicaservice;
 
 
+import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
-import com.comtrade.model.games.OnePlayerGame;
-import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.slagalicamodel.*;
+import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
@@ -24,18 +24,32 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
     private final OnePlayerGameRepository onePlayerGameRepository;
     private final TwoPlayerGameRepository twoPlayerGameRepository;
+    private final TimersRepository timersRepository;
     private final SlagalicaRepository slagalicaRepository;
     private final DictionaryWordRepository dictionaryWordRepository;
 
     @Autowired
     private GameServiceImpl gameService;
 
-    public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, SlagalicaRepository slagalicaRepository,
+    public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, TimersRepository timersRepository, SlagalicaRepository slagalicaRepository,
                                DictionaryWordRepository dictionaryWordRepository) {
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.twoPlayerGameRepository = twoPlayerGameRepository;
+        this.timersRepository = timersRepository;
         this.slagalicaRepository = slagalicaRepository;
         this.dictionaryWordRepository = dictionaryWordRepository;
+    }
+
+    @Override
+    public LettersResponse getInitData(Principal principal) throws Exception {
+        Game game = gameService.getGame(principal);
+        gameService.saveGame(game);
+        Timers timers = game.getTimers(principal);
+        timers.setStartTimeSlagalica(LocalTime.now());
+        timersRepository.save(timers);
+        game.setTimers(principal, timers);
+        gameService.saveGame(game);
+        return saveLetterForFindingWords(principal);
     }
 
     @Override
@@ -54,14 +68,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
         game.getIsActive(principal).setActiveSlagalica(true);
         slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
         SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
-        game.getTimers(principal).setStartTimeSlagalica(LocalTime.now());
         game.getGames().setSlagalicaGame(Sgame);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
         return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
     }
 
@@ -245,12 +253,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         finalResult = result;
         game.getPoints(principal).setNumOfPointsSlagalica(finalResult);
         game.getIsActive(principal).setActiveSlagalica(false);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
 
 
         return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),finalResult);
@@ -260,12 +263,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         Game game=gameService.getGame(principal);
         SlagalicaGame slagalicaGame=game.getGames().getSlagalicaGame();
         game.getIsActive(principal).setActiveSlagalica(false);
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
-        }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
-        }
+        gameService.saveGame(game);
         slagalicaRepository.save(slagalicaGame);
         return ResponseEntity.ok().build();
     }

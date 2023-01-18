@@ -96,12 +96,10 @@ async function submit(){
         }
 }
 function goBack() {
-    if(!isActiveGame){
-        history.back()
-    }
+
     if(confirm("Do you want to finish the game?")){
             finishGame().then(function () {
-                window.location.href = "OnePlayer";
+                history.back();
             });
     }
 }

@@ -1,10 +1,10 @@
 package com.comtrade.service.spojniceservice;
 
+import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
-import com.comtrade.model.games.OnePlayerGame;
-import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.spojnicemodel.PairsModel;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
+import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
 import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.spojnicerepository.PairsRepository;
@@ -24,13 +24,15 @@ public class SpojniceServiceImpl implements SpojniceService{
 
     private final SpojniceRepository spojniceRepository;
     private final PairsRepository pairsRepository;
+    private final TimersRepository timersRepository;
     private final OnePlayerGameRepository onePlayerGameRepository;
     private final TwoPlayerGameRepository twoPlayerGameRepository;
     private final GameServiceImpl gameService;
 
-    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, OnePlayerGameRepository onePlayerGameRepository,TwoPlayerGameRepository twoPlayerGameRepository, GameServiceImpl gameService) {
+    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, GameServiceImpl gameService) {
         this.spojniceRepository = spojniceRepository;
         this.pairsRepository = pairsRepository;
+        this.timersRepository = timersRepository;
         this.onePlayerGameRepository = onePlayerGameRepository;
         this.twoPlayerGameRepository = twoPlayerGameRepository;
         this.gameService = gameService;
@@ -71,6 +73,18 @@ public class SpojniceServiceImpl implements SpojniceService{
     }
 
     @Override
+    public List<String> getInitData(Principal principal) throws Exception {
+        Game game = gameService.getGame(principal);
+        gameService.saveGame(game);
+        Timers timers = game.getTimers(principal);
+        timers.setStartTimeSpojnice(LocalTime.now());
+        timersRepository.save(timers);
+        game.setTimers(principal, timers);
+        gameService.saveGame(game);
+        return getWords(principal);
+    }
+
+    @Override
     public SpojniceGame createNewSpojniceGame(Principal principal) throws Exception {
         Game game = gameService.getGame(principal);
         SpojniceGame spojniceGame = null;
@@ -96,13 +110,8 @@ public class SpojniceServiceImpl implements SpojniceService{
         }else{
             SpojniceGame spojniceGame= createNewSpojniceGame(principal);
             game.getGames().setSpojniceGame(spojniceGame);
-            game.getTimers(principal).setStartTimeSpojnice(LocalTime.now());
-            if(game instanceof OnePlayerGame){
-                onePlayerGameRepository.save((OnePlayerGame) game);
-            }
-            if(game instanceof TwoPlayerGame){
-                twoPlayerGameRepository.save((TwoPlayerGame) game);
-            }            return spojniceGame;
+            gameService.saveGame(game);
+            return spojniceGame;
         }
     }
 

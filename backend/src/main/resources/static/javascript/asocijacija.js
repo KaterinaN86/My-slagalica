@@ -76,7 +76,7 @@ const handleNewGame = () =>{
 
 function goBack() {
     if(!isActiveGame){
-             window.location.href = "OnePlayer";
+        history.back();;
         }
     else if(confirm("Do you want to finish the game?")){
        finishGame().then(function(){
