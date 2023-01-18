@@ -2,7 +2,9 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
 
@@ -96,5 +98,15 @@ public class MojBrojPage extends TestBase {
             //Incrementing index variable.
             i++;
         }
+    }
+
+    public void verifyBadExpressionWhenTimeIsUp(){
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getTimerLoc()));
+        WebElement timerEl = driver.findElement(locators.getTimerLoc());
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("arguments[0].innerHTML='00 : 00';", timerEl);
+        System.out.println(timerEl.getText());
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.locators.getTimerLoc()));
+       // this.dealWithAlert();
     }
 }

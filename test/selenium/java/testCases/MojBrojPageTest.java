@@ -73,22 +73,30 @@ public class MojBrojPageTest extends TestBase {
         this.mojBrojPage.verifyNumbersValues();
     }
 
-    @Test(priority = 6)
+//    @Test(priority=6)
+//    public void verifyTimeIsUp() throws Exception {
+//        this.mojBrojPage.verifyBadExpressionWhenTimeIsUp();
+//        takeSnapShot("MojBroj\\verifyBadExpressionWhenTimeIsUp", prop.getProperty("snapShotExtension"));
+//        this.mojBrojPage.wait.until(ExpectedConditions.alertIsPresent());
+//    }
+
+    @Test(priority = 7)
     public void GoBackToSinglePlayerPage() throws Exception {
         this.mojBrojPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.mojBrojPage.goBack();
         wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getContainerLoc()));
     }
 
-    @Test(priority = 7)
+    @Test(priority = 8)
     public void goBackToHomePage() throws Exception {
+        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getBackBtnLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         homePage = (HomePage) this.singlePlayerGamePage.goBack();
         wait.until(ExpectedConditions.presenceOfElementLocated(this.homePage.locators.getContainerLoc()));
         takeSnapShot("MojBroj\\goBackToHomePage", prop.getProperty("snapShotExtension"));
     }
 
-    @Test(priority = 8)
+    @Test(priority = 9)
     public void logout() throws Exception {
         homePage.logout();
         takeSnapShot("MojBroj\\logout", prop.getProperty("snapShotExtension"));
