@@ -286,15 +286,13 @@ public class TestBase {
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
 
-    void dealWithAlert() {
+    public void dealWithAlert() {
         wait.until(ExpectedConditions.alertIsPresent());
         Reporter.log("Alert popup displayed.");
         System.out.println("Alert popup displayed.");
         Alert registerAlert = driver.switchTo().alert();
         Reporter.log("Verify accept option in alert popup.");
         System.out.println("Checking if player can accept to go back.");
-        //verifyMethods.verifyAlertMessage(registerAlert.getText(), message);
-        //click on OK button on displayed alert window
         registerAlert.accept();
         Reporter.log("User successfully accepted.");
         System.out.println("User successfully accepted.");

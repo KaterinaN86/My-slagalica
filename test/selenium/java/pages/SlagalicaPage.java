@@ -1,14 +1,16 @@
 package pages;
 
 import base.TestBase;
-import org.openqa.selenium.Alert;
+
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
+import utility.FindWordForSlagalicaGame;
+import utility.ReadFromFile;
+import java.io.IOException;
+import java.util.List;
 
 public class SlagalicaPage extends TestBase {
 
@@ -28,6 +30,13 @@ public class SlagalicaPage extends TestBase {
 
     By closeButton = new By.ByXPath("//button[text()='Zatvori']");
 
+    List<String> dictionaryWordsList;
+
+    public void printWords() throws IOException {
+        this.dictionaryWordsList = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
+        FindWordForSlagalicaGame findWord = new FindWordForSlagalicaGame();
+        System.out.println(findWord.computersLongestWord("OŠUGOĆUČAČIR", dictionaryWordsList));
+    }
 
     public void verifyThatStopButtonIsClicked(){
         WebElement stop = driver.findElement((stopButtonLocator));
@@ -79,6 +88,11 @@ public class SlagalicaPage extends TestBase {
 
     public void waitForPopuptoClose(){
         wait.until(ExpectedConditions.elementToBeClickable(locators.getBackBtnLoc()));
+    }
+
+    public void verifyStopButtonIsNotClickable(){
+        wait.until(ExpectedConditions.presenceOfElementLocated(stopButtonLocator));
+        this.verifyMethods.verifyButtonNotClickable(stopButtonLocator);
     }
 
 }

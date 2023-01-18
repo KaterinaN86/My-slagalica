@@ -10,6 +10,8 @@ import pages.SinglePlayerGamePage;
 import pages.SlagalicaPage;
 import utility.VerifyMethods;
 
+import java.io.IOException;
+
 public class SlagalicaPageTest extends TestBase {
 
     SlagalicaPage slagalicaPage;
@@ -82,7 +84,7 @@ public class SlagalicaPageTest extends TestBase {
         this.slagalicaPage.waitForPopuptoClose();
     }
 
-    @Test(priority = 11)
+    @Test(priority = 12)
     public void verifyBackButton() {
         wait.until(ExpectedConditions.presenceOfElementLocated(this.slagalicaPage.locators.getBackBtnLoc()));
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
@@ -90,14 +92,15 @@ public class SlagalicaPageTest extends TestBase {
         wait.until(ExpectedConditions.elementToBeClickable(this.singlePlayerGamePage.locators.getContainerLoc()));
     }
 
-    @Test(priority = 12)
+    @Test(priority = 13)
     public void goBackToHomePage() {
         wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getBackBtnLoc()));
+        wait.until(ExpectedConditions.elementToBeClickable(this.singlePlayerGamePage.locators.getBackBtnLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
     }
 
-    @Test(priority = 13)
+    @Test(priority = 14)
     public void logout() {
         wait.until(ExpectedConditions.elementToBeClickable(this.homePage.locators.getContainerLoc()));
         this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
