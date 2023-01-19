@@ -129,16 +129,21 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
                         .body(new AnswerResponse(0));
             }
             else {
-                if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
-                    game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()+3);
-                } else if (!selectedQuestion.equals(0)) {
-                    game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()-1);
-                }
+                setPointsForSubmitedQuestion(selectedQuestion, koZnaZnaGame, questionIndex, game, principal);
                 koZnaZnaRepository.save(koZnaZnaGame);
                 log.info(principal.getName()+" is submited answer for "+(questionIndex+1)+". question!");
                 return ResponseEntity.ok()
                         .body(new AnswerResponse(existingQuestion.get().getCorrectAnswer()));
             }
+    }
+
+    public void setPointsForSubmitedQuestion(Integer selectedQuestion, KoZnaZnaGame koZnaZnaGame, Integer questionIndex, Game game, Principal principal){
+        if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
+            game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()+3);
+        } else if (!selectedQuestion.equals(0)) {
+            game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()-1);
+        }
+
     }
 
     public static Integer getQuestionIndexForCurrentPlayer (Game game, KoZnaZnaGame koZnaZnaGame, Principal principal){
