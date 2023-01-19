@@ -53,24 +53,20 @@ public class SlagalicaServiceImp implements SlagalicaService {
     }
 
     @Override
-    public LettersResponse saveLetterForFindingWords(Principal principal) {
-        Game game=null;
-        try {
-            game=gameService.getGame(principal);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    public LettersResponse saveLetterForFindingWords(Principal principal) throws Exception {
+        Game game=gameService.getGame(principal);
         if (game.getGames().getSlagalicaGame()!=null){
             return new LettersResponse(game.getGames().getSlagalicaGame().getLettersForFindingTheWord());
+        } else {
+            SlagalicaGame slagalicaGame = new SlagalicaGame();
+            slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
+            game.getIsActive(principal).setActiveSlagalica(true);
+            slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
+            SlagalicaGame Sgame = slagalicaRepository.save(slagalicaGame);
+            game.getGames().setSlagalicaGame(Sgame);
+            gameService.saveGame(game);
+            return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
         }
-        SlagalicaGame slagalicaGame = new SlagalicaGame();
-        slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
-        game.getIsActive(principal).setActiveSlagalica(true);
-        slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
-        SlagalicaGame Sgame=slagalicaRepository.save(slagalicaGame);
-        game.getGames().setSlagalicaGame(Sgame);
-        gameService.saveGame(game);
-        return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
     }
 
     @Override
