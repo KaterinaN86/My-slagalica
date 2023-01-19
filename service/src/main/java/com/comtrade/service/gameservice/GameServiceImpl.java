@@ -72,8 +72,9 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         }
         else if(!twoPlayerGames.isEmpty()){
             return twoPlayerGames.get(0);
+        } else {
+            throw new Exception("Game not found!");
         }
-        throw new Exception("Game not found!");
     }
     @Override
     public OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception {
