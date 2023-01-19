@@ -41,7 +41,8 @@ CREATE TABLE is_active (
 
 CREATE TABLE ko_zna_zna_game (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    index_of_the_current_question INTEGER
+    index_of_the_current_question_player_one INTEGER,
+    index_of_the_current_question_player_two INTEGER
 );
 
 CREATE TABLE ko_zna_zna_game_questions (

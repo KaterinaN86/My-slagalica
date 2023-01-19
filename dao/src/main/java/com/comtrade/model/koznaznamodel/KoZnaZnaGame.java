@@ -4,8 +4,6 @@ import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,5 +19,6 @@ public class KoZnaZnaGame {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Question> questions;
 
-    private int indexOfTheCurrentQuestion;
+    private int indexOfTheCurrentQuestionPlayerOne;
+    private int indexOfTheCurrentQuestionPlayerTwo;
 }

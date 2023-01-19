@@ -117,7 +117,7 @@ public class SpojniceServiceImpl implements SpojniceService{
 
 
     private Integer calcPoints(SpojniceGame spojniceGame, String json){
-        Integer numOfPoints=0;
+        int numOfPoints=0;
         JSONObject jsonObject=new JSONObject(json);
 
         List<String> col1= List.of(spojniceGame.getPairsModel().getColumn1().split(", "));

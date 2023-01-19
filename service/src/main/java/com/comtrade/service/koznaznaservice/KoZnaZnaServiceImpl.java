@@ -2,14 +2,14 @@ package com.comtrade.service.koznaznaservice;
 
 import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
+import com.comtrade.model.games.OnePlayerGame;
+import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.koznaznamodel.NextQuestion;
 import com.comtrade.model.koznaznamodel.Question;
 import com.comtrade.model.koznaznamodel.responses.AnswerResponse;
 import com.comtrade.model.koznaznamodel.responses.Response;
 import com.comtrade.repository.TimersRepository;
-import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
-import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.koznaznarepository.KoZnaZnaRepository;
 import com.comtrade.repository.koznaznarepository.QuestionRepository;
 import com.comtrade.service.gameservice.GameServiceImpl;
@@ -30,18 +30,14 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         private final QuestionRepository questionRepository;
         private final KoZnaZnaRepository koZnaZnaRepository;
         private final TimersRepository timersRepository;
-        private final OnePlayerGameRepository onePlayerGameRepository;
-        private final TwoPlayerGameRepository twoPlayerGameRepository;
 
         @Autowired
         private GameServiceImpl gameService;
 
-    public KoZnaZnaServiceImpl(QuestionRepository questionRepository, KoZnaZnaRepository koZnaZnaRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
+    public KoZnaZnaServiceImpl(QuestionRepository questionRepository, KoZnaZnaRepository koZnaZnaRepository, TimersRepository timersRepository) {
         this.questionRepository = questionRepository;
         this.koZnaZnaRepository = koZnaZnaRepository;
         this.timersRepository = timersRepository;
-        this.onePlayerGameRepository = onePlayerGameRepository;
-        this.twoPlayerGameRepository = twoPlayerGameRepository;
     }
 
     @Override
@@ -75,7 +71,8 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
             Game game = gameService.getGame(principal);
             koZnaZnaGame.setQuestions(getRandomQuestions());
             game.getIsActive(principal).setActiveKoZnaZna(true);
-            koZnaZnaGame.setIndexOfTheCurrentQuestion(0);
+            koZnaZnaGame.setIndexOfTheCurrentQuestionPlayerOne(0);
+            koZnaZnaGame.setIndexOfTheCurrentQuestionPlayerTwo(0);
             koZnaZnaRepository.save(koZnaZnaGame);
             log.info("A new Ko zna zna game has been created!");
             return koZnaZnaGame;
@@ -102,7 +99,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
         @Override
         public Integer getCurrentQuestionIndex(Long id){
             Optional<KoZnaZnaGame> existingGame=koZnaZnaRepository.findById(id);
-            return existingGame.isPresent() ? existingGame.get().getIndexOfTheCurrentQuestion() : 0;
+            return existingGame.isPresent() ? existingGame.get().getIndexOfTheCurrentQuestionPlayerOne() : 0;
         }
         public List<Question> getListOfQuestionsById(Long id){
             Optional<KoZnaZnaGame> existingGame=koZnaZnaRepository.findById(id);
@@ -121,28 +118,46 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
             if(numberOfSeconds>=120){
                 finishGame(principal);
             }
+            Integer questionIndexForCurrentPlayer=getQuestionIndexForCurrentPlayer(game, koZnaZnaGame, principal);
             Optional<Question> existingQuestion = questionRepository.findById(questionId);
             if (existingQuestion.isEmpty()) {
                 return ResponseEntity.notFound()
                         .build();
             }
-            else if(!game.getIsActive(principal).isActiveKoZnaZna() || koZnaZnaGame.getIndexOfTheCurrentQuestion()!=questionIndex){
+            else if(!game.getIsActive(principal).isActiveKoZnaZna() || !questionIndexForCurrentPlayer.equals(questionIndex)){
                 return ResponseEntity.status(404)
                         .body(new AnswerResponse(0));
             }
             else {
-                if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
-                    game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()+3);
-                    //koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()+3);
-                } else if (!selectedQuestion.equals(0)) {
-                    game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()-1);
-                    //koZnaZnaGame.setNumOfPoints(koZnaZnaGame.getNumOfPoints()-1);
-                }
+                setPointsForSubmitedQuestion(selectedQuestion, koZnaZnaGame, questionIndex, game, principal);
                 koZnaZnaRepository.save(koZnaZnaGame);
-                log.info("The submit button is clicked and the correct answer is displayed!");
+                log.info(principal.getName()+" is submited answer for "+(questionIndex+1)+". question!");
                 return ResponseEntity.ok()
                         .body(new AnswerResponse(existingQuestion.get().getCorrectAnswer()));
             }
+    }
+
+    public void setPointsForSubmitedQuestion(Integer selectedQuestion, KoZnaZnaGame koZnaZnaGame, Integer questionIndex, Game game, Principal principal){
+        if(selectedQuestion.equals(koZnaZnaGame.getQuestions().get(questionIndex).getCorrectAnswer())){
+            game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()+3);
+        } else if (!selectedQuestion.equals(0)) {
+            game.getPoints(principal).setNumOfPointsKoZnaZna(game.getPoints(principal).getNumOfPointsKoZnaZna()-1);
+        }
+
+    }
+
+    public static Integer getQuestionIndexForCurrentPlayer (Game game, KoZnaZnaGame koZnaZnaGame, Principal principal){
+        int questionIndexForCurrentPlayer=0;
+        if(game instanceof OnePlayerGame){
+            questionIndexForCurrentPlayer=koZnaZnaGame.getIndexOfTheCurrentQuestionPlayerOne();
+        }
+        else if(game instanceof TwoPlayerGame twoPlayerGame && twoPlayerGame.getUser1().getUserName().equals(principal.getName())){
+            questionIndexForCurrentPlayer=koZnaZnaGame.getIndexOfTheCurrentQuestionPlayerOne();
+        }
+        else if(game instanceof TwoPlayerGame twoPlayerGame && twoPlayerGame.getUser2().getUserName().equals(principal.getName())){
+            questionIndexForCurrentPlayer=koZnaZnaGame.getIndexOfTheCurrentQuestionPlayerTwo();
+        }
+        return questionIndexForCurrentPlayer;
     }
 
     @Override
@@ -160,7 +175,13 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
                     .build();
         }
         else {
-            koZnaZnaGame.setIndexOfTheCurrentQuestion(koZnaZnaGame.getIndexOfTheCurrentQuestion()+1);
+            if(game instanceof OnePlayerGame){
+                updateQuestionNumberForOnePlayerGame(koZnaZnaGame);
+            }
+            else if(game instanceof TwoPlayerGame){
+                updateQuestionNumberForTwoPlayerGame(principal, game);
+            }
+            gameService.saveGame(game);
             koZnaZnaRepository.save(koZnaZnaGame);
             return ResponseEntity.ok().build();
         }
@@ -179,5 +200,18 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     @Override
     public boolean isActiveGame(Principal principal) throws Exception {
         return gameService.getGame(principal).getIsActive(principal).isActiveKoZnaZna();
+    }
+    public void updateQuestionNumberForOnePlayerGame (KoZnaZnaGame koZnaZnaGame){
+        koZnaZnaGame.setIndexOfTheCurrentQuestionPlayerOne(koZnaZnaGame.getIndexOfTheCurrentQuestionPlayerOne()+1);
+    }
+    public void updateQuestionNumberForTwoPlayerGame (Principal principal, Game game){
+        TwoPlayerGame twoPlayerGame=(TwoPlayerGame) game;
+        KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
+        if(twoPlayerGame.getUser1().getUserName().equals(principal.getName())){
+            koZnaZnaGame.setIndexOfTheCurrentQuestionPlayerOne(koZnaZnaGame.getIndexOfTheCurrentQuestionPlayerOne()+1);
+        }
+        else {
+            koZnaZnaGame.setIndexOfTheCurrentQuestionPlayerTwo(koZnaZnaGame.getIndexOfTheCurrentQuestionPlayerTwo()+1);
+        }
     }
 }
