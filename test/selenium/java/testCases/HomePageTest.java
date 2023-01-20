@@ -26,17 +26,17 @@ public class HomePageTest extends TestBase {
         init();
         this.homePage=new HomePage();
     }
-    @Test(priority = 0)
+    @Test(priority = 1)
     public void verifyOpen(){
-        this.homePage= (HomePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
+        this.homePage= this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
         this.homePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
     }
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void verifyLinks(){
        this.homePage.verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
     }
 
-    @Test(priority = 2)
+    @Test(priority = 3)
     public void verifyLogout(){
         this.homePage.logout();
     }

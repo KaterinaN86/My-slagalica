@@ -12,11 +12,11 @@ public class HomePage extends TestBase {
     /**
      * Locator objects for all options in menu.
      */
-    By singlePlayerLoc = By.xpath("//button[text()='Jedan igrac']");
+    private final By singlePlayerLoc = By.xpath("//button[text()='Jedan igrac']");
     By twoPlayersLoc = By.xpath("//button[text()='Dva igraca']");
     By rulesLoc = By.xpath("//button[text()='Pravila']");
     By rangListLoc = By.xpath("//button[text()='Rang Lista']");
-    By logOutLoc = By.xpath("//button[text()='Log out']");
+   private final By logOutLoc = By.xpath("//button[text()='Log out']");
 
     /**
      * Constructor.
@@ -27,6 +27,10 @@ public class HomePage extends TestBase {
 
     public By getLogOutLoc() {
         return logOutLoc;
+    }
+
+    public By getSinglePlayerLoc() {
+        return singlePlayerLoc;
     }
 
     /**
@@ -50,10 +54,6 @@ public class HomePage extends TestBase {
         driver.findElement(singlePlayerLoc).click();
         System.out.println("Single player game page option clicked.");
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
-    }
-
-    public void waitAfterAlert(){
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
     }
 
 }

@@ -22,21 +22,21 @@ public class RegisterTest extends TestBase {
         this.registerPage= new RegisterPage();
     }
 
-    @Test(priority = 0)
+    @Test(priority = 1)
     public void registerPageOpenTest() {
        this.registerPage=this.registerPage.openRegisterPage();
     }
 
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void registerNewUserTest(){
      this.loginPage= (LoginPage) this.registerPage.register(prop.getProperty("userTestRegisterUsername"),prop.getProperty("userTestRegisterPassword"), prop.getProperty("registerSuccessMsg"));
     }
-    @Test(priority = 2)
+    @Test(priority = 3)
     public void registerExistingUserTest(){
        this.registerPage=(RegisterPage) this.loginPage.clickRegister().register(prop.getProperty("userTestRegisterUsername"),prop.getProperty("userTestRegisterPassword"), prop.getProperty("registerTakenMsg"));
     }
 
-    @Test(priority = 3)
+    @Test(priority = 4)
     public void registerInvalidUserTest(){
         this.registerPage.register(prop.getProperty("userTestInvalidUsername"),prop.getProperty("userTestInvalidPassword"), prop.getProperty("registerFailMsg"));
     }
