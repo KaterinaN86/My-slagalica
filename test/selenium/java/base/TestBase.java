@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import pages.HomePage;
 import pages.LoginPage;
+import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
 import utility.Locators;
 import utility.VerifyBrokenLink;
@@ -18,7 +19,6 @@ import utility.VerifyMethods;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -91,24 +91,27 @@ public class TestBase {
 
     /**
      * This method will take screenshot.
-     *
-     * @throws Exception
      */
 
-    public static void takeSnapShot(String methodName, String ext) throws Exception {
+    public static void takeSnapShot(String methodName, String ext) {
         //Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) driver);
         //Call getScreenshotAs method to create image file
         File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss");
-        String date = dtf.format(LocalDateTime.now());
-        date = date.replace("/", "-");
-        date = date.replace(":", "-");
+        //Date formatter used to create unique snapshot name.
+        String date = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss").format(LocalDateTime.now());
+        //Replace characters that can't be used for snapshot path
+        date = date.replace("/", "-").replace(":", "-");
         String imgName = methodName.concat(" ").concat("(" + date + ")").concat(ext);
         //Move image file to new destination
         File DestFile = new File(System.getProperty("user.dir") + "\\test\\selenium\\resources\\snapshots\\" + imgName);
         //Copy file at destination
-        FileUtils.copyFile(SrcFile, DestFile);
+        try {
+            FileUtils.copyFile(SrcFile, DestFile);
+        } catch (IOException e) {
+            System.out.println("Error creating destination file for snapshot.");
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -118,39 +121,36 @@ public class TestBase {
         try {
             //Initializing properties object that stores data from confing.properties file.
             prop = new Properties();
-            /**
-             * Reading data from properties file.
-             */
+            //Loading properties from confing.properties file
             FileInputStream fileIn = new FileInputStream(System.getProperty("user.dir") + "\\test\\selenium\\resources\\config.properties");
             prop.load(fileIn);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+            System.out.println("Error reading loading properties from config file.");
             e.printStackTrace();
         }
-        /**
-         * Defining browser used for testing.
-         */
-        this.browserName = prop.getProperty("browser");
-        /**
-         * Initializing driver object depending on chosen browser
-         */
-        if (browserName.equals("chrome")) {
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
-        } else if (browserName.equals("firefox")) {
-            WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
-        } else if (browserName.equals("edge")) {
-            WebDriverManager.edgedriver().setup();
-            driver = new EdgeDriver();
+        //Defining browser used for testing.
+        browserName = prop.getProperty("browser");
+        //Initializing driver object depending on chosen browser
+        switch (browserName) {
+            case "chrome" -> {
+                WebDriverManager.chromedriver().setup();
+                driver = new ChromeDriver();
+            }
+            case "firefox" -> {
+                WebDriverManager.firefoxdriver().setup();
+                driver = new FirefoxDriver();
+            }
+            case "edge" -> {
+                WebDriverManager.edgedriver().setup();
+                driver = new EdgeDriver();
+            }
         }
         //Initializing wait driver
         wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         //Initializing LoginPage object.
         this.loginPage = new LoginPage();
         //Initializing Locators object.
-        this.locators = new Locators();
+        locators = new Locators();
     }
 
     /**
@@ -181,7 +181,7 @@ public class TestBase {
     /**
      * Setter method expected page title value (read from config file).
      *
-     * @param configTitle
+     * @param configTitle String
      */
     public void setConfigTitle(String configTitle) {
         this.configTitle = configTitle;
@@ -207,8 +207,8 @@ public class TestBase {
     /**
      * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
      *
-     * @param username
-     * @param password
+     * @param username String
+     * @param password String
      */
     public void setUsernameAndPassword(String username, String password) {
         //Initializing username and password web elements.
@@ -275,7 +275,7 @@ public class TestBase {
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
-        JavascriptExecutor js = (JavascriptExecutor)driver;
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         WebElement stopEl = driver.findElement(locators.getBackBtnLoc());
         js.executeScript("arguments[0].click()", stopEl);
         //driver.findElement().click();
@@ -283,7 +283,11 @@ public class TestBase {
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
+        if (this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox")) {
+            return verifyMethods.verifyPageObjectInitialized(new HomePage());
+        }
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
+
     }
 
     public void dealWithAlert() {

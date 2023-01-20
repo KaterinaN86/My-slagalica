@@ -8,9 +8,9 @@ import java.io.IOException;
 public class SlagalicaGameTest extends SlagalicaPageTest {
 
 
-    @Test(priority = 0)
+    @Test(priority = 1)
     public void verifyOpen() {
-        this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"),
+        this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"),
                 prop.getProperty("userAdisPassword")).clickSinglePlayerGame();
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }

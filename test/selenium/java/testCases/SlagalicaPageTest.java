@@ -31,14 +31,14 @@ public class SlagalicaPageTest extends TestBase {
         verifyMethods = new VerifyMethods(this.slagalicaPage);
     }
 
-    @Test(priority = 0)
+    @Test(priority = 1)
     public void verifyOpen() {
-        this.singlePlayerGamePage = (SinglePlayerGamePage) this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"),
+        this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"),
                 prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }
 
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void verifyTimerStart() {
         verifyMethods.verifyTimerStartValue(prop.getProperty("slagalicaPageTimerStart"));
     }
@@ -79,30 +79,30 @@ public class SlagalicaPageTest extends TestBase {
     }
 
     @Test(priority = 10)
-    public void verifyDialogClosed() throws Exception {
+    public void verifyDialogClosed() {
         takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopuptoClose();
     }
 
     @Test(priority = 12)
     public void verifyBackButton() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.slagalicaPage.locators.getBackBtnLoc()));
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
-        wait.until(ExpectedConditions.elementToBeClickable(this.singlePlayerGamePage.locators.getContainerLoc()));
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
     }
 
     @Test(priority = 13)
     public void goBackToHomePage() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.locators.getBackBtnLoc()));
-        wait.until(ExpectedConditions.elementToBeClickable(this.singlePlayerGamePage.locators.getBackBtnLoc()));
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getBackBtnLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
     }
 
     @Test(priority = 14)
     public void logout() {
-        wait.until(ExpectedConditions.elementToBeClickable(this.homePage.locators.getContainerLoc()));
+        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
         this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
         this.homePage.logout();
     }

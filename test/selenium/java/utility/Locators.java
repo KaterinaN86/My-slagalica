@@ -6,32 +6,32 @@ public class Locators {
     /**
      * Username and password text input elements locators, used LoginPage and RegisterPage.
      */
-    private By usernameTextInputLoc = By.xpath("//input[@placeholder='Username']");
-    private By passwordTextInputLoc = By.xpath("//input[@placeholder='Password']");
+    private final By usernameTextInputLoc = By.xpath("//input[@placeholder='Username']");
+    private final By passwordTextInputLoc = By.xpath("//input[@placeholder='Password']");
     /**
      * Register button locator, used in LoginPage and RegisterPage.
      */
-    private By registerBtnLoc = By.xpath("//input[@value='Register']");
+    private final By registerBtnLoc = By.xpath("//input[@value='Register']");
     /**
      * Locator object for container element, used in HomePage and SinglePlayerGamePage.
      */
-    private By containerLoc = By.xpath("//div[@class='container p-5']");
+    private final By containerLoc = By.xpath("//div[@class='container p-5']");
     /**
      * Locator object for container title.
      */
-    private By containerTitleLoc = By.xpath("//h1[contains(@class,'text-center text-white')]");
+    private final By containerTitleLoc = By.xpath("//h1[contains(@class,'text-center text-white')]");
     /**
      * Locator object for div container for button elements on pages HomePage, SinglePlayerGamePage, MojBrojPage and SlagalicaPage
      */
-    private By allButtonDivsLoc = new By.ByXPath("//*[@class='row d-block text-center']//child::div");
+    private final By allButtonDivsLoc = new By.ByXPath("//*[@class='row d-block text-center']//child::div");
     /**
      * Back button locator object. Used in multiple pages.
      */
-    private By backBtnLoc = new By.ByXPath("//*[@class='bi bi-arrow-left']//parent::button");
+    private final By backBtnLoc = new By.ByXPath("//*[@class='bi bi-arrow-left']//parent::button");
     /**
      * Timer element locator object. Used in MojBrojPage and SlagalicaPage.
      */
-    private By timerLoc = new By.ByXPath("//div[@id='timer']");
+    private final By timerLoc = new By.ByXPath("//div[@id='timer']");
 
     public By getUsernameTextInputLoc() {
         return usernameTextInputLoc;

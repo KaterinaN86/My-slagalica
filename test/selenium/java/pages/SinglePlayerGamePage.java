@@ -51,12 +51,9 @@ public class SinglePlayerGamePage extends TestBase {
         return mojBrojBtnLoc;
     }
 
-    public void verifyNewGameButtonIsClickable(){
+    public void clickNewGameButton() {
         wait.until(ExpectedConditions.presenceOfElementLocated(newGameBtnLoc));
         this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
-    }
-    public void clickNewGameButton() {
-        verifyNewGameButtonIsClickable();
         driver.findElement(newGameBtnLoc).click();
         wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
         Reporter.log("New Game button is clicked");
@@ -82,29 +79,14 @@ public class SinglePlayerGamePage extends TestBase {
         return (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
     }
 
-    public void verifyMojBrojBtnIsClickable() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(mojBrojBtnLoc));
-        this.verifyMethods.verifyButtonIsClickable(mojBrojBtnLoc);
-    }
-
     public void verifyMojBrojBtnNotClickable() {
         wait.until(ExpectedConditions.presenceOfElementLocated(mojBrojBtnLoc));
         this.verifyMethods.verifyButtonNotClickable(mojBrojBtnLoc);
     }
 
-    public void verifySlagalicaButtonIsClickable() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(slagalicaBtnLoc));
-        this.verifyMethods.verifyButtonIsClickable(slagalicaBtnLoc);
-    }
-
     public void  verifySlagalicaButtonIsNotClickable() {
         wait.until(ExpectedConditions.presenceOfElementLocated(slagalicaBtnLoc));
         this.verifyMethods.verifyButtonNotClickable(slagalicaBtnLoc);
-    }
-
-    public void verifyThatNewGameBtnIsClickable() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(newGameBtnLoc));
-        this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
     }
 
 }

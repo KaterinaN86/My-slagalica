@@ -2,7 +2,6 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
@@ -18,11 +17,11 @@ public class MojBrojPage extends TestBase {
     /**
      * Target number locator object.
      */
-    By targetNumberLoc = new By.ById("targetNumber");
+    private final By targetNumberLoc = new By.ById("targetNumber");
     /**
      * Locator for page elements that contain button with a number.
      */
-    By numberButtonsLoc = new By.ByXPath("//button[starts-with(@class,'availableNumber')]");
+   private final By numberButtonsLoc = new By.ByXPath("//button[starts-with(@class,'availableNumber')]");
 
     /**
      * Constructor
@@ -42,6 +41,7 @@ public class MojBrojPage extends TestBase {
         Reporter.log("Target number value verified.");
         System.out.println("Target number value verified.");
     }
+
     public void verifyNumberButtonsTotal() {
         Reporter.log("Verify total amount of buttons with numbers matches specified.");
         System.out.println("Verify total amount of buttons with numbers matches specified.");
@@ -55,20 +55,18 @@ public class MojBrojPage extends TestBase {
 
     /**
      * Checks if number value of button element is contained in the list of expected values (in config file).
-     * @param number String (Variable that contains number displayed on button element).
+     *
+     * @param number    String (Variable that contains number displayed on button element).
      * @param condition String (Variable that contains a list of allowed values for specific button element).
      * @return boolean
      */
     boolean passesCondition(String number, String condition) {
         //Both number value and list of expected values are of type String. Contains method is used to check if value si valid.
-        if (condition.contains(number)) {
-            return true;
-        }
-        return false;
+        return condition.contains(number);
     }
 
     /**
-     * Checking values of button elements with numbers are valid.
+     * Checks if values of button elements with numbers are valid.
      */
     public void verifyNumbersValues() {
         //List of all button web elements on page that contain number values.
@@ -83,13 +81,13 @@ public class MojBrojPage extends TestBase {
             //Initializing a String variable that contains number displayed on button element.
             String value = el.getText();
             //Condition is same for first 4 numbers.
-            if(i<5) {
+            if (i < 5) {
                 condition = prop.getProperty("mojBrojFirstFourDigits");
             }
-            if(i==5){
+            if (i == 5) {
                 condition = prop.getProperty("mojBrojFifthNumber");
             }
-            if(i==6){
+            if (i == 6) {
                 condition = prop.getProperty("mojBrojSixthNumber");
             }
             Assert.assertTrue(passesCondition(value, condition), "Value " + value + " does not match specified condition.");
@@ -100,13 +98,30 @@ public class MojBrojPage extends TestBase {
         }
     }
 
-    public void verifyBadExpressionWhenTimeIsUp(){
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getTimerLoc()));
-        WebElement timerEl = driver.findElement(locators.getTimerLoc());
-        JavascriptExecutor jse = (JavascriptExecutor)driver;
-        jse.executeScript("arguments[0].innerHTML='00 : 00';", timerEl);
-        System.out.println(timerEl.getText());
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.locators.getTimerLoc()));
-       // this.dealWithAlert();
+    /**
+     * Workaround method for firefox Moj Broj go back bug.
+     *
+     * @param pageObject TestBase object (depending on browser object type can be HomePage or SinglePlayerGame).
+     * @return SinglePlayerGamePage object
+     */
+    public SinglePlayerGamePage firefoxWorkaround(TestBase pageObject) {
+        //If browser is set to firefox back button on Moj Broj page leads to HomePage. In order to get SinglePlayerGamePage object as return value steps for going back to that page sre added.
+        //Object that will be returned if browser is set to firefox.
+        SinglePlayerGamePage singlePlayerGamePage;
+        //Checking browser value.
+        if (prop.getProperty("browser").equals("firefox")) {
+            //Initializing HomePage object to return value of goBack method called by mojBroj instance in test.
+            HomePage homePage = (HomePage) pageObject;
+            wait.until(ExpectedConditions.presenceOfElementLocated(homePage.getSinglePlayerLoc()));
+            this.verifyMethods.verifyButtonIsClickable(homePage.getSinglePlayerLoc());
+            takeSnapShot("MojBroj\\firefoxWorkaround", prop.getProperty("snapShotExtension"));
+            //Initializing SinglePlayerGamePage object to return value of clickSinglePlayerGame method in HomePage class.
+            singlePlayerGamePage = homePage.clickSinglePlayerGame();
+            wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
+            //Returning previously initialized object;
+            return singlePlayerGamePage;
+        }
+        //if browser is not set to firefox goBack method called by MojBroj instance results in SinglePlayerGamePage object, which is received as method parameter and simply returned.
+        return (SinglePlayerGamePage) pageObject;
     }
 }

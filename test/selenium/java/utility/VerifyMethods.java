@@ -55,8 +55,8 @@ public class VerifyMethods {
      */
     public void verifyUsernamePasswordDisplayed() {
         //Initializing WebElement objects for username and password text input elements.
-        usernameEl = base.driver.findElement(base.locators.getUsernameTextInputLoc());
-        passwordEl = base.driver.findElement(base.locators.getPasswordTextInputLoc());
+        usernameEl = TestBase.driver.findElement(TestBase.locators.getUsernameTextInputLoc());
+        passwordEl = TestBase.driver.findElement(TestBase.locators.getPasswordTextInputLoc());
         Reporter.log("Verifying username and password elements are displayed.");
         System.out.println("Check if username and password are displayed.");
         Assert.assertTrue(usernameEl.isDisplayed(), "Username text input element not displayed!");
@@ -71,8 +71,8 @@ public class VerifyMethods {
     public void verifyRegisterDisplayed() {
         Reporter.log("Verify register button is displayed.");
         System.out.println("Check if register button is displayed.");
-        //Log corresponding message depending on isDsiplayed method result for register button WebElement object.
-        Assert.assertTrue(base.driver.findElement(base.locators.getRegisterBtnLoc()).isDisplayed(), "Register button not displayed!");
+        //Log corresponding message depending on isDisplayed method result for register button WebElement object.
+        Assert.assertTrue(TestBase.driver.findElement(TestBase.locators.getRegisterBtnLoc()).isDisplayed(), "Register button not displayed!");
         Reporter.log("Register button verified!");
         System.out.println("Register button is displayed.");
     }
@@ -119,7 +119,7 @@ public class VerifyMethods {
     public void verifyContainerDisplayed() {
         Reporter.log("Verifying main container element is displayed.");
         System.out.println("Verifying main container element is displayed.");
-        Assert.assertTrue(base.driver.findElement(base.locators.getContainerLoc()).isDisplayed(), "Main container element not displayed!");
+        Assert.assertTrue(TestBase.driver.findElement(TestBase.locators.getContainerLoc()).isDisplayed(), "Main container element not displayed!");
         Reporter.log("Main container element is displayed.");
         System.out.println("Main container element is displayed.");
     }
@@ -130,7 +130,7 @@ public class VerifyMethods {
      * @param containerTitle (String containing title specified in config.properties file.
      */
     public void verifyContainerTitle(String containerTitle) {
-        String actualContainerTitle = base.driver.findElement(base.locators.getContainerTitleLoc()).getText();
+        String actualContainerTitle = TestBase.driver.findElement(TestBase.locators.getContainerTitleLoc()).getText();
         Reporter.log("Verifying container title matches specified.");
         Assert.assertEquals(actualContainerTitle, containerTitle, "Container title doesn't match specified value!");
         Reporter.log("Container title " + actualContainerTitle + " verified.");
@@ -180,10 +180,10 @@ public class VerifyMethods {
         Reporter.log("Checking all button elements on page are displayed.");
         System.out.println("Checking buttons are displayed.");
         //Creating a list of all div web elements on current page, that contain button elements.
-        List<WebElement> buttonDivsList = base.driver.findElements(base.locators.getAllButtonDivsLoc());
+        List<WebElement> buttonDivsList = TestBase.driver.findElements(TestBase.locators.getAllButtonDivsLoc());
         //Iterating over divs list.
         for (WebElement el : buttonDivsList) {
-            this.base.wait.until(ExpectedConditions.visibilityOf(el));
+            TestBase.wait.until(ExpectedConditions.visibilityOf(el));
             //Creating an object for the button element inside the div element.
             WebElement btnEl = el.findElement(By.tagName("button"));
             Assert.assertTrue(btnEl.isDisplayed(), "Button element " + el.getText() + " not displayed.");
