@@ -1,7 +1,7 @@
 package com.comtrade.controller.koznaznacontroller;
 
 
-import com.comtrade.model.koznaznamodel.responses.Response;
+import com.comtrade.responses.Response;
 import com.comtrade.service.koznaznaservice.QuestionServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

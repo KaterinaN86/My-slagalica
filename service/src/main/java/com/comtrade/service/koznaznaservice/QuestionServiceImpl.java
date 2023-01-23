@@ -1,9 +1,9 @@
 package com.comtrade.service.koznaznaservice;
 
 import com.comtrade.model.koznaznamodel.Question;
-import com.comtrade.model.koznaznamodel.responses.AnswerResponse;
-import com.comtrade.model.koznaznamodel.responses.QuestionContentResponse;
-import com.comtrade.model.koznaznamodel.responses.Response;
+import com.comtrade.responses.AnswerResponse;
+import com.comtrade.responses.QuestionContentResponse;
+import com.comtrade.responses.Response;
 import com.comtrade.repository.koznaznarepository.QuestionRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

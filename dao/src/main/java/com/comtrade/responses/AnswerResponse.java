@@ -1,4 +1,4 @@
-package com.comtrade.model.koznaznamodel.responses;
+package com.comtrade.responses;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.comtrade.service.koznaznaservice;
 
 import com.comtrade.model.koznaznamodel.Question;
-import com.comtrade.model.koznaznamodel.responses.Response;
+import com.comtrade.responses.Response;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
