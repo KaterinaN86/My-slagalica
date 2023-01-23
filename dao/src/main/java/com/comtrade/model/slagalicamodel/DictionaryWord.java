@@ -5,8 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,6 +24,7 @@ public class DictionaryWord implements Comparable<DictionaryWord>{
 
     @Override
     public int compareTo(@NotNull DictionaryWord o) {
-        return Integer.compare(o.getWordFromDictionary().length(),getWordFromDictionary().length());
+        return (Integer.compare(o.getWordFromDictionary().length(),getWordFromDictionary().length())==0) ? -1 : Integer.compare(o.getWordFromDictionary().length(),getWordFromDictionary().length());
     }
+
 }

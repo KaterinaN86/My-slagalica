@@ -1,14 +1,14 @@
 package com.comtrade.service.slagalicaservice;
 
 
+import com.comtrade.exceptions.GameNotFoundException;
 import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
 import com.comtrade.model.slagalicamodel.*;
 import com.comtrade.repository.TimersRepository;
-import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
-import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.slagalicarepository.DictionaryWordRepository;
 import com.comtrade.repository.slagalicarepository.SlagalicaRepository;
+import com.comtrade.responses.Response;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,10 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SlagalicaServiceImp implements SlagalicaService {
 
-    private final OnePlayerGameRepository onePlayerGameRepository;
-    private final TwoPlayerGameRepository twoPlayerGameRepository;
     private final TimersRepository timersRepository;
     private final SlagalicaRepository slagalicaRepository;
     private final DictionaryWordRepository dictionaryWordRepository;
@@ -31,17 +28,15 @@ public class SlagalicaServiceImp implements SlagalicaService {
     @Autowired
     private GameServiceImpl gameService;
 
-    public SlagalicaServiceImp(OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, TimersRepository timersRepository, SlagalicaRepository slagalicaRepository,
+    public SlagalicaServiceImp(TimersRepository timersRepository, SlagalicaRepository slagalicaRepository,
                                DictionaryWordRepository dictionaryWordRepository) {
-        this.onePlayerGameRepository = onePlayerGameRepository;
-        this.twoPlayerGameRepository = twoPlayerGameRepository;
         this.timersRepository = timersRepository;
         this.slagalicaRepository = slagalicaRepository;
         this.dictionaryWordRepository = dictionaryWordRepository;
     }
 
     @Override
-    public LettersResponse getInitData(Principal principal) throws Exception {
+    public LettersResponse getInitData(Principal principal) throws GameNotFoundException {
         Game game = gameService.getGame(principal);
         gameService.saveGame(game);
         Timers timers = game.getTimers(principal);
@@ -53,7 +48,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
     }
 
     @Override
-    public LettersResponse saveLetterForFindingWords(Principal principal) throws Exception {
+    public LettersResponse saveLetterForFindingWords(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         if (game.getGames().getSlagalicaGame()!=null){
             return new LettersResponse(game.getGames().getSlagalicaGame().getLettersForFindingTheWord());
@@ -62,8 +57,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
             slagalicaGame.setLettersForFindingTheWord(lettersForFindingTheWord());
             game.getIsActive(principal).setActiveSlagalica(true);
             slagalicaGame.setComputerLongestWord(computersLongestWord(slagalicaGame.getLettersForFindingTheWord()));
-            SlagalicaGame Sgame = slagalicaRepository.save(slagalicaGame);
-            game.getGames().setSlagalicaGame(Sgame);
+            slagalicaRepository.save(slagalicaGame);
+            game.getGames().setSlagalicaGame(slagalicaGame);
             gameService.saveGame(game);
             return new LettersResponse(slagalicaGame.getLettersForFindingTheWord());
         }
@@ -74,116 +69,82 @@ public class SlagalicaServiceImp implements SlagalicaService {
 
         List<DictionaryWord> wordsDictionary = dictionaryWordRepository.findAll();
         String longestWord = "";
-        HashMap<String,Integer> lettersForWordMap=convertStringToHashMap(lettersForWord);
-        HashMap<String, Integer> temp=new HashMap<>();
-        wordsDictionary=wordsDictionary.stream().filter((word)-> word.getWordFromDictionary().length()<=lettersForWord.length()).sorted().collect(Collectors.toList());
+        Map<String,Integer> lettersForWordMap=convertStringToHashMap(lettersForWord);
+        HashMap<String, Integer> tempLettersForWordMap=new HashMap<>();
+        wordsDictionary=wordsDictionary.stream().filter(word-> word.getWordFromDictionary().length()<=lettersForWord.length()).sorted().toList();
        for (DictionaryWord dictionaryWord : wordsDictionary) {
             String word = dictionaryWord.getWordFromDictionary();
             if (word.length() < longestWord.length()) {
                 continue;
             }
+           tempLettersForWordMap.clear();
+           tempLettersForWordMap.putAll(lettersForWordMap);
+           int letterCount=0;
+           word=searchLetterWithTwoCharsInWord("nj", "Nj", word, tempLettersForWordMap, letterCount);
+           word=searchLetterWithTwoCharsInWord("lj","Lj", word, tempLettersForWordMap, letterCount);
+           word=searchLetterWithTwoCharsInWord("dž","Dž", word, tempLettersForWordMap, letterCount);
 
-            temp.clear();
-            temp.putAll(lettersForWordMap);
-            int letterCount=0;
-            String stringCharacter="";
-            while(word.contains("nj") || word.contains("Nj")){
-                if(temp.containsKey("Nj") && temp.get("Nj")>0){
-                    temp.put("Nj",temp.get("Nj")-1);
-                    letterCount++;
-                    if(word.replace("nj","").equals(word)){
-                        word=word.replace("Nj","");
-                    }
-                    else word=word.replaceFirst("nj","");
-                }
-                else break;
-            }
-            while(word.contains("lj") || word.contains("Lj")){
-                if(temp.containsKey("Lj") && temp.get("Lj")>0){
-                    temp.put("Lj",temp.get("Lj")-1);
-                    letterCount++;
-                    if(word.replace("lj","").equals(word)){
-                        word=word.replace("Lj","");
-                    }
-                    else word=word.replaceFirst("lj","");
-                }
-                else break;
-            }
-
-            while(word.contains("dž") || word.contains("Dž")){
-                if(temp.containsKey("Dž") && temp.get("Dž")>0){
-                    temp.put("Dž",temp.get("Dž")-1);
-                    letterCount++;
-                    if(word.replace("dž","").equals(word)){
-                        word=word.replace("Dž","");
-                    }
-                    else word=word.replaceFirst("dž","");
-                }
-                else break;
-            }
-
-            for (Character c:  word.toCharArray()) {
-                //convert char to uppercase
-                if(c >= 'a' && c <= 'z') {
-                    c = (char) ((int)c - 32);
-                }
-                else if(c == 'đ'){
-                    c='Đ';
-                } else if (c=='š' || c=='ž') {
-                    c = (char) ((int)c-16);
-                } else if(c=='č') {
-                    c='Č';
-                } else if (c=='ć') {
-                    c='Ć';
-                }
-                stringCharacter=c.toString();
-                if (temp.containsKey(stringCharacter) && temp.get(stringCharacter)!=0){
-                    temp.put(stringCharacter,temp.get(stringCharacter)-1);
-                    letterCount++;
-                }
-                else {
-                    letterCount=0;
-                    break;
-                }
-            }
-            if (letterCount > longestWord.length()) {
+           letterCount=getLetterCount(word, tempLettersForWordMap, letterCount);
+           System.out.println(tempLettersForWordMap.toString());
+           if (letterCount > longestWord.length()) {
                 longestWord = dictionaryWord.getWordFromDictionary();
-            }
+           }
         }
-
         return longestWord;
     }
 
-    public static HashMap<String,Integer> convertStringToHashMap(String letters){
-        HashMap<String,Integer> tmpHashMap=new HashMap<>();
-        while (letters.contains("Dž")){
-            if(tmpHashMap.containsKey("Dž")){
-                tmpHashMap.put("Dž",tmpHashMap.get("Dž")+1);
+    public static String searchLetterWithTwoCharsInWord (String lowerCaseLetter, String upperCaseLetter, String word, Map<String, Integer> lettersForWord, int letterCount){
+        while(word.contains(lowerCaseLetter) || word.contains(upperCaseLetter)){
+            if(lettersForWord.containsKey(upperCaseLetter) && lettersForWord.get(upperCaseLetter)>0){
+                lettersForWord.put(upperCaseLetter,lettersForWord.get(upperCaseLetter)-1);
+                letterCount++;
+                if(word.replace(lowerCaseLetter,"").equals(word)){
+                    word=word.replace(upperCaseLetter,"");
+                }
+                else word=word.replaceFirst(lowerCaseLetter,"");
             }
-            else{
-                tmpHashMap.putIfAbsent("Dž",1);
-            }
-            letters=letters.replaceFirst("Dž","");
+            else break;
         }
-        while (letters.contains("Nj")){
-            if(tmpHashMap.containsKey("Nj")){
-                tmpHashMap.put("Nj",tmpHashMap.get("Nj")+1);
-            }
-            else{
-                tmpHashMap.putIfAbsent("Nj",1);
-            }
-            letters=letters.replaceFirst("Nj","");
-        }
-        while (letters.contains("Lj")){
-            if(tmpHashMap.containsKey("Lj")){
-                tmpHashMap.put("Lj",tmpHashMap.get("Lj")+1);
-            }
-            else{
-                tmpHashMap.putIfAbsent("Lj",1);
-            }
-            letters=letters.replaceFirst("Lj","");
-        }
+        return word;
+    }
 
+    public static int getLetterCount(String word, Map<String, Integer> tempLettersForWordMap, int letterCount){
+        String stringCharacter="";
+        for (Character c:  word.toCharArray()) {
+            c=convertCharToUppercase(c);
+            stringCharacter=c.toString();
+            if (tempLettersForWordMap.containsKey(stringCharacter) && tempLettersForWordMap.get(stringCharacter)!=0){
+                tempLettersForWordMap.put(stringCharacter,tempLettersForWordMap.get(stringCharacter)-1);
+                letterCount++;
+            }
+            else {
+                return 0;
+            }
+        }
+        return letterCount;
+    }
+
+    public static Character convertCharToUppercase (Character character){
+        if(character >= 'a' && character <= 'z') {
+            character = (char) ((int)character - 32);
+        }
+        else if(character == 'đ'){
+            character='Đ';
+        } else if (character=='š' || character=='ž') {
+            character = (char) ((int)character-16);
+        } else if(character=='č') {
+            character='Č';
+        } else if (character=='ć') {
+            character='Ć';
+        }
+        return character;
+    }
+    
+    public static Map<String,Integer> convertStringToHashMap(String letters){
+        HashMap<String,Integer> tmpHashMap=new HashMap<>();
+        letters=convertLetterWithTwoChars("Dž", letters, tmpHashMap);
+        letters=convertLetterWithTwoChars("Nj", letters, tmpHashMap);
+        letters=convertLetterWithTwoChars("Lj", letters, tmpHashMap);
         for (Character c:  letters.toCharArray()) {
             if(tmpHashMap.containsKey(c.toString())){
                 tmpHashMap.put(c.toString(),tmpHashMap.get(c.toString())+1);
@@ -193,46 +154,62 @@ public class SlagalicaServiceImp implements SlagalicaService {
         return tmpHashMap;
     }
 
+    public static String convertLetterWithTwoChars(String letter, String letters, Map<String, Integer> lettersHashMap){
+        while (letters.contains(letter)){
+            if(lettersHashMap.containsKey(letter)){
+                lettersHashMap.put(letter,lettersHashMap.get(letter)+1);
+            }
+            else{
+                lettersHashMap.putIfAbsent(letter,1);
+            }
+            letters=letters.replaceFirst(letter,"");
+        }
+        return letters;
+    }
+
     @Override
     public String lettersForFindingTheWord() {
         Random random = new Random();
         String[] vowels = {"A", "E", "I", "O", "U"};
         String[] consonants = {"B", "C", "Č", "Ć", "D", "Dž", "Đ", "F", "G", "H", "J", "K", "L", "Lj", "M", "N", "Nj", "P", "R", "S", "Š", "T", "Z", "Ž", "V"};
 
-        String s = "";
-        int numOfLetters = 0, numOfVowels = 0, numofConsonants = 0;
-
+        StringBuilder chosenletters = new StringBuilder();
+        int numOfLetters = 0;
+        int numOfVowels = 0;
+        int numofConsonants = 0;
         while (numOfLetters < 12) {
-
             if (numOfVowels != 6 && numofConsonants != 6) {
-                s += (vowels[random.nextInt(vowels.length)] + consonants[random.nextInt(consonants.length)]);
+                chosenletters.append(vowels[random.nextInt(vowels.length)]);
+                chosenletters.append(consonants[random.nextInt(consonants.length)]);
                 numOfVowels++;
                 numofConsonants++;
             } else {
-                s += consonants[random.nextInt(consonants.length)];
+                chosenletters.append(consonants[random.nextInt(consonants.length)]);
             }
             numOfLetters = numOfVowels+numofConsonants;
         }
-
-        return s;
+        return chosenletters.toString();
     }
 
 
     @Override
-    public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws Exception {
+    public SubmitResponse userWordProcessing(SlagalicaUserWordSubmit slagalicaUserWordSubmit, Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         if(!game.getIsActive(principal).isActiveSlagalica()){
             return new SubmitResponse("",0);
         }
-        int finalResult = 0;
-        String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
+        int numberOfPoints = calculateNumberOfPoints(slagalicaUserWordSubmit);
+        game.getPoints(principal).setNumOfPointsSlagalica(numberOfPoints);
+        game.getIsActive(principal).setActiveSlagalica(false);
+        gameService.saveGame(game);
+        return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),numberOfPoints);
+    }
 
-        int result = 0;
+    public int calculateNumberOfPoints(SlagalicaUserWordSubmit slagalicaUserWordSubmit){
+        String chosenUserWord = slagalicaUserWordSubmit.getUserWord();
         int computerWordlength = Optional.of(slagalicaRepository.findAll().get(0).getComputerLongestWord().length()).orElse(0);
-        String modifiedChosenWord="";
-        if(chosenUserWord.length()>0){
-            modifiedChosenWord= chosenUserWord.charAt(0) +chosenUserWord.substring(1).toLowerCase();
-        }
+        String modifiedChosenWord= (chosenUserWord.length()>0) ?  chosenUserWord.charAt(0) +chosenUserWord.substring(1).toLowerCase() : "";
+        int result = 0;
         if(dictionaryWordRepository.findAllByWord(chosenUserWord.toLowerCase()) >= 1 || dictionaryWordRepository.findAllByWord(modifiedChosenWord) >= 1) {
             if(computerWordlength == chosenUserWord.length()) {
                 result = chosenUserWord.length()*2 + 3;
@@ -241,21 +218,12 @@ public class SlagalicaServiceImp implements SlagalicaService {
             } else {
                 result = chosenUserWord.length()*2;
             }
-
-        } else {
-            result = 0;
         }
-
-        finalResult = result;
-        game.getPoints(principal).setNumOfPointsSlagalica(finalResult);
-        game.getIsActive(principal).setActiveSlagalica(false);
-        gameService.saveGame(game);
-
-
-        return new SubmitResponse(game.getGames().getSlagalicaGame().getComputerLongestWord(),finalResult);
+        return result;
     }
+
     @Override
-    public ResponseEntity finishGame(Principal principal) throws Exception {
+    public ResponseEntity<Response> finishGame(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         SlagalicaGame slagalicaGame=game.getGames().getSlagalicaGame();
         game.getIsActive(principal).setActiveSlagalica(false);
@@ -264,10 +232,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
         return ResponseEntity.ok().build();
     }
     @Override
-    public boolean isActiveGame(Principal principal) throws Exception {
+    public boolean isActiveGame(Principal principal) throws GameNotFoundException {
         return gameService.getGame(principal).getIsActive(principal).isActiveSlagalica();
     }
-
-
-
 }

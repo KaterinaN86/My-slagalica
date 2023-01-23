@@ -1,5 +1,7 @@
 package com.comtrade.controller;
 
+import com.comtrade.exceptions.GameNotFoundException;
+import com.comtrade.exceptions.UserNotFoundException;
 import com.comtrade.model.games.OnePlayerGame;
 import com.comtrade.model.games.OnePlayerInitResponse;
 import com.comtrade.model.games.RangListResponse;
@@ -29,12 +31,12 @@ public class Gamecontroler {
         try {
             return gameservice.getOnePlayerGameInitData(principal);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
     @GetMapping("/TwoPlayer/init")
-    public TwoPlayerInitResponse initTwoPlayer(Principal principal) throws Exception {
+    public TwoPlayerInitResponse initTwoPlayer(Principal principal) throws GameNotFoundException {
         return gameservice.getTwoPlayerInitData(principal);
     }
 
@@ -54,18 +56,18 @@ public class Gamecontroler {
     }
 
     @GetMapping("/finishGame")
-    public String newGame(Principal principal) throws Exception {
+    public String newGame(Principal principal) throws GameNotFoundException {
         gameservice.finishGame(principal);
         return "chooseGameOnePlayer.html";
     }
 
     @GetMapping("/queue")
-    public ResponseEntity<Boolean> queue(Principal principal) {
+    public ResponseEntity<Boolean> queue(Principal principal) throws UserNotFoundException {
         return ResponseEntity.ok(gameservice.addPlayerToQueue(principal));
     }
 
     @GetMapping("/dequeue")
-    public ResponseEntity<Boolean> dequeue(Principal principal) {
+    public ResponseEntity<Boolean> dequeue(Principal principal) throws UserNotFoundException {
         return ResponseEntity.ok(gameservice.removePlayerFromQueue(principal));
     }
 

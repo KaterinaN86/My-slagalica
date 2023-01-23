@@ -1,15 +1,17 @@
 package com.comtrade.service.mojbrojservice;
 
 
+import com.comtrade.exceptions.BadExpressionException;
+import com.comtrade.exceptions.GameNotFoundException;
+import com.comtrade.exceptions.IllegalSubmitException;
 import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
 import com.comtrade.model.mojbrojmodel.MojBrojGame;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitRequest;
 import com.comtrade.model.mojbrojmodel.MojBrojSubmitResponse;
 import com.comtrade.repository.TimersRepository;
-import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
-import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.mojbrojrepository.MojBrojRepository;
+import com.comtrade.responses.Response;
 import com.comtrade.service.gameservice.GameServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import net.objecthunter.exp4j.Expression;
@@ -31,20 +33,17 @@ public class MojBrojServiceImpl implements MojBrojService{
 
     private final MojBrojRepository mojBrojRepository;
     private final TimersRepository timersRepository;
-    private final OnePlayerGameRepository onePlayerGameRepository;
-    private final TwoPlayerGameRepository twoPlayerGameRepository;
+
 
     @Autowired
     private GameServiceImpl gameService;
-    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository) {
+    public MojBrojServiceImpl(MojBrojRepository mojBrojRepository, TimersRepository timersRepository) {
         this.mojBrojRepository = mojBrojRepository;
         this.timersRepository = timersRepository;
-        this.onePlayerGameRepository = onePlayerGameRepository;
-        this.twoPlayerGameRepository = twoPlayerGameRepository;
     }
 
     @Override
-    public MojBrojGame getInitData(Principal principal) throws Exception {
+    public MojBrojGame getInitData(Principal principal) throws GameNotFoundException {
         Game game = gameService.getGame(principal);
         gameService.saveGame(game);
         Timers timers = game.getTimers(principal);
@@ -56,20 +55,20 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public MojBrojGame getGame(Principal principal) throws Exception {
+    public MojBrojGame getGame(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         if(game.getGames().getMojBrojGame()!=null){
             return game.getGames().getMojBrojGame();
         }else{
-            MojBrojGame MBgame=createNewGame();
-            game.getGames().setMojBrojGame(MBgame);
+            MojBrojGame mojBrojGame=createNewGame();
+            game.getGames().setMojBrojGame(mojBrojGame);
             gameService.saveGame(game);
-            return MBgame;
+            return mojBrojGame;
         }
     }
 
     @Override
-    public MojBrojGame createNewGame(){
+    public MojBrojGame createNewGame() {
         MojBrojGame game=new MojBrojGame();
         List<Integer> nums=game.getNumbers();
         try {
@@ -88,8 +87,8 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public MojBrojGame createNewGame(Long id, ArrayList<Integer> nums, Boolean isActive, String solution){
-        MojBrojGame game=new MojBrojGame(id,nums,isActive, solution);
+    public MojBrojGame createNewGame(Long id, List<Integer> nums, Boolean isActive, String solution){
+        MojBrojGame game=new MojBrojGame(id,nums,solution);
         mojBrojRepository.save(game);
         return game;
     }
@@ -99,25 +98,13 @@ public class MojBrojServiceImpl implements MojBrojService{
         Optional<MojBrojGame> game= mojBrojRepository.findById(gameId);
         if(game.isEmpty()){return false;}
         MojBrojGame existingGame=game.get();
-        int cnt=0;
-        for(int i=0;i<expr.length();i++){
-            if(expr.charAt(i)=='('){
-                cnt++;
-            } else if (expr.charAt(i)==')') {
-                cnt--;
-            }
-            if(cnt<0){
-                return false;
-            }
-        }
+        int cnt=countBrackets(expr);
         if (cnt!=0){return false;}
         expr=expr.replaceAll("[\\(\\)]","");
         List<String> exprNums= List.of(expr.split("[\\+\\-\\*\\/]"));
         List<Integer> gameNums=existingGame.getNumbers();
         List<Integer> gameNumsCopy=new ArrayList<>();
-        for(Integer i:gameNums){
-            gameNumsCopy.add(i);
-        }
+        gameNums.stream().forEach(gameNumsCopy::add);
         gameNumsCopy.remove(0);
         for(String num:exprNums){
             try {
@@ -127,11 +114,27 @@ public class MojBrojServiceImpl implements MojBrojService{
             }catch (Exception e){
                 return false;
             }
-
             gameNumsCopy.remove((Object) Integer.parseInt(num));
         }
         return true;
     }
+
+    public int countBrackets(String expr){
+        int cnt=0;
+        for(int i=0;i<expr.length();i++){
+            if(expr.charAt(i)=='('){
+                cnt++;
+            } else if (expr.charAt(i)==')') {
+                cnt--;
+            }
+            if(cnt<0){
+                log.warn("A closed parenthesis cannot come before an open parenthesis!");
+                return cnt;
+            }
+        }
+        return cnt;
+    }
+
 
     @Override
     public Integer eval(String expr) throws ScriptException {
@@ -140,27 +143,27 @@ public class MojBrojServiceImpl implements MojBrojService{
     }
 
     @Override
-    public Integer userSolutionDiff(String expression, Principal principal) throws Exception {
+    public Integer userSolutionDiff(String expression, Principal principal) throws IllegalSubmitException, GameNotFoundException, BadExpressionException, ScriptException {
         Game game= gameService.getGame(principal);
-        MojBrojGame MBgame=game.getGames().getMojBrojGame();
-        Long gameId=MBgame.getId();
+        MojBrojGame mojBrojGame=game.getGames().getMojBrojGame();
+        Long gameId=mojBrojGame.getId();
         if(!game.getIsActive(principal).isActiveMojBroj()){
-            throw new Exception("You can submit only once");
+            throw new IllegalSubmitException("You can submit only once");
         }
         if(!validateExpression(expression,gameId)){
-            throw new Exception("Bad expression");
+            throw new BadExpressionException("Bad expression");
         }
         game.getIsActive(principal).setActiveMojBroj(false);
-        mojBrojRepository.save(MBgame);
-        int target=MBgame.getNumbers().get(0);
+        mojBrojRepository.save(mojBrojGame);
+        int target=mojBrojGame.getNumbers().get(0);
         return Math.abs(eval(expression)-target);
     }
 
     @Override
-    public String getSolution(Principal principal) throws Exception {
+    public String getSolution(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
-        MojBrojGame MBgame=game.getGames().getMojBrojGame();
-        return MBgame.getSolution();
+        MojBrojGame mojBrojGame=game.getGames().getMojBrojGame();
+        return mojBrojGame.getSolution();
     }
 
     @Override
@@ -172,7 +175,25 @@ public class MojBrojServiceImpl implements MojBrojService{
             return new MojBrojSubmitResponse(e.getMessage(), "", 0, 0);
         }
 
-        Integer numOfPoints=0;
+        int numOfPoints=getNumOfPoints(diff);
+        String solution = null;
+        Game game=null;
+        String msg = "";
+        int result = 0;
+        try {
+            solution = getSolution(principal);
+            game=gameService.getGame(principal);
+            result = eval(request.getExpression());
+        } catch (Exception e) {
+            return new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);
+        }
+        game.getPoints(principal).setNumOfPointsMojBroj(numOfPoints);
+        gameService.saveGame(game);
+        return new MojBrojSubmitResponse(msg, solution, numOfPoints, result);
+    }
+
+    public int getNumOfPoints(int diff){
+        int numOfPoints=0;
         switch (diff){
             case 0:
                 numOfPoints= 30;
@@ -183,26 +204,14 @@ public class MojBrojServiceImpl implements MojBrojService{
             case 2:
                 numOfPoints=10;
                 break;
+            default:
+                numOfPoints=0;
         }
-        String solution = null;
-        Game game=null;
-        String msg = "";
-        int result = 0;
-        try {
-            solution = getSolution(principal);
-            game=gameService.getGame(principal);
-            result = eval(request.getExpression());
-        } catch (Exception e) {
-            new MojBrojSubmitResponse("Something went wrong", solution, numOfPoints, result);
-        }
-        game.getPoints(principal).setNumOfPointsMojBroj(numOfPoints);
-        gameService.saveGame(game);
-
-        return new MojBrojSubmitResponse(msg, solution, numOfPoints, result);
+        return numOfPoints;
     }
 
     @Override
-    public ResponseEntity finishGame(Principal principal) throws Exception {
+    public ResponseEntity<Response> finishGame(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         MojBrojGame mojBrojGame=game.getGames().getMojBrojGame();
         game.getIsActive(principal).setActiveMojBroj(false);
@@ -210,7 +219,7 @@ public class MojBrojServiceImpl implements MojBrojService{
         mojBrojRepository.save(mojBrojGame);
         return ResponseEntity.ok().build();
     }
-    public boolean isActiveGame(Principal principal) throws Exception {
+    public boolean isActiveGame(Principal principal) throws GameNotFoundException {
         return gameService.getGame(principal).getIsActive(principal).isActiveMojBroj();
     }
 }

@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,7 @@ public class MojBrojGame {
         initializeRandom();
     }
 
-    public MojBrojGame(Long id, ArrayList<Integer> numbers, boolean isActive, String solution) {
+    public MojBrojGame(Long id, List<Integer> numbers, String solution) {
         this.id = id;
         this.numbers = numbers;
         this.solution=solution;
@@ -59,7 +58,7 @@ public class MojBrojGame {
         solution=createSolutionFromNums(numsToUse);
     }
     String createSolutionFromNums(ArrayList<Integer> nums){
-        String expression="";
+        StringBuilder expression=new StringBuilder();
         HashMap<Integer,String> op=new HashMap<>();
         op.put(0,"*");
         op.put(4,"*");
@@ -67,9 +66,8 @@ public class MojBrojGame {
         op.put(2,"-");
         op.put(3,"/");
         for(Integer num:nums){
-            expression+=num.toString()+op.get((int)(Math.random()*5));
+            expression.append(num.toString()+op.get((int)(Math.random()*5)));
         }
-        expression=expression.substring(0,expression.length()-1);
-        return expression;//todo create brackets
+        return expression.substring(0,expression.length()-1);
     }
 }

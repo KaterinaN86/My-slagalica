@@ -1,5 +1,7 @@
 package com.comtrade.service.gameservice;
 
+import com.comtrade.exceptions.GameNotFoundException;
+import com.comtrade.exceptions.UserNotFoundException;
 import com.comtrade.interfaces.MultiPlayerService;
 import com.comtrade.interfaces.OnePlayerGameService;
 import com.comtrade.model.Games;
@@ -31,7 +33,8 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
 
     private List<User> playerQueue = new ArrayList<>();
 
-    private List<TwoPlayerGame> playerGames = new ArrayList<>();
+    private static final String USER_NOT_FOUND = "User not found!";
+    private static final String GAME_NOT_FOUND = "Game not found!";
 
     public GameServiceImpl(TwoPlayerGameRepository twoPlayerGameRepository, OnePlayerGameRepository onePlayerGameRepository, UserRepository userRepository, GamesRepository gamesRepository, PointsRepository pointsRepository, TimersRepository timersRepository, IsActiveRepository isActiveRepository) {
         this.onePlayerGameRepository = onePlayerGameRepository;
@@ -44,10 +47,10 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     }
 
     @Override
-    public OnePlayerGame createNewOnePlayerGame(Principal principal) throws Exception {
+    public OnePlayerGame createNewOnePlayerGame(Principal principal) throws UserNotFoundException {
         Optional<User> user=userRepository.findByUserName(principal.getName());
         if(user.isEmpty()){
-            throw new Exception("User not found");
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
         Games games=new Games();
         gamesRepository.save(games);
@@ -59,12 +62,11 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         Points points=new Points();
         pointsRepository.save(points);
         onePlayerGame.setPoints(points);
-        OnePlayerGame game= onePlayerGameRepository.save(onePlayerGame);
-        return game;
+        return onePlayerGameRepository.save(onePlayerGame);
     }
 
     @Override
-    public Game getGame(Principal principal) throws Exception {
+    public Game getGame(Principal principal) throws GameNotFoundException {
         List<OnePlayerGame> onePlayerGames = onePlayerGameRepository.findAllByUserUserNameAndFinishedFalse(principal.getName());
         List<TwoPlayerGame> twoPlayerGames = twoPlayerGameRepository.findByUserName(principal.getName());
         if (!onePlayerGames.isEmpty()){
@@ -73,11 +75,11 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
         else if(!twoPlayerGames.isEmpty()){
             return twoPlayerGames.get(0);
         } else {
-            throw new Exception("Game not found!");
+            throw new GameNotFoundException(GAME_NOT_FOUND);
         }
     }
     @Override
-    public OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws Exception {
+    public OnePlayerInitResponse getOnePlayerGameInitData(Principal principal) throws UserNotFoundException {
         Game game= null;
         try {
             game = getGame(principal);
@@ -111,7 +113,7 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     }
 
     @Override
-    public TwoPlayerInitResponse getTwoPlayerInitData(Principal principal) throws Exception {
+    public TwoPlayerInitResponse getTwoPlayerInitData(Principal principal) throws GameNotFoundException {
         TwoPlayerGame game = (TwoPlayerGame) getGame(principal);
         Points points1 = game.getPoints1();
         Points points2 = game.getPoints2();
@@ -124,51 +126,62 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
 
     @Override
     public List<OnePlayerGame> getTopTenOnePlayerGames() {
-        ArrayList<OnePlayerGame> lisOfGames= (ArrayList<OnePlayerGame>) onePlayerGameRepository.findAllOrderedBySumOfPoints();
-        return lisOfGames;
+        return onePlayerGameRepository.findAllOrderedBySumOfPoints();
+
     }
 
-    public void finishGame(Principal principal) throws Exception {
+    public void finishGame(Principal principal) throws GameNotFoundException {
         Game game = getGame(principal);
         game.setFinished(true);
 
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
+        if(game instanceof OnePlayerGame onePlayerGame){
+            onePlayerGameRepository.save(onePlayerGame);
         }
-        else if(game instanceof TwoPlayerGame){
-            //todo set game winer
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        else if(game instanceof TwoPlayerGame twoPlayerGame){
+            twoPlayerGameRepository.save(twoPlayerGame);
         }
     }
 
     @Override
-    public boolean addPlayerToQueue(Principal principal) {
+    public boolean addPlayerToQueue(Principal principal) throws UserNotFoundException {
         if (isInGame(principal)){
             try {
                 finishGame(principal);
                 finishGame(principal);//twice because there could be one single player and one two player game not finished
-            } catch (Exception e) {}
+            } catch (GameNotFoundException e) {
+                log.warn(e.getMessage());
+            }
         }
         Optional<User> optUser=userRepository.findByUserName(principal.getName());
-        if (!playerQueue.contains(optUser.get())){
-            playerQueue.add(optUser.get());
-            createTwoPlayerGame();
-            log.info("Queue is: "+playerQueue.toString());
-            return true;
-        } else {
-            return false;
+        if(optUser.isPresent()){
+            if (!playerQueue.contains(optUser.get())){
+                playerQueue.add(optUser.get());
+                createTwoPlayerGame();
+                log.info("Queue is: "+playerQueue.toString());
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else{
+            throw new UserNotFoundException(USER_NOT_FOUND);
         }
     }
 
     @Override
-    public boolean removePlayerFromQueue(Principal principal) {
+    public boolean removePlayerFromQueue(Principal principal) throws UserNotFoundException {
         Optional<User> optUser=userRepository.findByUserName(principal.getName());
-        if (playerQueue.contains(optUser.get())) {
-            playerQueue.remove(optUser.get());
-            log.info(playerQueue.toString());
-            return true;
+        if(optUser.isPresent()){
+            if (playerQueue.contains(optUser.get())) {
+                playerQueue.remove(optUser.get());
+                log.info(playerQueue.toString());
+                return true;
+            }
+            return false;
         }
-        return false;
+        else {
+            throw new UserNotFoundException(USER_NOT_FOUND);
+        }
     }
 
     @Override
@@ -197,7 +210,7 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
             twoPlayerGame.setPoints2(points2);
             twoPlayerGame.setFinished(false);
             twoPlayerGameRepository.save(twoPlayerGame);
-            log.info("twoPlayerGame ccreated");
+            log.info("twoPlayerGame created");
         } else {
             log.info("Not enough player in queue");
         }
@@ -206,18 +219,15 @@ public class GameServiceImpl implements OnePlayerGameService, MultiPlayerService
     @Override
     public boolean isInGame(Principal principal) {
         List<TwoPlayerGame> listOfGames = twoPlayerGameRepository.findByUserName(principal.getName());
-        if (!listOfGames.isEmpty()){
-            return true;
-        }
-        return false;
+        return !listOfGames.isEmpty();
     }
 
-    public void saveGame(Game game) {
-        if(game instanceof OnePlayerGame){
-            onePlayerGameRepository.save((OnePlayerGame) game);
+    public void saveGame(Game game){
+        if(game instanceof OnePlayerGame onePlayerGame){
+            onePlayerGameRepository.save(onePlayerGame);
         }
-        if(game instanceof TwoPlayerGame){
-            twoPlayerGameRepository.save((TwoPlayerGame) game);
+        else if(game instanceof TwoPlayerGame twoPlayerGame){
+            twoPlayerGameRepository.save(twoPlayerGame);
         }
     }
 }

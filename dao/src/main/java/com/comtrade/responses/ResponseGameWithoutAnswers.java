@@ -1,4 +1,4 @@
-package com.comtrade.model.koznaznamodel.responses;
+package com.comtrade.responses;
 
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.koznaznamodel.Question;

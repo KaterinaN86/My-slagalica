@@ -1,8 +1,7 @@
 package com.comtrade.controller.skockocontroller;
 
-
-
-import com.comtrade.model.koznaznamodel.responses.Response;
+import com.comtrade.exceptions.GameNotFoundException;
+import com.comtrade.responses.Response;
 import com.comtrade.model.skockomodel.SkockoGame;
 import com.comtrade.model.skockomodel.SkockoResponse;
 import com.comtrade.model.skockomodel.SkockoSubmit;
@@ -25,7 +24,7 @@ public class SkockoGameController {
 
     @GetMapping("/play")
     @CrossOrigin
-    public ResponseEntity<SkockoGame> getNewGame(Principal principal) throws Exception {
+    public ResponseEntity<SkockoGame> getNewGame(Principal principal) throws GameNotFoundException {
         if(!skockoGameService.isActiveGame(principal)){
             return ResponseEntity.notFound().build();
         }
@@ -34,17 +33,17 @@ public class SkockoGameController {
 
     @PostMapping("/submit")
     @CrossOrigin
-    public ResponseEntity<SkockoResponse> submitCombination(@RequestBody SkockoSubmit submit,Principal principal){
+    public ResponseEntity<SkockoResponse> submitCombination(@RequestBody SkockoSubmit submit,Principal principal) throws GameNotFoundException {
         return skockoGameService.handleSubmit(submit,principal);
     }
 
     @GetMapping("/getCombination")
     @CrossOrigin
-    public ResponseEntity<List<Integer>> getCombination(Principal principal){
+    public ResponseEntity<List<Integer>> getCombination(Principal principal) throws GameNotFoundException {
         return skockoGameService.getCombination(principal);
     }
     @PutMapping("/finishGame")
-    public ResponseEntity<Response> finishGame(Principal principal) throws Exception {
+    public ResponseEntity<Response> finishGame(Principal principal) throws GameNotFoundException {
         return skockoGameService.finishGame(principal);
     }
 }

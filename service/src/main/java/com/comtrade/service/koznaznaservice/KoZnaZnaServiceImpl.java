@@ -1,5 +1,6 @@
 package com.comtrade.service.koznaznaservice;
 
+import com.comtrade.exceptions.GameNotFoundException;
 import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
 import com.comtrade.model.games.OnePlayerGame;
@@ -7,8 +8,8 @@ import com.comtrade.model.games.TwoPlayerGame;
 import com.comtrade.model.koznaznamodel.KoZnaZnaGame;
 import com.comtrade.model.koznaznamodel.NextQuestion;
 import com.comtrade.model.koznaznamodel.Question;
-import com.comtrade.model.koznaznamodel.responses.AnswerResponse;
-import com.comtrade.model.koznaznamodel.responses.Response;
+import com.comtrade.responses.AnswerResponse;
+import com.comtrade.responses.Response;
 import com.comtrade.repository.TimersRepository;
 import com.comtrade.repository.koznaznarepository.KoZnaZnaRepository;
 import com.comtrade.repository.koznaznarepository.QuestionRepository;
@@ -41,7 +42,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public KoZnaZnaGame getInitData(Principal principal) throws Exception {
+    public KoZnaZnaGame getInitData(Principal principal) throws GameNotFoundException {
         Game game = gameService.getGame(principal);
         gameService.saveGame(game);
         Timers timers = game.getTimers(principal);
@@ -53,7 +54,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public KoZnaZnaGame getGame(Principal principal) throws Exception {
+    public KoZnaZnaGame getGame(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         if(game.getGames().getKoZnaZnaGame()!=null){
             return game.getGames().getKoZnaZnaGame();
@@ -66,7 +67,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public KoZnaZnaGame createNewGame(Principal principal) throws Exception {
+    public KoZnaZnaGame createNewGame(Principal principal) throws GameNotFoundException {
             KoZnaZnaGame koZnaZnaGame=new KoZnaZnaGame();
             Game game = gameService.getGame(principal);
             koZnaZnaGame.setQuestions(getRandomQuestions());
@@ -111,7 +112,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
             return existingGame.isPresent() ? existingGame.get() : null;
         }
 
-        public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws Exception {
+        public ResponseEntity<Response> checkSubmitedQuestion(Long gameId, Integer questionIndex, Long questionId, Integer selectedQuestion,Principal principal) throws GameNotFoundException {
             Game game = gameService.getGame(principal);
             KoZnaZnaGame koZnaZnaGame=this.getGame(gameId);
             long numberOfSeconds = ChronoUnit.SECONDS.between(game.getTimers(principal).getStartTimeKoZnaZna(), LocalTime.now());
@@ -161,13 +162,13 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public Integer getNumberOfPoints(Principal principal) throws Exception {
+    public Integer getNumberOfPoints(Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         return game.getPoints(principal).getNumOfPointsKoZnaZna();
     }
 
     @Override
-    public ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion, Principal principal) throws Exception {
+    public ResponseEntity<Response> updateQuestionNumber(NextQuestion nextQuestion, Principal principal) throws GameNotFoundException {
         Game game = gameService.getGame(principal);
         KoZnaZnaGame koZnaZnaGame=this.getGame(nextQuestion.getGameId());
         if (!game.getIsActive(principal).isActiveKoZnaZna()) {
@@ -188,7 +189,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public ResponseEntity<Response> finishGame( Principal principal) throws Exception {
+    public ResponseEntity<Response> finishGame( Principal principal) throws GameNotFoundException {
         Game game=gameService.getGame(principal);
         KoZnaZnaGame koZnaZnaGame=game.getGames().getKoZnaZnaGame();
         game.getIsActive(principal).setActiveKoZnaZna(false);
@@ -198,7 +199,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
     }
 
     @Override
-    public boolean isActiveGame(Principal principal) throws Exception {
+    public boolean isActiveGame(Principal principal) throws GameNotFoundException {
         return gameService.getGame(principal).getIsActive(principal).isActiveKoZnaZna();
     }
     public void updateQuestionNumberForOnePlayerGame (KoZnaZnaGame koZnaZnaGame){
