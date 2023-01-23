@@ -1,7 +1,6 @@
 package testCases;
 
 import base.TestBase;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -9,8 +8,6 @@ import pages.HomePage;
 import pages.SinglePlayerGamePage;
 import pages.SlagalicaPage;
 import utility.VerifyMethods;
-
-import java.io.IOException;
 
 public class SlagalicaPageTest extends TestBase {
 
@@ -32,9 +29,10 @@ public class SlagalicaPageTest extends TestBase {
     }
 
     @Test(priority = 1)
-    public void verifyOpen() {
-        this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"),
-                prop.getProperty("userTestRegisterPassword")).clickSinglePlayerGame();
+    public void logInAndOpen() {
+        this.homePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"),
+                prop.getProperty("userTestRegisterPassword"));
+        this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }
 
@@ -44,65 +42,66 @@ public class SlagalicaPageTest extends TestBase {
     }
 
     @Test(priority = 3)
+    public void verifyOpen() {
+        this.slagalicaPage.verifyTitlesAndContainer();
+    }
+
+    @Test(priority = 4)
     public void verifyFirstList() {
         this.slagalicaPage.verifyThatFirstListIsDisplayed();
     }
 
-    @Test(priority = 4)
+    @Test(priority = 5)
     public void verifySecondList() {
         this.slagalicaPage.verifyThatSecondListIsDisplayed();
     }
 
-    @Test(priority = 5)
+    @Test(priority = 6)
     public void verifyDeleteButton() {
         this.slagalicaPage.verifyThatIzbrisiButtonIsClicked();
     }
 
-    @Test(priority = 6)
+    @Test(priority = 7)
     public void verifyStopButton() {
-        this.slagalicaPage.verifyThatStopButtonIsClicked();
+        this.slagalicaPage.verifyStopButtonDisplayed();
     }
 
-    @Test(priority = 7)
+    @Test(priority = 8)
     public void verifyPotvrdiButton() {
         this.slagalicaPage.verifyThatPotvrdiButtonIsClicked();
     }
 
-    @Test(priority = 8)
+    @Test(priority = 9)
     public void verifyDialog() {
         this.slagalicaPage.verifyPopUpDialog();
     }
 
-    @Test(priority = 9)
+    @Test(priority = 10)
     public void verifyCloseButtonClicked() {
         this.slagalicaPage.verifyCloseButtonIsClicked();
     }
 
-    @Test(priority = 10)
+    @Test(priority = 11)
     public void verifyDialogClosed() {
         takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopuptoClose();
     }
 
-    @Test(priority = 12)
+    @Test(priority = 13)
     public void verifyBackButton() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
-    }
-
-    @Test(priority = 13)
-    public void goBackToHomePage() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getBackBtnLoc()));
-        this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
-        this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
     }
 
     @Test(priority = 14)
+    public void goBackToHomePage() {
+        this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
+        this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
+        this.homePage.verifyMethods.verifyContainerDisplayed();
+    }
+
+    @Test(priority = 15)
     public void logout() {
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
         this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
         this.homePage.logout();
     }

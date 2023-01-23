@@ -1,8 +1,6 @@
 package testCases;
 
 import base.TestBase;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -47,7 +45,9 @@ public class SinglePlayerGamePageTest extends TestBase {
      */
     @Test(priority = 1)
     public void verifyOpen() {
-        this.singlePlayerGamePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).clickSinglePlayerGame();
+        this.homePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword"));
+        verifyMethods.verifyContainerDisplayed();
+        this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
     }
 
     /**
@@ -61,18 +61,14 @@ public class SinglePlayerGamePageTest extends TestBase {
 
     @Test(priority = 3)
     public void openMojBrojTest() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.getMojBrojBtnLoc()));
         this.mojBrojPage = this.singlePlayerGamePage.openMojBrojPage();
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
         this.mojBrojPage.verifyMethods.verifyContainerDisplayed();
     }
 
     @Test(priority = 4)
     public void mojBrojGoBackTest() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
         this.mojBrojPage.verifyMethods.verifyBackButtonIsClickable();
         tempPageObject = this.mojBrojPage.goBack();
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
     }
 
     /**
@@ -80,23 +76,19 @@ public class SinglePlayerGamePageTest extends TestBase {
      */
     @Test(priority = 5)
     public void singlePlayerOpenedTest() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
-        this.tempPageObject.verifyMethods.verifyContainerDisplayed();
         //Added because of firefox bug.
         this.singlePlayerGamePage = this.mojBrojPage.firefoxWorkaround(tempPageObject);
         takeSnapShot("OnePlayer\\mojBrojGoBackTest", prop.getProperty("snapShotExtension"));
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.getMojBrojBtnLoc()));
-        this.singlePlayerGamePage.verifyMojBrojBtnNotClickable();
+        //wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
+        this.singlePlayerGamePage.verifyMethods.verifyContainerDisplayed();
+        verifyMethods.verifyButtonNotClickable(this.singlePlayerGamePage.getMojBrojBtnLoc());
     }
 
     @Test(priority = 6)
-    public void openSlagalicaTest(){
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.getNewGameBtnLoc()));
+    public void openSlagalicaTest() {
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
         this.slagalicaPage.verifyMethods.verifyContainerDisplayed();
-        takeSnapShot("OnePlayer\\openSlagalicaTest",prop.getProperty("snapShotExtension"));
+        takeSnapShot("OnePlayer\\openSlagalicaTest", prop.getProperty("snapShotExtension"));
     }
 
     /**
@@ -104,26 +96,21 @@ public class SinglePlayerGamePageTest extends TestBase {
      */
     @Test(priority = 7)
     public void slagalicaGoBackTest() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
-        wait.until(ExpectedConditions.presenceOfElementLocated(this.singlePlayerGamePage.getSlagalicaBtnLoc()));
-        this.singlePlayerGamePage.verifySlagalicaButtonIsNotClickable();
+        verifyMethods.verifyButtonNotClickable(this.singlePlayerGamePage.getSlagalicaBtnLoc());
     }
 
     @Test(priority = 8)
     public void goBackTest() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
-        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
-
+        verifyMethods.verifyContainerDisplayed();
     }
 
     @Test(priority = 9)
-    public void logout(){
-       wait.until(ExpectedConditions.presenceOfElementLocated(this.homePage.getLogOutLoc()));
-       this.homePage.logout();
+    public void logout() {
+        this.homePage.logout();
     }
 
     @AfterClass

@@ -3,7 +3,6 @@ package utility;
 import base.TestBase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -55,12 +54,12 @@ public class VerifyMethods {
      */
     public void verifyUsernamePasswordDisplayed() {
         //Initializing WebElement objects for username and password text input elements.
-        usernameEl = TestBase.driver.findElement(TestBase.locators.getUsernameTextInputLoc());
-        passwordEl = TestBase.driver.findElement(TestBase.locators.getPasswordTextInputLoc());
+        base.waitForVisibilityOf(TestBase.locators.getUsernameTextInputLoc());
+        base.waitForVisibilityOf(TestBase.locators.getPasswordTextInputLoc());
         Reporter.log("Verifying username and password elements are displayed.");
         System.out.println("Check if username and password are displayed.");
-        Assert.assertTrue(usernameEl.isDisplayed(), "Username text input element not displayed!");
-        Assert.assertTrue(passwordEl.isDisplayed(), "Password text input element not displayed!");
+        Assert.assertTrue(base.find(TestBase.locators.getUsernameTextInputLoc()).isDisplayed(), "Username text input element not displayed!");
+        Assert.assertTrue(base.find(TestBase.locators.getPasswordTextInputLoc()).isDisplayed(), "Password text input element not displayed!");
         Reporter.log("Username and password text input elements are displayed.");
         System.out.println("Username and password text input elements are displayed.");
     }
@@ -69,10 +68,11 @@ public class VerifyMethods {
      * Verify register button is displayed.
      */
     public void verifyRegisterDisplayed() {
+        base.waitForVisibilityOf(TestBase.locators.getRegisterBtnLoc());
         Reporter.log("Verify register button is displayed.");
         System.out.println("Check if register button is displayed.");
         //Log corresponding message depending on isDisplayed method result for register button WebElement object.
-        Assert.assertTrue(TestBase.driver.findElement(TestBase.locators.getRegisterBtnLoc()).isDisplayed(), "Register button not displayed!");
+        Assert.assertTrue(base.find(TestBase.locators.getRegisterBtnLoc()).isDisplayed(), "Register button not displayed!");
         Reporter.log("Register button verified!");
         System.out.println("Register button is displayed.");
     }
@@ -117,9 +117,10 @@ public class VerifyMethods {
      * Verifies container element in pages with menus containing links (like HomePage and SinglePlayerGamePage) or pages with buttons for playing game (like SlagalicaPage and MojBrojPage.
      */
     public void verifyContainerDisplayed() {
+        base.waitForVisibilityOf(TestBase.locators.getContainerLoc());
         Reporter.log("Verifying main container element is displayed.");
         System.out.println("Verifying main container element is displayed.");
-        Assert.assertTrue(TestBase.driver.findElement(TestBase.locators.getContainerLoc()).isDisplayed(), "Main container element not displayed!");
+        Assert.assertTrue(base.find(TestBase.locators.getContainerLoc()).isDisplayed(), "Main container element not displayed!");
         Reporter.log("Main container element is displayed.");
         System.out.println("Main container element is displayed.");
     }
@@ -130,7 +131,8 @@ public class VerifyMethods {
      * @param containerTitle (String containing title specified in config.properties file.
      */
     public void verifyContainerTitle(String containerTitle) {
-        String actualContainerTitle = TestBase.driver.findElement(TestBase.locators.getContainerTitleLoc()).getText();
+        base.waitForVisibilityOf(TestBase.locators.getContainerTitleLoc());
+        String actualContainerTitle = base.find(TestBase.locators.getContainerTitleLoc()).getText();
         Reporter.log("Verifying container title matches specified.");
         Assert.assertEquals(actualContainerTitle, containerTitle, "Container title doesn't match specified value!");
         Reporter.log("Container title " + actualContainerTitle + " verified.");
@@ -141,10 +143,10 @@ public class VerifyMethods {
      * Helper method used by verifyTitlesAndOtherPageElements. Verifies timer element.
      */
     public void verifyTimerElement() {
-        this.base.wait.until(ExpectedConditions.elementToBeClickable(this.base.locators.getTimerLoc()));
+        base.waitForVisibilityOf(TestBase.locators.getTimerLoc());
         Reporter.log("Verifying timer element.");
         System.out.println("Verifying timer element.");
-        Assert.assertTrue(base.driver.findElement(base.locators.getTimerLoc()).isDisplayed(), "Timer element not displayed!");
+        Assert.assertTrue(base.find(TestBase.locators.getTimerLoc()).isDisplayed(), "Timer element not displayed!");
         Reporter.log("Timer verified.");
         System.out.println("Timer verified.");
     }
@@ -153,7 +155,8 @@ public class VerifyMethods {
      * Helper method used by verifyTitlesAndOtherPageElements. Verifies go back button element.
      */
     public void verifyGoBackButton() {
-        WebElement goBackButtonEl = base.driver.findElement(base.locators.getBackBtnLoc());
+        base.waitForVisibilityOf(TestBase.locators.getBackBtnLoc());
+        WebElement goBackButtonEl = base.find(TestBase.locators.getBackBtnLoc());
         Reporter.log("Verifying back button on page " + this.base.getClass().getSimpleName() + ".");
         System.out.println("Verifying back button on page " + this.base.getClass().getSimpleName() + ".");
         Assert.assertTrue(goBackButtonEl.isDisplayed(), "Go back button not displayed!");
@@ -165,8 +168,8 @@ public class VerifyMethods {
     /**
      * Verifies page title, container title and menu elements or button elements used for playing game.
      *
-     * @param configTitle
-     * @param containerTitle
+     * @param configTitle    String
+     * @param containerTitle String
      */
     public void verifyTitlesAndOtherPageElements(String configTitle, String containerTitle) {
         // Setting expected title value before calling verify method.
@@ -179,8 +182,9 @@ public class VerifyMethods {
         // Verify all buttons on page.
         Reporter.log("Checking all button elements on page are displayed.");
         System.out.println("Checking buttons are displayed.");
+        base.waitForVisibilityOf(TestBase.locators.getAllButtonDivsLoc());
         //Creating a list of all div web elements on current page, that contain button elements.
-        List<WebElement> buttonDivsList = TestBase.driver.findElements(TestBase.locators.getAllButtonDivsLoc());
+        List<WebElement> buttonDivsList = base.findAll(TestBase.locators.getAllButtonDivsLoc());
         //Iterating over divs list.
         for (WebElement el : buttonDivsList) {
             TestBase.wait.until(ExpectedConditions.visibilityOf(el));
@@ -206,7 +210,8 @@ public class VerifyMethods {
      * @param startValue (String value specified in config file.)
      */
     public void verifyTimerStartValue(String startValue) {
-        String actualValue = base.driver.findElement(base.locators.getTimerLoc()).getText();
+        base.waitForVisibilityOf(TestBase.locators.getTimerLoc());
+        String actualValue = base.find(TestBase.locators.getTimerLoc()).getText();
         Reporter.log("Verifying timer element start value.");
         System.out.println("Verifying timer element start value.");
         Assert.assertEquals(actualValue, startValue, "Timer start value " + actualValue + " doesn't match expected " + startValue + ".");
@@ -233,26 +238,28 @@ public class VerifyMethods {
     /**
      * Verifies specified button element is clickable.
      *
-     * @param locator
+     * @param locator By
      */
     public void verifyButtonIsClickable(By locator) {
-        this.base.wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        base.waitForVisibilityOf(locator);
         //Initializing WebElement object for specified button element.
-        WebElement btnEl = this.base.driver.findElement(locator);
+        WebElement btnEl = base.find(locator);
         Reporter.log("Check if button " + btnEl.getText() + " is clickable.");
         System.out.println("Check if button " + btnEl.getText() + " is clickable.");
         Assert.assertTrue(btnEl.isEnabled(), "Button " + btnEl.getText() + " is not enabled!");
         Reporter.log("Button " + btnEl.getText() + " is clickable.");
         System.out.println("Button " + btnEl.getText() + " is clickable.");
     }
+
     /**
      * Verifies specified button element is not clickable.
      *
-     * @param locator
+     * @param locator By
      */
     public void verifyButtonNotClickable(By locator) {
+        base.waitForVisibilityOf(locator);
         //Initializing WebElement object for specified button element.
-        WebElement btnEl = this.base.driver.findElement(locator);
+        WebElement btnEl = base.find(locator);
         Reporter.log("Check if button " + btnEl.getText() + " is clickable.");
         System.out.println("Check if button " + btnEl.getText() + " is clickable.");
         Assert.assertFalse(btnEl.isEnabled(), "Button " + btnEl.getText() + " is enabled!");
@@ -261,10 +268,10 @@ public class VerifyMethods {
     }
 
     public void verifyBackButtonIsClickable() {
-        this.base.wait.until(ExpectedConditions.presenceOfElementLocated(this.base.locators.getContainerLoc()));
+        base.waitForVisibilityOf(TestBase.locators.getBackBtnLoc());
         Reporter.log("Check if go back button is clickable.");
         System.out.println("Check if go back button is clickable.");
-        Assert.assertTrue(this.base.driver.findElement(this.base.locators.getBackBtnLoc()).isEnabled(), "Go back button is not enabled.");
+        Assert.assertTrue(base.find(TestBase.locators.getBackBtnLoc()).isEnabled(), "Go back button is not enabled.");
         Reporter.log("Go back button is clickable.");
         System.out.println("Go back button is clickable.");
     }
