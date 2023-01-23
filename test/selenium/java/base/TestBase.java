@@ -6,6 +6,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
@@ -73,6 +74,8 @@ public class TestBase {
      */
     private String configTitle;
 
+    private String alertMsg;
+
     /**
      * Empty constructor.
      */
@@ -81,12 +84,11 @@ public class TestBase {
     }
 
     /**
-     * Getter for WebDriver element.
-     *
-     * @return WebDriver element.
+     * Getter for alert message variable.
+     * @return String
      */
-    public static WebDriver getDriver() {
-        return driver;
+    public String getAlertMsg() {
+        return alertMsg;
     }
 
     /**
@@ -205,6 +207,14 @@ public class TestBase {
     }
 
     /**
+     * Type given text into element with given locator
+     */
+    public void type(String text, By locator) {
+        waitForVisibilityOf(locator, Duration.ofSeconds(5));
+        find(locator).sendKeys(text);
+    }
+
+    /**
      * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
      *
      * @param username String
@@ -212,18 +222,18 @@ public class TestBase {
      */
     public void setUsernameAndPassword(String username, String password) {
         //Initializing username and password web elements.
-        WebElement usernameEl = driver.findElement(locators.getUsernameTextInputLoc());
-        WebElement passwordEl = driver.findElement(locators.getPasswordTextInputLoc());
+        WebElement usernameEl = find(locators.getUsernameTextInputLoc());
+        WebElement passwordEl = find(locators.getPasswordTextInputLoc());
         //Deleting existing data in text input fields (CTRL+delete).
         usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
         usernameEl.sendKeys(Keys.DELETE);
         passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
         passwordEl.sendKeys(Keys.DELETE);
         //Sending new values for username and password. Logging entered data.
-        usernameEl.sendKeys(username);
+        type(username, locators.getUsernameTextInputLoc());
         Reporter.log("Entered username: " + username);
         System.out.println("Entered username: " + username);
-        passwordEl.sendKeys(password);
+        type(password, locators.getPasswordTextInputLoc());
         Reporter.log("Entered password.");
         System.out.println("Entered password.");
     }
@@ -271,13 +281,12 @@ public class TestBase {
      * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
      */
     public TestBase goBack() {
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
+        waitForElToBeClickable(locators.getContainerLoc());
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        WebElement stopEl = driver.findElement(locators.getBackBtnLoc());
-        js.executeScript("arguments[0].click()", stopEl);
+        js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
         //driver.findElement().click();
         dealWithAlert();
         if (this instanceof SinglePlayerGamePage) {
@@ -295,12 +304,78 @@ public class TestBase {
         Reporter.log("Alert popup displayed.");
         System.out.println("Alert popup displayed.");
         Alert registerAlert = driver.switchTo().alert();
+        alertMsg=registerAlert.getText();
         Reporter.log("Verify accept option in alert popup.");
         System.out.println("Checking if player can accept to go back.");
         registerAlert.accept();
         Reporter.log("User successfully accepted.");
         System.out.println("User successfully accepted.");
     }
+
+    /**
+     * Wait for specific ExpectedCondition for the given amount of time in seconds
+     */
+    private void waitFor(ExpectedCondition<WebElement> condition, Duration timeOutInSeconds) {
+        timeOutInSeconds = timeOutInSeconds != null ? timeOutInSeconds : Duration.ofSeconds(5);
+        WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
+        wait.until(condition);
+    }
+
+    /**
+     * Wait for given number of seconds for element with given locator to be visible
+     * on the page
+     */
+    public void waitForVisibilityOf(By locator, Duration... timeOutInSeconds) {
+        int attempts = 0;
+        while (attempts < 2) {
+            try {
+                waitFor(ExpectedConditions.visibilityOfElementLocated(locator),
+                        (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
+                break;
+            } catch (StaleElementReferenceException e) {
+            }
+            attempts++;
+        }
+    }
+
+    /**
+     * Wait for given number of seconds for element with given locator to be clickable
+     * on the page
+     */
+    public void waitForElToBeClickable(By locator, Duration... timeOutInSeconds) {
+        int attempts = 0;
+        while (attempts < 2) {
+            try {
+                waitFor(ExpectedConditions.elementToBeClickable(locator),
+                        (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
+                break;
+            } catch (StaleElementReferenceException e) {
+            }
+            attempts++;
+        }
+    }
+
+    /**
+     * Find element using given locator
+     */
+    public WebElement find(By locator) {
+        waitForVisibilityOf(locator);
+        return driver.findElement(locator);
+    }
+    /** Find all elements using given locator */
+    public List<WebElement> findAll(By locator) {
+        waitForVisibilityOf(locator);
+        return driver.findElements(locator);
+    }
+
+    /**
+     * Click on element with given locator when its visible
+     */
+    public void click(By locator) {
+        waitForVisibilityOf(locator, Duration.ofSeconds(5));
+        find(locator).click();
+    }
+
 
     /**
      * Closing web page.

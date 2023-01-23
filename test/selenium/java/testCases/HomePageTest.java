@@ -27,17 +27,32 @@ public class HomePageTest extends TestBase {
         this.homePage=new HomePage();
     }
     @Test(priority = 1)
-    public void verifyOpen(){
-        this.homePage= this.loginPage.openLoginPage().userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
-        this.homePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"),prop.getProperty("homePageContainerTitle"));
+    public void verifyOpenLogin() {
+        this.loginPage.openLoginPage();
     }
+
     @Test(priority = 2)
-    public void verifyLinks(){
-       this.homePage.verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(),Integer.parseInt(prop.getProperty("homePageLinksNumber")));
+    public void verifySignIn() {
+        this.homePage = this.loginPage.userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
     }
 
     @Test(priority = 3)
-    public void verifyLogout(){
+    public void verifyStateAfterSingIn() {
+        this.homePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"), prop.getProperty("homePageContainerTitle"));
+    }
+
+    @Test(priority = 4)
+    public void verifyLinks() {
+        this.homePage.verifyMethods.verifyValidLinkNumber(this.getValidLinkNumber(), Integer.parseInt(prop.getProperty("homePageLinksNumber")));
+    }
+
+    @Test(priority = 5)
+    public void verifyLogout() {
+        this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
+    }
+
+    @Test(priority = 6)
+    public void logout() {
         this.homePage.logout();
     }
 

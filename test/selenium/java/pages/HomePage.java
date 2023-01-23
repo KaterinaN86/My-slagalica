@@ -2,7 +2,6 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Reporter;
 
 /**
@@ -13,10 +12,10 @@ public class HomePage extends TestBase {
      * Locator objects for all options in menu.
      */
     private final By singlePlayerLoc = By.xpath("//button[text()='Jedan igrac']");
+    private final By logOutLoc = By.xpath("//button[text()='Log out']");
     By twoPlayersLoc = By.xpath("//button[text()='Dva igraca']");
     By rulesLoc = By.xpath("//button[text()='Pravila']");
     By rangListLoc = By.xpath("//button[text()='Rang Lista']");
-   private final By logOutLoc = By.xpath("//button[text()='Log out']");
 
     /**
      * Constructor.
@@ -39,19 +38,21 @@ public class HomePage extends TestBase {
      * @return LoginPage (new instance of LoginPage, after verification).
      */
     public LoginPage logout() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(logOutLoc));
+        waitForVisibilityOf(locators.getContainerLoc());
         this.verifyMethods.verifyButtonIsClickable(logOutLoc);
         Reporter.log("Logging out active user.");
         System.out.println("Logging out active user.");
-        driver.findElement(logOutLoc).click();
+        click(logOutLoc);
         Reporter.log("User logged out.");
         System.out.println("User logged out.");
         return (LoginPage) verifyMethods.verifyPageObjectInitialized(new LoginPage());
     }
 
     public SinglePlayerGamePage clickSinglePlayerGame() {
+        waitForVisibilityOf(singlePlayerLoc);
+        verifyMethods.verifyButtonIsClickable(singlePlayerLoc);
         Reporter.log("Clicking single player option.");
-        driver.findElement(singlePlayerLoc).click();
+        click(singlePlayerLoc);
         System.out.println("Single player game page option clicked.");
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }

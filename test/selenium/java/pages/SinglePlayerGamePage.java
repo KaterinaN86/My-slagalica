@@ -52,10 +52,10 @@ public class SinglePlayerGamePage extends TestBase {
     }
 
     public void clickNewGameButton() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(newGameBtnLoc));
+        //wait.until(ExpectedConditions.presenceOfElementLocated(newGameBtnLoc));
         this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
-        driver.findElement(newGameBtnLoc).click();
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getContainerLoc()));
+        click(newGameBtnLoc);
+        waitForElToBeClickable(locators.getContainerLoc());
         Reporter.log("New Game button is clicked");
         System.out.println("New Game button is clicked");
     }
@@ -65,8 +65,7 @@ public class SinglePlayerGamePage extends TestBase {
         this.verifyMethods.verifyButtonIsClickable(mojBrojBtnLoc);
         Reporter.log("Click \"Moj broj\" button.");
         System.out.println("Click \"Moj broj\" button.");
-        wait.until(ExpectedConditions.elementToBeClickable(mojBrojBtnLoc));
-        driver.findElement(mojBrojBtnLoc).click();
+        click(mojBrojBtnLoc);
         return (MojBrojPage) verifyMethods.verifyPageObjectInitialized(new MojBrojPage());
     }
 
@@ -75,18 +74,7 @@ public class SinglePlayerGamePage extends TestBase {
         this.verifyMethods.verifyButtonIsClickable(slagalicaBtnLoc);
         Reporter.log("Click \"Slagalica\" button");
         System.out.println("Click \"Slagalica\" button");
-        driver.findElement(slagalicaBtnLoc).click();
+        click(slagalicaBtnLoc);
         return (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
     }
-
-    public void verifyMojBrojBtnNotClickable() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(mojBrojBtnLoc));
-        this.verifyMethods.verifyButtonNotClickable(mojBrojBtnLoc);
-    }
-
-    public void  verifySlagalicaButtonIsNotClickable() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(slagalicaBtnLoc));
-        this.verifyMethods.verifyButtonNotClickable(slagalicaBtnLoc);
-    }
-
 }

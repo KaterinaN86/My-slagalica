@@ -39,18 +39,42 @@ public class LoginTest extends TestBase {
     }
 
     @Test(priority = 2)
-    public void userKatrinaLoginTest() {
+    public void userLoginTest() {
         this.homePage = this.loginPage.userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
     }
 
     @Test(priority = 3)
-    public void differentUsersLoginTest() {
-        this.loginPage = this.homePage.logout().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword")).logout();
+    public void verifyStateAfterLogin() {
+        this.homePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"), prop.getProperty("homePageContainerTitle"));
     }
 
     @Test(priority = 4)
+    public void verifyLogOut() {
+        this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
+    }
+
+    @Test(priority = 5)
+    public void logout() {
+        this.loginPage = this.homePage.logout();
+    }
+
+    @Test(priority = 6)
+    public void secondUserLoginTest() {
+        this.loginPage.verifyLoginFormDisplayed();
+        this.homePage = this.loginPage.userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword"));
+    }
+
+    @Test(priority = 7)
+    public void secondUserLogoutTest() {
+        this.homePage.verifyMethods.verifyTitlesAndOtherPageElements(prop.getProperty("homePageTitle"), prop.getProperty("homePageContainerTitle"));
+        this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
+        this.loginPage = this.homePage.logout();
+    }
+
+    @Test(priority = 8)
     public void invalidUserLoginTest() {
-        loginPage.invalidUserLogin();
+        this.loginPage.verifyLoginFormDisplayed();
+        this.loginPage.invalidUserLogin();
     }
 
     @AfterClass

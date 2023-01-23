@@ -33,6 +33,8 @@ public class Locators {
      */
     private final By timerLoc = new By.ByXPath("//div[@id='timer']");
 
+    private final By h1TitleLoc = new By.ByTagName("h1");
+
     public By getUsernameTextInputLoc() {
         return usernameTextInputLoc;
     }
@@ -63,5 +65,9 @@ public class Locators {
 
     public By getTimerLoc() {
         return timerLoc;
+    }
+
+    public By getH1TitleLoc() {
+        return h1TitleLoc;
     }
 }

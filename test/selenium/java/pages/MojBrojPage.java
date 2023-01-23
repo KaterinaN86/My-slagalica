@@ -21,7 +21,13 @@ public class MojBrojPage extends TestBase {
     /**
      * Locator for page elements that contain button with a number.
      */
-   private final By numberButtonsLoc = new By.ByXPath("//button[starts-with(@class,'availableNumber')]");
+    private final By numberButtonsLoc = new By.ByXPath("//button[starts-with(@class,'availableNumber')]");
+    private final By userExpressionLoc = new By.ById("userExpression");
+
+    private final By deleteBtnLoc = new By.ByXPath("//button[text()='Izbrisi']");
+
+    private final By submitBtnLoc = new By.ByXPath("//button[text()='Potvrdi']");
+    private List<WebElement> numbersList;
 
     /**
      * Constructor
@@ -30,12 +36,8 @@ public class MojBrojPage extends TestBase {
         super();
     }
 
-    public By getTargetNumberLoc() {
-        return targetNumberLoc;
-    }
-
     public void verifyTargetValueIsPositiveInteger() {
-        String value = driver.findElement(targetNumberLoc).getText();
+        String value =find(targetNumberLoc).getText();
         int intValue = Integer.parseInt(value);
         Assert.assertTrue((intValue > 0), "Target number doesn't match specification.");
         Reporter.log("Target number value verified.");
@@ -45,7 +47,7 @@ public class MojBrojPage extends TestBase {
     public void verifyNumberButtonsTotal() {
         Reporter.log("Verify total amount of buttons with numbers matches specified.");
         System.out.println("Verify total amount of buttons with numbers matches specified.");
-        int total = driver.findElements(numberButtonsLoc).size();
+        int total = findAll(numberButtonsLoc).size();
         int expected = Integer.parseInt(prop.getProperty("mojBrojTotalNumbers"));
         Assert.assertEquals(total, expected, "There are " + total + " buttons with numbers displayed. Amount doesn't match specified value of: " + expected + ".");
         Reporter.log("There are " + total + " buttons with numbers displayed. Amount matches specified.");
@@ -70,7 +72,7 @@ public class MojBrojPage extends TestBase {
      */
     public void verifyNumbersValues() {
         //List of all button web elements on page that contain number values.
-        List<WebElement> numbersList = driver.findElements(numberButtonsLoc);
+        numbersList = findAll(numberButtonsLoc);
         //Variable used as index of web element in list.
         int i = 1;
         //Variable used to store allowed values read from config.properties file.
@@ -105,6 +107,7 @@ public class MojBrojPage extends TestBase {
      * @return SinglePlayerGamePage object
      */
     public SinglePlayerGamePage firefoxWorkaround(TestBase pageObject) {
+        waitForElToBeClickable(locators.getH1TitleLoc());
         //If browser is set to firefox back button on Moj Broj page leads to HomePage. In order to get SinglePlayerGamePage object as return value steps for going back to that page sre added.
         //Object that will be returned if browser is set to firefox.
         SinglePlayerGamePage singlePlayerGamePage;
@@ -112,16 +115,50 @@ public class MojBrojPage extends TestBase {
         if (prop.getProperty("browser").equals("firefox")) {
             //Initializing HomePage object to return value of goBack method called by mojBroj instance in test.
             HomePage homePage = (HomePage) pageObject;
-            wait.until(ExpectedConditions.presenceOfElementLocated(homePage.getSinglePlayerLoc()));
+            waitForVisibilityOf(homePage.getSinglePlayerLoc());
             this.verifyMethods.verifyButtonIsClickable(homePage.getSinglePlayerLoc());
             takeSnapShot("MojBroj\\firefoxWorkaround", prop.getProperty("snapShotExtension"));
             //Initializing SinglePlayerGamePage object to return value of clickSinglePlayerGame method in HomePage class.
             singlePlayerGamePage = homePage.clickSinglePlayerGame();
-            wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
+            waitForVisibilityOf(locators.getContainerLoc());
             //Returning previously initialized object;
             return singlePlayerGamePage;
         }
         //if browser is not set to firefox goBack method called by MojBroj instance results in SinglePlayerGamePage object, which is received as method parameter and simply returned.
         return (SinglePlayerGamePage) pageObject;
     }
+
+    public void clickEachNumberAndDelete() {
+        WebElement userExpValue = find(userExpressionLoc);
+        int i = 1;
+        for (WebElement el : numbersList) {
+            String numberValue = el.getText();
+            el.click();
+            Reporter.log("Clicked on number on position: " + i + ", with value: "+numberValue+".");
+            System.out.println("Clicked on number on position: " + i + ", with value: "+numberValue+".");
+            verifyUserExp(userExpValue.getText(), numberValue);
+            click(deleteBtnLoc);
+            Reporter.log("Clicked delete button.");
+            System.out.println("Clicked delete button.");
+            verifyUserExp(userExpValue.getText(), "");
+            i++;
+        }
+    }
+
+    public void verifyUserExp(String actual, String expected) {
+        Reporter.log("Verifying value displayed in user expression text field element.");
+        System.out.println("Verifying value displayed in user expression text field element.");
+        Assert.assertEquals(actual, expected, "Value " + actual + " doesn't match displayed.");
+        Reporter.log("Expected value is displayed in user expression text field element.");
+        System.out.println("Expected value is displayed in user expression text field element.");
+    }
+
+    public void verifyEmtpyExpressionSubmit() {
+        Reporter.log("Submitting empty expression as potential solution.");
+        System.out.println("Submitting empty expression as potential solution.");
+        driver.findElement(submitBtnLoc).click();
+        dealWithAlert();
+        verifyMethods.verifyAlertMessage(this.getAlertMsg(), prop.getProperty("mojBrojBadExpMsg"));
+    }
+
 }

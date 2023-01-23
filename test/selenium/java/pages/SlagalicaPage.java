@@ -35,64 +35,74 @@ public class SlagalicaPage extends TestBase {
     public void printWords() throws IOException {
         this.dictionaryWordsList = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
         FindWordForSlagalicaGame findWord = new FindWordForSlagalicaGame();
-        System.out.println(findWord.computersLongestWord("OŠUGOĆUČAČIR", dictionaryWordsList));
+        System.out.println(findWord.computersLongestWord("ULjONjENEDžUSET", dictionaryWordsList));
+    }
+
+    public void verifyStopButtonDisplayed(){
+        Assert.assertTrue(find(stopButtonLocator).isDisplayed(), "Stop button not displayed!");
+        Reporter.log("Stop button is displayed.");
+        System.out.println("Stop button is displayed.");
     }
 
     public void verifyThatStopButtonIsClicked(){
-        WebElement stop = driver.findElement((stopButtonLocator));
-        Assert.assertTrue(stop.isDisplayed(), "Stop button not displayed!");
+        verifyMethods.verifyButtonIsClickable(stopButtonLocator);
+        click(stopButtonLocator);
         Reporter.log("Stop button is clicked.");
         System.out.println("Stop button is clicked.");
     }
 
     public void verifyThatPotvrdiButtonIsClicked(){
-        driver.findElement((potvrdiButtonLocator)).click();
+        click(potvrdiButtonLocator);
         Reporter.log("Potvrdi button is clicked.");
         System.out.println("Potvrdi button is clicked.");
     }
 
     public void verifyThatIzbrisiButtonIsClicked(){
-        driver.findElement((izbrisiButtonLocator)).click();
+        click(izbrisiButtonLocator);
         Reporter.log("Izbrisi button is clicked.");
         System.out.println("Izbrisi button is clicked.");
     }
 
     public void verifyThatFirstListIsDisplayed(){
-        WebElement firstlist = driver.findElement((firstListLocator));
-        Assert.assertTrue(firstlist.isDisplayed(), "First list not displayed!");
+        Assert.assertTrue(find(firstListLocator).isDisplayed(), "First list not displayed!");
         Reporter.log("First list is displayed.");
         System.out.println("First list is displayed.");
     }
 
     public void verifyThatSecondListIsDisplayed(){
-        WebElement secondlist = driver.findElement((secondListLocator));
-        Assert.assertTrue(secondlist.isDisplayed(), "Second list not displayed!");
-        Reporter.log("First list is displayed.");
-        System.out.println("First list is displayed.");
+        Assert.assertTrue(find(secondListLocator).isDisplayed(), "Second list not displayed!");
+        Reporter.log("Second list is displayed.");
+        System.out.println("Second list is displayed.");
     }
 
     public void verifyPopUpDialog(){
-        wait.until(ExpectedConditions.elementToBeClickable(popUpDialog));
-        WebElement popup = driver.findElement((popUpDialog));
+        waitForElToBeClickable(popUpDialog);
+        WebElement popup = find(popUpDialog);
         Assert.assertTrue(popup.isDisplayed(), "Popup dialog not displayed!");
         Reporter.log("Dialog is displayed.");
         System.out.println("Dialog is displayed.");
     }
 
     public void verifyCloseButtonIsClicked(){
-        wait.until(ExpectedConditions.elementToBeClickable(closeButton));
-        driver.findElement((closeButton)).click();
+        waitForVisibilityOf(closeButton);
+        verifyMethods.verifyButtonIsClickable(closeButton);
+        click((closeButton));
         Reporter.log("Close button clicked.");
         System.out.println("Close button clicked.");
+        waitForElToBeClickable(locators.getBackBtnLoc());
     }
 
     public void waitForPopuptoClose(){
-        wait.until(ExpectedConditions.elementToBeClickable(locators.getBackBtnLoc()));
+        waitForVisibilityOf(locators.getContainerLoc());
+        waitForElToBeClickable(locators.getBackBtnLoc());
     }
 
-    public void verifyStopButtonIsNotClickable(){
-        wait.until(ExpectedConditions.presenceOfElementLocated(stopButtonLocator));
-        this.verifyMethods.verifyButtonNotClickable(stopButtonLocator);
+    public void verifyTitlesAndContainer(){
+        setPageTitle();
+        setConfigTitle(prop.getProperty("slagalicaPageTitle"));
+        verifyMethods.verifyPageTitle();
+        verifyMethods.verifyContainerDisplayed();
+        verifyMethods.verifyContainerTitle(prop.getProperty("slagalicaContainerTitle"));
     }
 
 }

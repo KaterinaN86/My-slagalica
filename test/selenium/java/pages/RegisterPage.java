@@ -37,9 +37,8 @@ public class RegisterPage extends TestBase {
      * Verifying register form is displayed.
      */
     public void verifyRegisterFormDisplayed() {
-        WebElement registerFormEl = driver.findElement(registerFormLoc);
-        wait.until(ExpectedConditions.visibilityOf(registerFormEl));
-        Assert.assertTrue(registerFormEl.isDisplayed(), "Register form displayed not verified.");
+        waitForVisibilityOf(registerFormLoc);
+        Assert.assertTrue(find(registerFormLoc).isDisplayed(), "Register form displayed not verified.");
         Reporter.log("Verified register form displayed.");
         System.out.println("Register form is displayed.");
     }
@@ -48,7 +47,7 @@ public class RegisterPage extends TestBase {
      * Verifying log in button.
      */
     public void verifyLogInDisplayed() {
-        Assert.assertTrue(driver.findElement(loginBtnLoc).isDisplayed(), "Log in button not displayed!");
+        Assert.assertTrue(find(loginBtnLoc).isDisplayed(), "Log in button not displayed!");
         Reporter.log("Log in button verified!");
         System.out.println("Log in button is displayed.");
     }
@@ -62,7 +61,7 @@ public class RegisterPage extends TestBase {
         openSetup(prop.getProperty("registerUrl"));
         this.verifyMethods.verifyStateAfterOpen(prop.getProperty("registerPageTitle"));
         verifyRegisterFormDisplayed();
-        this.verifyMethods.verifyFormTitle(driver.findElement(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
+        this.verifyMethods.verifyFormTitle(find(registerFormTitleLoc).getText(), prop.getProperty("registerFormTitle"));
         verifyLogInDisplayed();
         return (RegisterPage) verifyMethods.verifyPageObjectInitialized(this);
     }
@@ -99,12 +98,12 @@ public class RegisterPage extends TestBase {
         Reporter.log("Registering user: " + username);
         System.out.println("Registering user: " + username);
         //Perform register action.
-        driver.findElement(locators.getRegisterBtnLoc()).click();
+       click(locators.getRegisterBtnLoc());
         //In firefox browser alert is not shown when user is successfully registered.
         if (browserName.equals("firefox") && message.equals(success)) {
             Reporter.log("User successfully registered.");
             System.out.println("User successfully registered.");
-            return (LoginPage) verifyMethods.verifyPageObjectInitialized(new LoginPage());
+            return verifyMethods.verifyPageObjectInitialized(new LoginPage());
         }
         //Check if alert response message matches specified.
         alertResponse(message);
