@@ -70,4 +70,5 @@ public class Locators {
     public By getH1TitleLoc() {
         return h1TitleLoc;
     }
+
 }

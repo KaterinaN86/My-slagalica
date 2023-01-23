@@ -15,8 +15,19 @@ public class SlagalicaGameTest extends SlagalicaPageTest {
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }
 
-    @Test(priority = 12)
+
+    @Test(priority = 8)
+    public void clickStopButton() {
+        this.slagalicaPage.verifyThatStopButtonIsClicked();
+    }
+
+    @Test(priority = 13)
     public void printWordsTest() throws IOException {
         this.slagalicaPage.printWords();
+    }
+    @Test(priority = 14)
+    public void verifyBackButton() {
+        this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
+        this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBackAfterGameFinished();
     }
 }
