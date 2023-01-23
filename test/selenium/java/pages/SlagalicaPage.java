@@ -12,6 +12,7 @@ import utility.ReadFromFile;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 
 public class SlagalicaPage extends TestBase {
 
@@ -46,6 +47,8 @@ public class SlagalicaPage extends TestBase {
         click(stopButtonLocator);
         Reporter.log("Stop button is clicked.");
         System.out.println("Stop button is clicked.");
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        waitForVisibilityOf(locators.getContainerLoc());
     }
 
     public void verifyThatPotvrdiButtonIsClicked() {
@@ -112,6 +115,16 @@ public class SlagalicaPage extends TestBase {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
+    }
+
+    public void clickLetterFromFirstList() {
+        List<WebElement> firstListLetters = find(firstListLocator).findElements(By.xpath("//button[starts-with(@id,'btn')]"));
+        waitForVisibilityOf(firstListLocator);
+        Random rn = new Random();
+        int answer = rn.nextInt(firstListLetters.size()) + 1;
+        System.out.println(firstListLetters.get(answer).getText());
+        waitForElToBeClickable(locators.getH1TitleLoc());
+
     }
 
 }
