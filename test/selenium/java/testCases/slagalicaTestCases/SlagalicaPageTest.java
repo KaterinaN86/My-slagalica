@@ -1,6 +1,7 @@
-package testCases;
+package testCases.slagalicaTestCases;
 
 import base.TestBase;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -91,6 +92,8 @@ public class SlagalicaPageTest extends TestBase {
     public void verifyBackButton() {
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
+        waitForVisibilityOf(locators.getContainerLoc());
     }
 
     @Test(priority = 15)

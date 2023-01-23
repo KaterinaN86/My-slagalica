@@ -1,5 +1,7 @@
-package testCases;
+package testCases.slagalicaTestCases;
 
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 import pages.SinglePlayerGamePage;
 
@@ -19,11 +21,13 @@ public class SlagalicaGameTest extends SlagalicaPageTest {
     @Test(priority = 8)
     public void clickStopButton() {
         this.slagalicaPage.verifyThatStopButtonIsClicked();
+        waitForElToBeClickable(locators.getH1TitleLoc());
     }
 
     @Test(priority = 13)
     public void printWordsTest() throws IOException {
         this.slagalicaPage.printWords();
+        wait.until(ExpectedConditions.presenceOfElementLocated(locators.getBackBtnLoc()));
     }
     @Test(priority = 14)
     public void verifyBackButton() {

@@ -269,6 +269,7 @@ public class VerifyMethods {
 
     public void verifyBackButtonIsClickable() {
         base.waitForVisibilityOf(TestBase.locators.getBackBtnLoc());
+        base.waitForElToBeClickable(TestBase.locators.getH1TitleLoc());
         Reporter.log("Check if go back button is clickable.");
         System.out.println("Check if go back button is clickable.");
         Assert.assertTrue(base.find(TestBase.locators.getBackBtnLoc()).isEnabled(), "Go back button is not enabled.");
