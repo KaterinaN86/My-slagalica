@@ -66,41 +66,41 @@ public class SlagalicaPageTest extends TestBase {
         this.slagalicaPage.verifyStopButtonDisplayed();
     }
 
-    @Test(priority = 8)
+    @Test(priority = 9)
     public void verifyPotvrdiButton() {
         this.slagalicaPage.verifyThatPotvrdiButtonIsClicked();
     }
 
-    @Test(priority = 9)
+    @Test(priority = 10)
     public void verifyDialog() {
         this.slagalicaPage.verifyPopUpDialog();
     }
 
-    @Test(priority = 10)
+    @Test(priority = 11)
     public void verifyCloseButtonClicked() {
         this.slagalicaPage.verifyCloseButtonIsClicked();
     }
 
-    @Test(priority = 11)
+    @Test(priority = 12)
     public void verifyDialogClosed() {
         takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
-        this.slagalicaPage.waitForPopuptoClose();
+        this.slagalicaPage.waitForPopupToClose();
     }
 
-    @Test(priority = 13)
+    @Test(priority = 14)
     public void verifyBackButton() {
         this.slagalicaPage.verifyMethods.verifyBackButtonIsClickable();
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
     }
 
-    @Test(priority = 14)
+    @Test(priority = 15)
     public void goBackToHomePage() {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
         this.homePage.verifyMethods.verifyContainerDisplayed();
     }
 
-    @Test(priority = 15)
+    @Test(priority = 16)
     public void logout() {
         this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
         this.homePage.logout();

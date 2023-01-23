@@ -84,14 +84,6 @@ public class TestBase {
     }
 
     /**
-     * Getter for alert message variable.
-     * @return String
-     */
-    public String getAlertMsg() {
-        return alertMsg;
-    }
-
-    /**
      * This method will take screenshot.
      */
 
@@ -114,6 +106,15 @@ public class TestBase {
             System.out.println("Error creating destination file for snapshot.");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Getter for alert message variable.
+     *
+     * @return String
+     */
+    public String getAlertMsg() {
+        return alertMsg;
     }
 
     /**
@@ -287,7 +288,6 @@ public class TestBase {
         System.out.println("Click back button on page: " + page);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
-        //driver.findElement().click();
         dealWithAlert();
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
@@ -296,7 +296,6 @@ public class TestBase {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
-
     }
 
     public void dealWithAlert() {
@@ -304,7 +303,7 @@ public class TestBase {
         Reporter.log("Alert popup displayed.");
         System.out.println("Alert popup displayed.");
         Alert registerAlert = driver.switchTo().alert();
-        alertMsg=registerAlert.getText();
+        alertMsg = registerAlert.getText();
         Reporter.log("Verify accept option in alert popup.");
         System.out.println("Checking if player can accept to go back.");
         registerAlert.accept();
@@ -362,7 +361,10 @@ public class TestBase {
         waitForVisibilityOf(locator);
         return driver.findElement(locator);
     }
-    /** Find all elements using given locator */
+
+    /**
+     * Find all elements using given locator
+     */
     public List<WebElement> findAll(By locator) {
         waitForVisibilityOf(locator);
         return driver.findElements(locator);

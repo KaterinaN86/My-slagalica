@@ -39,6 +39,7 @@ public class HomePage extends TestBase {
      */
     public LoginPage logout() {
         waitForVisibilityOf(locators.getContainerLoc());
+        waitForElToBeClickable(locators.getH1TitleLoc());
         this.verifyMethods.verifyButtonIsClickable(logOutLoc);
         Reporter.log("Logging out active user.");
         System.out.println("Logging out active user.");
