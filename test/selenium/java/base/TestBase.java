@@ -283,6 +283,7 @@ public class TestBase {
      */
     public TestBase goBack() {
         waitForElToBeClickable(locators.getContainerLoc());
+        waitForVisibilityOf(locators.getBackBtnLoc());
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
