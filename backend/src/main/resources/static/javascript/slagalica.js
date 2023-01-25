@@ -14,7 +14,7 @@ let time=90;
 
 backButton.addEventListener("click", goBack);
 document.addEventListener("DOMContentLoaded", () => {
-    stopButton.disabled = true;
+    disableButtons();
     fastAlphabetSwitch();
     handleNewGame();
 });
@@ -154,6 +154,7 @@ const setLettersToButtons = (data) => {
                document.getElementById(buttons[i]).textContent = data.lettersForFindingTheWord[i]
            }
         }
+        enableButtons();
         document.getElementById('stopButton').setAttribute("disabled", "disabled")
     }
 
@@ -217,17 +218,26 @@ function disableButtons() {
     const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
 
     buttons.forEach(buttonLetter => {
-
         document.getElementById(buttonLetter).setAttribute("disabled", "disabled")
-
-
     });
 
     document.getElementById('submitButton').setAttribute("disabled", "disabled")
     document.getElementById('deleteLetter').setAttribute("disabled", "disabled")
     document.getElementById('stopButton').setAttribute("disabled", "disabled")
-
 }
+
+function enableButtons() {
+
+    const buttons = ['btn1', 'btn2', 'btn3', 'btn4', 'btn5', 'btn6', 'btn7', 'btn8', 'btn9', 'btn10', 'btn11', 'btn12']
+
+    buttons.forEach(buttonLetter => {
+        document.getElementById(buttonLetter).disabled=false
+    });
+
+    document.getElementById('submitButton').disabled=false
+    document.getElementById('deleteLetter').disabled=false
+}
+
 const startTimer=(order) =>{
     if (order == "stop") {
         clearInterval(timerInterval);
