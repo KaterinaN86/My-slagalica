@@ -126,7 +126,7 @@ public class KoZnaZnaServiceImpl implements KoZnaZnaGameService{
                         .build();
             }
             else if(!game.getIsActive(principal).isActiveKoZnaZna() || !questionIndexForCurrentPlayer.equals(questionIndex)){
-                return ResponseEntity.status(404)
+                return ResponseEntity.status(403)
                         .body(new AnswerResponse(0));
             }
             else {

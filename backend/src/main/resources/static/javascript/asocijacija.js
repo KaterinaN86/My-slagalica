@@ -163,8 +163,6 @@ const sendSubmit = async () =>{
                     }
                 }
                 if(pressedButtonId == 'final'){
-                    showAll();
-                    timer("stop");
                     await finishGame();
                 }
             }
@@ -197,6 +195,8 @@ async function finishGame(){
     }
     isActiveGame=false;
     closeModal();
+    showAll();
+    timer("stop");
 }
 
 

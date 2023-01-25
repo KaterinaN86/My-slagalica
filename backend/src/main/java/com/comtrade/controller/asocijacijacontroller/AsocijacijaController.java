@@ -1,9 +1,8 @@
 package com.comtrade.controller.asocijacijacontroller;
 
+import com.comtrade.exceptions.GameNotFoundException;
 import com.comtrade.model.asocijacijamodel.Response;
-import com.comtrade.model.asocijacijamodel.SubmitFieldName;
 import com.comtrade.model.asocijacijamodel.SubmitFieldValue;
-import com.comtrade.model.asocijacijamodel.SubmitNumberOfFields;
 import com.comtrade.service.asocijacijaservice.AsocijacijaServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,7 @@ public class AsocijacijaController {
     }
 
     @GetMapping("/asocijacija/play")
-    public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal) throws Exception {
+    public ResponseEntity<Response> createNewAsocijacijaGame(Principal principal) throws GameNotFoundException {
         if(!asocijacijaService.isActiveGame(principal)){
             return ResponseEntity.notFound().build();
         }
@@ -40,12 +39,12 @@ public class AsocijacijaController {
     //Only for testing purpose
     //To check its imposible to get final word when game is active
     @GetMapping("/asocijacija/change/{gameId}")
-    public void change(@PathVariable Long gameId, Principal principal){
+    public void change(@PathVariable Long gameId, Principal principal) throws GameNotFoundException {
         asocijacijaService.change(gameId, principal);
     }
 
     @GetMapping("/asocijacija/getNumberOfPoints/{gameId}")
-    public ResponseEntity<Response> getNumberOfPoints(@PathVariable Long gameId, Principal principal){
+    public ResponseEntity<Response> getNumberOfPoints(@PathVariable Long gameId, Principal principal) throws GameNotFoundException {
         return asocijacijaService.getNumberOfPoints(gameId,principal);
     }
     @PutMapping("/asocijacija/finishGame")

@@ -1,12 +1,11 @@
 package com.comtrade.service.spojniceservice;
 
+import com.comtrade.exceptions.GameNotFoundException;
 import com.comtrade.model.Timers;
 import com.comtrade.model.games.Game;
 import com.comtrade.model.spojnicemodel.PairsModel;
 import com.comtrade.model.spojnicemodel.SpojniceGame;
 import com.comtrade.repository.TimersRepository;
-import com.comtrade.repository.gamerepository.OnePlayerGameRepository;
-import com.comtrade.repository.gamerepository.TwoPlayerGameRepository;
 import com.comtrade.repository.spojnicerepository.PairsRepository;
 import com.comtrade.repository.spojnicerepository.SpojniceRepository;
 import com.comtrade.service.gameservice.GameServiceImpl;
@@ -25,16 +24,12 @@ public class SpojniceServiceImpl implements SpojniceService{
     private final SpojniceRepository spojniceRepository;
     private final PairsRepository pairsRepository;
     private final TimersRepository timersRepository;
-    private final OnePlayerGameRepository onePlayerGameRepository;
-    private final TwoPlayerGameRepository twoPlayerGameRepository;
     private final GameServiceImpl gameService;
 
-    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, TimersRepository timersRepository, OnePlayerGameRepository onePlayerGameRepository, TwoPlayerGameRepository twoPlayerGameRepository, GameServiceImpl gameService) {
+    public SpojniceServiceImpl(SpojniceRepository spojniceRepository, PairsRepository pairsRepository, TimersRepository timersRepository, GameServiceImpl gameService) {
         this.spojniceRepository = spojniceRepository;
         this.pairsRepository = pairsRepository;
         this.timersRepository = timersRepository;
-        this.onePlayerGameRepository = onePlayerGameRepository;
-        this.twoPlayerGameRepository = twoPlayerGameRepository;
         this.gameService = gameService;
     }
 
@@ -53,21 +48,13 @@ public class SpojniceServiceImpl implements SpojniceService{
     }
 
     public List<String> getWords(Principal principal) throws Exception {
-
         SpojniceGame game = getGame(principal);
         List<String> column1 = List.of(game.getPairsModel().getColumn1().split(", "));
         List<String> column2 = List.of(game.getPairsModel().getColumn2().split(", "));
         List<String> words = new ArrayList<>();
-
-        for (String word : column1) {
-            words.add(word.split(":")[1]);
-        }
-
-        for (String word : column2) {
-            words.add(word.split(":")[1]);
-        }
+        column1.forEach(word -> words.add(word.split(":")[1]));
+        column2.forEach(word -> words.add(word.split(":")[1]));
         words.add(game.getPairsModel().getHeadline());
-
         return words;
 
     }
@@ -124,9 +111,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         List<String> col2= List.of(spojniceGame.getPairsModel().getColumn2().split(", "));
 
         HashMap<String, String> col2Map = new HashMap<>();
-        for(String word:col2){
-            col2Map.put(word.split(":")[0],word.split(":")[1]);
-        }
+        col2.forEach(word -> col2Map.put(word.split(":")[0],word.split(":")[1]));
 
         HashMap<String,String> pairs=new HashMap<>();
         for(int i=0;i<col1.size();i++){
@@ -160,7 +145,7 @@ public class SpojniceServiceImpl implements SpojniceService{
         return onePlayerGame.getPoints(principal).getNumOfPointsSpojnice();
     }
 
-    public boolean isActiveGame(Principal principal) throws Exception {
+    public boolean isActiveGame(Principal principal) throws GameNotFoundException {
         return gameService.getGame(principal).getIsActive(principal).isActiveSpojnice();
     }
 

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 
 
 @Entity
@@ -23,5 +22,4 @@ public class AsocijacijaGame {
     @ManyToOne
     @JoinColumn(name = "rijeci_id")
     private WordModel wordModel;
-
 }
