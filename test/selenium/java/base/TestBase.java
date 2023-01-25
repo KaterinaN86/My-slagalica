@@ -288,7 +288,11 @@ public class TestBase {
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
+        try {
+            js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
+        }catch (Exception e){
+            System.err.println("Stale element error.");
+        }
         dealWithAlert();
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
@@ -347,6 +351,23 @@ public class TestBase {
         while (attempts < 2) {
             try {
                 waitFor(ExpectedConditions.elementToBeClickable(locator),
+                        (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
+                break;
+            } catch (StaleElementReferenceException e) {
+            }
+            attempts++;
+        }
+    }
+
+    /**
+     * Wait for given number of seconds for given WebElement object to be clickable
+     * on the page
+     */
+    public void waitForElToBeClickable(WebElement element, Duration... timeOutInSeconds) {
+        int attempts = 0;
+        while (attempts < 2) {
+            try {
+                waitFor(ExpectedConditions.elementToBeClickable(element),
                         (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
                 break;
             } catch (StaleElementReferenceException e) {

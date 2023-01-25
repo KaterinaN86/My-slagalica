@@ -77,4 +77,8 @@ public class SinglePlayerGamePage extends TestBase {
         click(slagalicaBtnLoc);
         return (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
     }
+    public void verifyBeforeGoingBack(){
+        this.waitForElToBeClickable(locators.getH1TitleLoc());
+        this.waitForElToBeClickable(locators.getBackBtnLoc());
+    }
 }

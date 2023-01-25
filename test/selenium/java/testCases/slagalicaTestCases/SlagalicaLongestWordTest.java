@@ -2,50 +2,41 @@ package testCases.slagalicaTestCases;
 
 import org.testng.annotations.Test;
 import pages.SinglePlayerGamePage;
+import pages.SlagalicaPage;
 
-public class SlagalicaGameTest extends SlagalicaBaseTest {
+public class SlagalicaLongestWordTest extends SlagalicaBaseTest {
 
     @Test(priority = 4)
-    public void clickStopButton() {
+    public void clickStopButtonTest() {
         this.slagalicaPage.verifyThatStopButtonIsClicked();
-        waitForElToBeClickable(locators.getH1TitleLoc());
     }
 
     @Test(priority = 5)
-    public void clickRandomLettersAfterStopTest(){
-        this.slagalicaPage.clickRandomLetters();
-    }
-
-    @Test(priority = 6)
-    public void verifyUserWordFieldTest(){
-        this.slagalicaPage.verifyLettersAppearsInUserWordField();
-    }
-    @Test(priority = 7)
     public void verifyClickPotvrdiTest() {
         this.slagalicaPage.verifyThatPotvrdiButtonIsClicked();
     }
-    @Test(priority = 8)
+    @Test(priority = 6)
     public void verifyDialog() {
         this.slagalicaPage.verifyPopUpDialog();
     }
 
-    @Test(priority = 9)
+    @Test(priority = 7)
     public void verifyGeneratedWordTest() {
-        this.slagalicaPage.getActualComputerWord();
+        this.slagalicaPage.verifyComputerGeneratedWord();
     }
 
-    @Test(priority = 10)
+    @Test(priority = 9)
     public void verifyCloseButtonClicked() {
         this.slagalicaPage.verifyMethods.verifyButtonIsClickable(this.slagalicaPage.closeButton);
         this.slagalicaPage.verifyCloseButtonIsClicked();
     }
 
-    @Test(priority = 11)
+    @Test(priority = 10)
     public void verifyDialogClosed() {
         takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopupToClose();
     }
-    @Test(priority = 12)
+    @Test(priority = 11)
     public void waitBeforeGoBackTest() {
         this.slagalicaPage.waitBeforeGoingBack();
     }

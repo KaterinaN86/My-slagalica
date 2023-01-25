@@ -48,22 +48,31 @@ public class SlagalicaBaseTest extends TestBase {
     public void verifyBackButton() {
         this.slagalicaPage.waitForVisibilityOf(locators.getBackBtnLoc());
     }
+
     @Test(priority = 25)
     public void goBackToSinglePlayerGamePage() {
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
-        this.singlePlayerGamePage.verifyMethods.verifyContainerDisplayed();
     }
 
     @Test(priority = 26)
+    public void verifyBeforeGoBackToHomePage() {
+        this.singlePlayerGamePage.verifyBeforeGoingBack();
+    }
+
+    @Test(priority = 27)
     public void goBackToHomePage() {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
         this.homePage.verifyMethods.verifyContainerDisplayed();
     }
 
-    @Test(priority = 27)
+    @Test(priority = 28)
+    public void waitBeforeLogoutTest() {
+        this.homePage.waitBeforeLogout();
+    }
+
+    @Test(priority = 29)
     public void logout() {
-        this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
         this.homePage.logout();
     }
 
