@@ -79,7 +79,7 @@ CREATE TABLE pairs_model (
 
 CREATE TABLE points (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    num_of_points_asocijacije INTEGER,
+    num_of_points_asocijacije DOUBLE,
     num_of_points_ko_zna_zna INTEGER,
     num_of_points_moj_broj INTEGER,
     num_of_points_skocko INTEGER,

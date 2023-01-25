@@ -85,7 +85,6 @@ public class SlagalicaServiceImp implements SlagalicaService {
            word=searchLetterWithTwoCharsInWord("dž","Dž", word, tempLettersForWordMap, letterCount);
 
            letterCount=getLetterCount(word, tempLettersForWordMap, letterCount);
-           System.out.println(tempLettersForWordMap.toString());
            if (letterCount > longestWord.length()) {
                 longestWord = dictionaryWord.getWordFromDictionary();
            }
