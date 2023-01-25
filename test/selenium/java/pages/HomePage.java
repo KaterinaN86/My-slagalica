@@ -56,5 +56,9 @@ public class HomePage extends TestBase {
         System.out.println("Single player game page option clicked.");
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
+    public void waitBeforeLogout(){
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        waitForElToBeClickable(logOutLoc);
+    }
 
 }

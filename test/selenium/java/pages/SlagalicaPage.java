@@ -16,28 +16,26 @@ import java.util.Random;
 
 public class SlagalicaPage extends TestBase {
 
+    public By firstListLocator = new By.ByXPath("//div[@class='pt-5']");
+    public By secondListLocator = new By.ByXPath("//div[@class='pt-2']");
+    public By closeButton = new By.ByXPath("//button[text()='Zatvori']");
     By stopButtonLocator = new By.ById("stopButton");
     By potvrdiButtonLocator = new By.ById("submitButton");
     By izbrisiButtonLocator = new By.ById("deleteLetter");
-    public By firstListLocator = new By.ByXPath("//div[@class='pt-5']");
-    public By secondListLocator = new By.ByXPath("//div[@class='pt-2']");
     By userWordFieldLocator = new By.ById("userWord");
-    By buttonsInListLocator = new By.ByXPath("//*[starts-with(@id,'btn')]");
+    By buttonsInListLocator = new By.ByXPath("//button[starts-with(@id,'btn')]");
     By popUpDialog = new By.ByXPath("//div[@class='modal-content']");
-    By closeButton = new By.ByXPath("//button[text()='Zatvori']");
+    By computerWord = new By.ById("computerWordTxt");
     List<String> dictionaryWordsList;
-    List<WebElement> firstListLetterButtons;
-    List<WebElement> secondListLetterButtons;
-    String letters = "";
+    String clickedLetters = "";
+    String expectedLongestWord = "";
+    String actualComputerWord = "";
+    String randomLetters = "";
+
+    private Random rnd = new Random();
 
     public SlagalicaPage() {
         super();
-    }
-
-    public void printWords() {
-        this.dictionaryWordsList = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
-        FindWordForSlagalicaGame findWord = new FindWordForSlagalicaGame();
-        System.out.println(findWord.computersLongestWord("ULjONjENEDžUSET", dictionaryWordsList));
     }
 
     public void verifyStopButtonDisplayed() {
@@ -47,13 +45,10 @@ public class SlagalicaPage extends TestBase {
     }
 
     public void verifyThatStopButtonIsClicked() {
-        waitForElToBeClickable(stopButtonLocator, Duration.ofSeconds(10));
+        waitForStopButtonClickableDelay();
         verifyMethods.verifyButtonIsClickable(stopButtonLocator);
         click(stopButtonLocator);
         Reporter.log("Stop button is clicked.");
-        System.out.println("Stop button is clicked.");
-        waitForElToBeClickable(locators.getH1TitleLoc());
-        waitForVisibilityOf(locators.getContainerLoc());
     }
 
     public void verifyThatPotvrdiButtonIsClicked() {
@@ -113,49 +108,107 @@ public class SlagalicaPage extends TestBase {
         verifyMethods.verifyContainerTitle(prop.getProperty("slagalicaContainerTitle"));
     }
 
+    public void waitBeforeGoingBack() {
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        waitForElToBeClickable(locators.getBackBtnLoc());
+    }
+
     public SinglePlayerGamePage goBackAfterGameFinished() {
         waitForElToBeClickable(locators.getContainerLoc());
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
-        verifyMethods.verifyBackButtonIsClickable();
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
+        try {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            WebElement goBackButton = find(locators.getBackBtnLoc());
+            waitForElToBeClickable(goBackButton);
+            this.verifyMethods.verifyBackButtonIsClickable();
+            waitForElToBeClickable(locators.getH1TitleLoc());
+            js.executeScript("arguments[0].click()", goBackButton);
+        } catch (Exception e) {
+            System.err.println("*******Stale element error*********");
+        }
+        waitForElToBeClickable(locators.getH1TitleLoc());
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
 
-    private void initializeButtonsLists(){
-        firstListLetterButtons = find(firstListLocator).findElements(buttonsInListLocator);
-        secondListLetterButtons = find(secondListLocator).findElements(buttonsInListLocator);
-    }
-
-    public void clickLetterFromList(List<WebElement> btnList) {
+    public void getRandomLettersFromButtons() {
+        StringBuilder result = new StringBuilder();
+        waitForVisibilityOf(locators.getH1TitleLoc());
+        Reporter.log("Get text from letters after clicking stop button.");
+        System.out.println("Get text from letters after clicking stop button.");
         waitForVisibilityOf(firstListLocator);
-        Random rn = new Random();
-        int index = rn.nextInt(btnList.size());
-        WebElement letterButton = btnList.get(index);
-        wait.until(ExpectedConditions.visibilityOf(letterButton));
-        Assert.assertTrue(letterButton.isEnabled(), "Selected letter button not clickable!");
-        letterButton.click();
-        String letter = letterButton.getText();
-        letters += letter;
-        Reporter.log("Clicked letter: " + letter);
-        System.out.println("Clicked letter: " + letter);
+        waitForVisibilityOf(secondListLocator);
+        List<WebElement> buttonsList = findAll(buttonsInListLocator);
+        for (WebElement el : buttonsList) {
+            result.append(el.getText());
+        }
+        this.randomLetters = result.toString();
+        Reporter.log("Computer generated letters: " + randomLetters);
+        System.out.println("Computer generated letters: " + randomLetters);
+        waitForVisibilityOf(locators.getContainerLoc());
     }
 
-    public void clickLettersBeforeStop(By locator) {
-        Reporter.log("Click letters before clicking stop button.");
-        System.out.println("Click letters before clicking stop button.");
-        waitForVisibilityOf(locator);
-        List <WebElement> buttonsList = find(locator).findElements(buttonsInListLocator);
-        int index = new Random().nextInt(buttonsList.size());
-        wait.until(ExpectedConditions.visibilityOfAllElements(buttonsList));
-        buttonsList.get(index).click();
+    public void getExpectedLongestWord() {
+        this.dictionaryWordsList = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
+        FindWordForSlagalicaGame findWord = new FindWordForSlagalicaGame();
+        this.expectedLongestWord = findWord.computersLongestWord(this.randomLetters, dictionaryWordsList);
+        Reporter.log("Expected longest generated word is: " + expectedLongestWord);
+        System.out.println("Expected longest generated word is: " + expectedLongestWord);
+    }
+
+    public void getActualComputerWord() {
+        waitForVisibilityOf(computerWord);
+        String[] generatedTextList = find(computerWord).getText().split(" ");
+        actualComputerWord = generatedTextList[generatedTextList.length - 1];
+        Reporter.log("Actual computer generated word is: " + actualComputerWord);
+        System.out.println("Actual computer generated word is: " + actualComputerWord);
+    }
+
+    public void verifyComputerGeneratedWord() {
+        getRandomLettersFromButtons();
+        getExpectedLongestWord();
+        getActualComputerWord();
+        Reporter.log("Verifying computer generated longest word matches expected.");
+        System.out.println("Verifying computer generated longest word matches expected.");
+        Assert.assertEquals(actualComputerWord, this.expectedLongestWord, "Longest generated computer word: " + this.actualComputerWord + " doesn't match expected " + this.expectedLongestWord);
+        Reporter.log("Computer generated word: " + this.actualComputerWord.toUpperCase() + " matches expected.");
+        System.out.println("Computer generated word: " + this.actualComputerWord.toUpperCase() + " matches expected.");
+        waitForVisibilityOf(closeButton);
+    }
+
+    public void waitForStopButtonClickableDelay(){
+        waitForVisibilityOf(stopButtonLocator);
+        waitForElToBeClickable(stopButtonLocator, Duration.ofSeconds(10));
+    }
+
+    public void clickRandomLetters() {
+        Reporter.log("Click random letters.");
+        System.out.println("Click random letters.");
+        waitForVisibilityOf(firstListLocator);
+        waitForVisibilityOf(secondListLocator);
+        List<WebElement> letterButtonsList = findAll(buttonsInListLocator);
+        wait.until(ExpectedConditions.visibilityOfAllElements(letterButtonsList));
+        for (int i = 0; i < 3; i++) {
+            int index = rnd.nextInt(letterButtonsList.size());
+            clickButtonWithIndex(index, letterButtonsList);
+        }
+    }
+
+    public void clickButtonWithIndex(int index, List<WebElement> letterButtonsList) {
+        WebElement el = letterButtonsList.get(index);
+        waitForElToBeClickable(el, Duration.ofSeconds(10));
+        Assert.assertTrue(el.isEnabled(), "Selected letter button not clickable!");
+        el.click();
         waitForElToBeClickable(locators.getH1TitleLoc());
-        Reporter.log("Clicked button on position " + index + " in list of letters.");
-        System.out.println("Clicked button on position " + index + " in list of letters.");
-        waitForVisibilityOf(userWordFieldLocator);
-        System.out.println(find(userWordFieldLocator).getText());
+        Reporter.log("Clicked button on position " + (index + 1) + " in list of letters.");
+        System.out.println("Clicked button on position " + (index + 1) + " in list of letters.");
+        if (!find(stopButtonLocator).isEnabled()) {
+            String letter = el.getText();
+            this.clickedLetters += letter;
+            Reporter.log("Clicked letter: " + letter);
+            System.out.println("Clicked letter: " + letter);
+        }
         waitForVisibilityOf(locators.getBackBtnLoc());
     }
 
@@ -182,15 +235,15 @@ public class SlagalicaPage extends TestBase {
         waitForVisibilityOf(locators.getContainerLoc());
     }
 
-    public void verifyLettersAppearsInUserWrodField() {
+    public void verifyLettersAppearsInUserWordField() {
+        waitForElToBeClickable(locators.getH1TitleLoc());
         waitForVisibilityOf(userWordFieldLocator);
-        verifyMethods.verifyButtonNotClickable(userWordFieldLocator);
         String userWordText = find(userWordFieldLocator).getText();
-        Reporter.log("Verifying clicked letter is shown in user word text field.");
-        System.out.println("Verifying clicked letter is shown in user word text field.");
-        Assert.assertEquals(userWordText, letters, "Clicked letter is not displayed.");
-        Reporter.log("Letter is displayed!. Complete user text displayed: " + userWordText);
-        System.out.println("Letter is displayed!. Complete user text displayed: " + userWordText);
+        Reporter.log("Verifying clicked letters are shown in user word text field.");
+        System.out.println("Verifying clicked letters are shown in user word text field.");
+        Assert.assertEquals(userWordText, clickedLetters, "Clicked letters are not displayed.");
+        Reporter.log("Letters displayed!. Complete user text displayed: " + userWordText);
+        System.out.println("Letters displayed!. Complete user text displayed: " + userWordText);
     }
 
 }
