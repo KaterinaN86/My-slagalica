@@ -10,8 +10,8 @@ public class SlagalicaGameNegativeTestCase extends SlagalicaBaseTest {
         this.slagalicaPage.clickRandomLetters();
     }
     @Test(priority = 5)
-    public void verifyUserWordElementNotEmptyTest() {
-        this.slagalicaPage.verifyUserWordFieldNotEmpty();
+    public void verifyUserWordElementIsEmptyTest() {
+        this.slagalicaPage.verifyUserWordFieldIsEmpty();
     }
     @Test (priority =6)
     public void verifyTimerNotStartedTest(){

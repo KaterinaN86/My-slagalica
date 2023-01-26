@@ -7,33 +7,45 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
-import utility.FindWordForSlagalicaGame;
 import utility.ReadFromFile;
+import utility.slagalica.DictionaryWord;
+import utility.slagalica.FindWordForSlagalicaGame;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.TreeSet;
 
 public class SlagalicaPage extends TestBase {
+    //Locators for lists of buttons with generated letters.
+    public By firstListLocator = new By.ByXPath("//div[@class='pt-5']"),
+            secondListLocator = new By.ByXPath("//div[@class='pt-2']"),
+    //Locator for "Zatvori" button on pop up dialog that appears when button "Potvrdi" is clicked.
+    closeButton = new By.ByXPath("//button[text()='Zatvori']");
+    By stopButtonLocator = new By.ById("stopButton"),
+            potvrdiButtonLocator = new By.ById("submitButton"),
+            izbrisiButtonLocator = new By.ById("deleteLetter"),
+    //Locator for element displaying text composed of letters clicked by player.
+    userWordFieldLocator = new By.ById("userWord"),
+    //Locator for list of button elements that display random letters.
+    buttonsInListLocator = new By.ByXPath("//button[starts-with(@id,'btn')]"),
+    //Locator for pop up dialog container.
+    popUpDialog = new By.ByXPath("//div[@class='modal-content']"),
+    //Locator for computer generated word (solution word).
+    computerWord = new By.ById("computerWordTxt");
+    //Stores letters clicked by player.
+    String clickedLetters = "",
+    //Stores the expected longest word.
+    expectedLongestWord = "",
+    //Stores actual computer word (solution word), needs to match expectedLongestWord.
+    actualComputerWord = "",
+    //Stores random letters generated after "Stop" button is clicked.
+    randomLetters = "";
+    // Random object used for clicking letters.
+    Random rnd = new Random();
 
-    public By firstListLocator = new By.ByXPath("//div[@class='pt-5']");
-    public By secondListLocator = new By.ByXPath("//div[@class='pt-2']");
-    public By closeButton = new By.ByXPath("//button[text()='Zatvori']");
-    By stopButtonLocator = new By.ById("stopButton");
-    By potvrdiButtonLocator = new By.ById("submitButton");
-    By izbrisiButtonLocator = new By.ById("deleteLetter");
-    By userWordFieldLocator = new By.ById("userWord");
-    By buttonsInListLocator = new By.ByXPath("//button[starts-with(@id,'btn')]");
-    By popUpDialog = new By.ByXPath("//div[@class='modal-content']");
-    By computerWord = new By.ById("computerWordTxt");
-    List<String> dictionaryWordsList;
-    String clickedLetters = "";
-    String expectedLongestWord = "";
-    String actualComputerWord = "";
-    String randomLetters = "";
-
-    private Random rnd = new Random();
-
+    //Constructor.
     public SlagalicaPage() {
         super();
     }
@@ -47,8 +59,10 @@ public class SlagalicaPage extends TestBase {
     public void verifyThatStopButtonIsClicked() {
         waitForStopButtonClickableDelay();
         verifyMethods.verifyButtonIsClickable(stopButtonLocator);
+        waitForStopButtonClickableDelay();
         click(stopButtonLocator);
         Reporter.log("Stop button is clicked.");
+        System.out.println("Stop button is clicked.");
     }
 
     public void verifyThatPotvrdiButtonIsClicked() {
@@ -86,6 +100,7 @@ public class SlagalicaPage extends TestBase {
         System.out.println("Dialog is displayed.");
     }
 
+    //Verify "Zatvori" button on "Potvrdi" pop up dialog is closed.
     public void verifyCloseButtonIsClicked() {
         waitForVisibilityOf(closeButton);
         verifyMethods.verifyButtonIsClickable(closeButton);
@@ -108,22 +123,29 @@ public class SlagalicaPage extends TestBase {
         verifyMethods.verifyContainerTitle(prop.getProperty("slagalicaContainerTitle"));
     }
 
+    // Adding waits before going back to SinglePlayerGamePage.
     public void waitBeforeGoingBack() {
         waitForElToBeClickable(locators.getH1TitleLoc());
         waitForElToBeClickable(locators.getBackBtnLoc());
     }
 
+    /**
+     * Since there is no alert after player finishes game, we need different method to back to SinglePlayerGame page.
+     *
+     * @return SinglePlayerGamePage object
+     */
     public SinglePlayerGamePage goBackAfterGameFinished() {
         waitForElToBeClickable(locators.getContainerLoc());
+        //Variable for storing name of current class.
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
         System.out.println("Click back button on page: " + page);
+        //Added because of pop up dialog covering back button bug.
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             WebElement goBackButton = find(locators.getBackBtnLoc());
             waitForElToBeClickable(goBackButton);
             this.verifyMethods.verifyBackButtonIsClickable();
-            waitForElToBeClickable(locators.getH1TitleLoc());
             js.executeScript("arguments[0].click()", goBackButton);
         } catch (Exception e) {
             System.err.println("*******Stale element error*********");
@@ -132,8 +154,8 @@ public class SlagalicaPage extends TestBase {
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
 
+    //Initialize randomLetters class variable.
     public void getRandomLettersFromButtons() {
-        StringBuilder result = new StringBuilder();
         waitForVisibilityOf(locators.getH1TitleLoc());
         Reporter.log("Get text from letters after clicking stop button.");
         System.out.println("Get text from letters after clicking stop button.");
@@ -141,73 +163,113 @@ public class SlagalicaPage extends TestBase {
         waitForVisibilityOf(secondListLocator);
         List<WebElement> buttonsList = findAll(buttonsInListLocator);
         for (WebElement el : buttonsList) {
-            result.append(el.getText());
+            randomLetters = randomLetters.concat(el.getText());
         }
-        this.randomLetters = result.toString();
         Reporter.log("Computer generated letters: " + randomLetters);
         System.out.println("Computer generated letters: " + randomLetters);
         waitForVisibilityOf(locators.getContainerLoc());
     }
 
+    //Initializes expectedLongestWord. Reads from text file and finds the longest one to match generated letters.
     public void getExpectedLongestWord() {
-        this.dictionaryWordsList = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
+        getRandomLettersFromButtons();
+        TreeSet<DictionaryWord> dictionaryWordsSet = new TreeSet<>();
+        List<String> words = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
+        for (String word : words) {
+            dictionaryWordsSet.add(new DictionaryWord(word));
+        }
+        List<DictionaryWord> wordObjects = new ArrayList<>(dictionaryWordsSet);
         FindWordForSlagalicaGame findWord = new FindWordForSlagalicaGame();
-        this.expectedLongestWord = findWord.computersLongestWord(this.randomLetters, dictionaryWordsList);
+        expectedLongestWord = findWord.computersLongestWord(randomLetters, wordObjects);
         Reporter.log("Expected longest generated word is: " + expectedLongestWord);
         System.out.println("Expected longest generated word is: " + expectedLongestWord);
     }
 
+    //Initializes actualComputerWord by getting text from corresponding WebElement object.
     public void getActualComputerWord() {
+        // String actualComputerWord = "";
         waitForVisibilityOf(computerWord);
-        String[] generatedTextList = find(computerWord).getText().split(" ");
+        String text = find(computerWord).getText();
+        //List is created by separating each word from web element's text.
+        String[] generatedTextList = text.split(" ");
+        //Only the last word of list is needed to initialize variable.
         actualComputerWord = generatedTextList[generatedTextList.length - 1];
         Reporter.log("Actual computer generated word is: " + actualComputerWord);
         System.out.println("Actual computer generated word is: " + actualComputerWord);
     }
 
     public void verifyComputerGeneratedWord() {
-        getRandomLettersFromButtons();
         getExpectedLongestWord();
         getActualComputerWord();
-        Reporter.log("Verifying computer generated longest word matches expected.");
-        System.out.println("Verifying computer generated longest word matches expected.");
-        Assert.assertEquals(actualComputerWord, this.expectedLongestWord, "Longest generated computer word: " + this.actualComputerWord + " doesn't match expected " + this.expectedLongestWord);
-        Reporter.log("Computer generated word: " + this.actualComputerWord.toUpperCase() + " matches expected.");
-        System.out.println("Computer generated word: " + this.actualComputerWord.toUpperCase() + " matches expected.");
+        Reporter.log("Verifying computer generated word matches expected longest word.");
+        System.out.println("Verifying computer generated word matches expected longest word.");
+        Assert.assertEquals(actualComputerWord, expectedLongestWord, "Longest generated computer word: " + actualComputerWord + " doesn't match expected " + expectedLongestWord);
+        Reporter.log("Computer generated word: " + actualComputerWord + " matches expected.");
+        System.out.println("Computer generated word: " + actualComputerWord + " matches expected.");
         waitForVisibilityOf(closeButton);
     }
 
-    public void waitForStopButtonClickableDelay(){
+    //Wait for stop button to be clickable. Workaround for delay bug.
+    public void waitForStopButtonClickableDelay() {
         waitForVisibilityOf(stopButtonLocator);
         waitForElToBeClickable(stopButtonLocator, Duration.ofSeconds(10));
     }
 
+    private int generateUnique(ArrayList<Integer> generated, int maxValue) {
+        int index = rnd.nextInt(maxValue);
+        while (generated.contains(index)) {
+            index = rnd.nextInt(maxValue);
+        }
+        generated.add(index);
+        return index;
+    }
+
+    //Clicks on three random letters form list of letter buttons.
     public void clickRandomLetters() {
+        this.clickedLetters = "";
         Reporter.log("Click random letters.");
         System.out.println("Click random letters.");
         waitForVisibilityOf(firstListLocator);
         waitForVisibilityOf(secondListLocator);
+        //List of button WebElement objects that contain letter as text.
         List<WebElement> letterButtonsList = findAll(buttonsInListLocator);
+        int maxValue = letterButtonsList.size();
+        ArrayList<Integer> generated = new ArrayList<>();
         wait.until(ExpectedConditions.visibilityOfAllElements(letterButtonsList));
-        for (int i = 0; i < 3; i++) {
-            int index = rnd.nextInt(letterButtonsList.size());
+        for (int i = 0; i < 7; i++) {
+            //Random int from 0 to 12 (excluding 12).
+            int index = generateUnique(generated, maxValue);
             clickButtonWithIndex(index, letterButtonsList);
         }
     }
 
+    /**
+     * Helper method that clicks on WebElement with specified index. Web element is part of list of letter button elements.
+     *
+     * @param index             int (Position of element in list).
+     * @param letterButtonsList List<WebElement> (List of buttons with letters).
+     */
     public void clickButtonWithIndex(int index, List<WebElement> letterButtonsList) {
+        //Initializing button element.
         WebElement el = letterButtonsList.get(index);
-        waitForElToBeClickable(el, Duration.ofSeconds(10));
-        Assert.assertTrue(el.isEnabled(), "Selected letter button not clickable!");
-        el.click();
-        waitForElToBeClickable(locators.getH1TitleLoc());
-        Reporter.log("Clicked button on position " + (index + 1) + " in list of letters.");
-        System.out.println("Clicked button on position " + (index + 1) + " in list of letters.");
-        if (!find(stopButtonLocator).isEnabled()) {
+        if (find(stopButtonLocator).isEnabled()) {
+            Reporter.log("Stop button is not clicked!");
+            System.out.println("Stop button is not clicked!");
+            Assert.assertFalse(el.isEnabled(), "Letter button is not disabled!");
+            Reporter.log("Letter button on position " + (index + 1) + " not clickable.");
+            System.out.println("Letter button on position " + (index + 1) + " not clickable.");
+        } else {
+            waitForElToBeClickable(el, Duration.ofSeconds(10));
+            Assert.assertTrue(el.isEnabled(), "Selected letter button not clickable!");
+            el.click();
+            waitForElToBeClickable(locators.getH1TitleLoc());
+            Reporter.log("Clicked button on position " + (index + 1) + " in list of letters.");
+            System.out.println("Clicked button on position " + (index + 1) + " in list of letters.");
             String letter = el.getText();
             this.clickedLetters += letter;
             Reporter.log("Clicked letter: " + letter);
             System.out.println("Clicked letter: " + letter);
+            wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(el)));
         }
         waitForVisibilityOf(locators.getBackBtnLoc());
     }
@@ -218,11 +280,22 @@ public class SlagalicaPage extends TestBase {
         Reporter.log("Checking if user word field has letters displayed.");
         System.out.println("Checking if user word field has letters displayed.");
         String text = find(userWordFieldLocator).getText();
-        Assert.assertNotEquals(text, "", "User word field is empty!");
+        Assert.assertNotEquals(text, "[]", "User word field is empty!");
         Reporter.log("User word field not empty! Text displayed: " + text);
         System.out.println("User word field not empty! Text displayed: " + text);
     }
 
+    public void verifyUserWordFieldIsEmpty() {
+        waitForVisibilityOf(locators.getBackBtnLoc());
+        waitForVisibilityOf(userWordFieldLocator);
+        Reporter.log("Checking if user word field is empty.");
+        System.out.println("Checking if user word field is empty.");
+        String text = find(userWordFieldLocator).getText();
+        waitForVisibilityOf(userWordFieldLocator);
+        Assert.assertNotEquals(text, "[]", "User word field not empty!");
+        Reporter.log("No text displayed in user word field.");
+        System.out.println("No text displayed in user word field.");
+    }
 
     public void verifyTimerNotStarted() {
         waitForVisibilityOf(locators.getTimerLoc());
@@ -238,6 +311,7 @@ public class SlagalicaPage extends TestBase {
     public void verifyLettersAppearsInUserWordField() {
         waitForElToBeClickable(locators.getH1TitleLoc());
         waitForVisibilityOf(userWordFieldLocator);
+        verifyUserWordFieldNotEmpty();
         String userWordText = find(userWordFieldLocator).getText();
         Reporter.log("Verifying clicked letters are shown in user word text field.");
         System.out.println("Verifying clicked letters are shown in user word text field.");
@@ -245,5 +319,4 @@ public class SlagalicaPage extends TestBase {
         Reporter.log("Letters displayed!. Complete user text displayed: " + userWordText);
         System.out.println("Letters displayed!. Complete user text displayed: " + userWordText);
     }
-
 }
