@@ -2,9 +2,8 @@ package utility.slagalica;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class FindWordForSlagalicaGame {
+public class LogicForSlagalicaGame {
     public String computersLongestWord(String lettersForWord,  List<DictionaryWord> wordsDictionary) {
 
         String longestWord = "";
@@ -103,6 +102,32 @@ public class FindWordForSlagalicaGame {
             letters=letters.replaceFirst(letter,"");
         }
         return letters;
+    }
+
+    public int findAllByWord(List<DictionaryWord> wordObjects, String userWord){
+        int result =0;
+        for(DictionaryWord word:wordObjects){
+            if(word.getWordFromDictionary().equals(userWord)){
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public int calculateNumberOfPoints(List<DictionaryWord> wordObjects, String chosenUserWord, String computerGeneratedWord){
+        int computerWordLength = computerGeneratedWord.length();
+        String modifiedChosenWord= (chosenUserWord.length()>0) ?  chosenUserWord.charAt(0) +chosenUserWord.substring(1).toLowerCase() : "";
+        int result = 0;
+        if(findAllByWord(wordObjects, chosenUserWord.toLowerCase()) >= 1 || findAllByWord(wordObjects, modifiedChosenWord) >= 1) {
+            if(computerWordLength == chosenUserWord.length()) {
+                result = chosenUserWord.length()*2 + 3;
+            } else if(computerWordLength < chosenUserWord.length()) {
+                result = chosenUserWord.length()*2 + 6;
+            } else {
+                result = chosenUserWord.length()*2;
+            }
+        }
+        return result;
     }
 
 }

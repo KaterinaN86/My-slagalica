@@ -3,7 +3,7 @@ package testCases.slagalicaTestCases;
 import org.testng.annotations.Test;
 import pages.SinglePlayerGamePage;
 
-public class SlagalicaGameTest extends SlagalicaBaseTest {
+public class SlagalicaRandomGameTest extends SlagalicaBaseTest {
     @Test(priority = 4)
     public void clickStopButton() {
         this.slagalicaPage.waitForStopButtonClickableDelay();
@@ -37,18 +37,24 @@ public class SlagalicaGameTest extends SlagalicaBaseTest {
     }
 
     @Test(priority = 10)
+    public void testPoints() {
+        this.slagalicaPage.getPoints();
+    }
+
+
+    @Test(priority = 11)
     public void verifyCloseButtonClicked() {
         this.slagalicaPage.verifyMethods.verifyButtonIsClickable(this.slagalicaPage.closeButton);
         this.slagalicaPage.verifyCloseButtonIsClicked();
     }
 
-    @Test(priority = 11)
+    @Test(priority = 12)
     public void verifyDialogClosed() {
         takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopupToClose();
     }
 
-    @Test(priority = 12)
+    @Test(priority = 13)
     public void waitBeforeGoBackTest() {
         this.slagalicaPage.waitBeforeGoingBack();
     }
