@@ -1,23 +1,15 @@
 package com.comtrade.model.asocijacijamodel;
 
-import com.comtrade.model.spojnicemodel.PairsModel;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ErrorCollector;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.swing.*;
-
-import java.util.Optional;
-
-import static org.junit.Assert.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -77,13 +69,11 @@ public class AsocijacijaGameTest {
             ec.addError(e);
         }
 
-
         try {
             Assert.assertNotNull(wordModel);
         } catch (Exception e) {
             ec.addError(e);
         }
-
     }
 
     @Test
