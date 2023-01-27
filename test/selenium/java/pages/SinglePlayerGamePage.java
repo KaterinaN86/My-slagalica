@@ -34,7 +34,6 @@ public class SinglePlayerGamePage extends TestBase {
      */
     By newGameBtnLoc = new By.ByXPath("//button[text()='New Game']");
 
-
     public SinglePlayerGamePage() {
         super();
     }

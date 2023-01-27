@@ -65,6 +65,8 @@ public class TestBase {
      * LoginPage instance, used in several classes.
      */
     public LoginPage loginPage;
+    //Class variable that stores points for played slagalica game.
+    protected int slagalicaPoints;
     /**
      * Variable used for storing page title.
      */
@@ -73,7 +75,7 @@ public class TestBase {
      * Variable used for storing page title value from config file (used for title verification).
      */
     private String configTitle;
-
+    //Variable used to store text message from alert popup.
     private String alertMsg;
 
     /**
@@ -290,7 +292,7 @@ public class TestBase {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         try {
             js.executeScript("arguments[0].click()", find(locators.getBackBtnLoc()));
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Stale element error.");
         }
         dealWithAlert();
