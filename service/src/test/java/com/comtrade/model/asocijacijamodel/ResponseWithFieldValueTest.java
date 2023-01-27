@@ -1,11 +1,11 @@
 package com.comtrade.model.asocijacijamodel;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.testng.Assert;
 
 import java.util.NoSuchElementException;
 

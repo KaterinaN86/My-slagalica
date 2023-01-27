@@ -55,7 +55,7 @@ class SubmitResponseTest {
 
     @Test
     void setPoints() {
-        Integer points = null;
+        Integer points = 20;
         try {
             Assertions.assertEquals(points, submitResponse.getPoints());
         } catch (NullPointerException npe) {

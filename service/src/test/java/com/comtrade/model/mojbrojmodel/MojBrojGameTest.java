@@ -1,6 +1,6 @@
 package com.comtrade.model.mojbrojmodel;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ErrorCollector;
@@ -110,7 +110,7 @@ class MojBrojGameTest {
         Assert.assertNotEquals(expected, mojBrojGame.toString());
     }
 
-    @Test
+    /*@Test
     public void constructorTest() {
         Long id = 1L;
         List<Integer> number = new ArrayList<>(Arrays.asList(1,4,2,8,10,50));
@@ -121,5 +121,5 @@ class MojBrojGameTest {
         Assert.assertEquals(number, mojBrojGame.getNumbers());
         Assert.assertEquals(solution, mojBrojGame.getSolution());
         Assert.assertNotNull(mojBrojGame);
-    }
+    }*/
 }

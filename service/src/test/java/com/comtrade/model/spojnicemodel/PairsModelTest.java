@@ -1,6 +1,6 @@
 package com.comtrade.model.spojnicemodel;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;

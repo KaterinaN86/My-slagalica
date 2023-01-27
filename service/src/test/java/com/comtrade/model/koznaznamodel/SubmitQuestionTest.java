@@ -133,6 +133,6 @@ public class SubmitQuestionTest {
     @Test
     public void testToString() {
         String expected = "";
-        org.junit.Assert.assertNotEquals(expected, submitQuestion.toString());
+        Assert.assertNotEquals(expected, submitQuestion.toString());
     }
 }

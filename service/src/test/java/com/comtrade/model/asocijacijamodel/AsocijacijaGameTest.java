@@ -1,28 +1,31 @@
 package com.comtrade.model.asocijacijamodel;
 
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ErrorCollector;
 
+import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testng.Assert;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
+@SpringBootTest(classes = AsocijacijaGame.class)
 public class AsocijacijaGameTest {
 
+    @Mock
     AsocijacijaGame asocijacijaGame;
-
+    @Mock
     WordModel wordModel;
 
     private final ErrorCollector ec = new ErrorCollector();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         asocijacijaGame = new AsocijacijaGame();
     }
 
