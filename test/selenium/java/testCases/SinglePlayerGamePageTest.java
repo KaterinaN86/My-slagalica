@@ -45,7 +45,7 @@ public class SinglePlayerGamePageTest extends TestBase {
      */
     @Test(priority = 1)
     public void verifyOpen() {
-        this.homePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword"));
+        this.homePage = this.loginPage.openLoginPage().userLogin("1",prop.getProperty("userAdisUsername"), prop.getProperty("userAdisPassword"), "User "+ prop.getProperty("userAdisUsername")+ " logged in.");
         verifyMethods.verifyContainerDisplayed();
         this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
     }

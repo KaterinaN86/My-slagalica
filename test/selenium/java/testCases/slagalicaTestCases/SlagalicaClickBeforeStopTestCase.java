@@ -2,7 +2,7 @@ package testCases.slagalicaTestCases;
 
 import org.testng.annotations.Test;
 
-public class SlagalicaGameNegativeTestCase extends SlagalicaBaseTest {
+public class SlagalicaClickBeforeStopTestCase extends SlagalicaBaseTest {
 
     @Test(priority = 4)
     public void clickLettersFromFirstListTest() {

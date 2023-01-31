@@ -1,0 +1,4 @@
+no,username,password,expectedMessage,description
+1,testUser,123456,Successfully logged in with user testUser.
+2,katerinaN,9151pass,Successfully logged in with user katerinaN.
+3,adisTest,adisadis,Successfully logged in with user adisTest.

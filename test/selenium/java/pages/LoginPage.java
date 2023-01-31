@@ -3,7 +3,6 @@ package pages;
 import base.TestBase;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -30,6 +29,10 @@ public class LoginPage extends TestBase {
      */
     public LoginPage() {
         super();
+    }
+
+    public By getSignInBtnLoc() {
+        return signInBtnLoc;
     }
 
     /**
@@ -80,19 +83,22 @@ public class LoginPage extends TestBase {
      * @param password (String containing password specified on method call)
      * @return new HomePage instance after not null verification.
      */
-    public HomePage userLogin(String username, String password) {
+    public HomePage userLogin(String testNumber, String username, String password, String description) {
+        Reporter.log("Log in test number: " + testNumber);
+        System.out.println("Log in test number: " + testNumber);
         //Setting username and password data.
         setUsernameAndPassword(username, password);
         //Click "Sign in" button.
         click(signInBtnLoc);
         Reporter.log("Clicked \"Sign in\" button in login form.");
         System.out.println("Clicked \"Sign in\" button in login form.");
+        Reporter.log(description);
+        System.out.println(description);
         return (HomePage) verifyMethods.verifyPageObjectInitialized(new HomePage());
     }
 
     /**
      * Login method for invalid user.
-     *
      */
     public void invalidUserLogin() {
         waitForVisibilityOf(signInBtnLoc);
@@ -116,6 +122,7 @@ public class LoginPage extends TestBase {
         Reporter.log("Click register button.");
         System.out.println("Click register button.");
         click(locators.getRegisterBtnLoc());
+        waitForElToBeClickable(locators.getH1TitleLoc());
         return (RegisterPage) verifyMethods.verifyPageObjectInitialized(new RegisterPage());
     }
 }
