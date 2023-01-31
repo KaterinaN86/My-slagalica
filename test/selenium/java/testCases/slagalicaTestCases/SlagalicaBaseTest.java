@@ -29,7 +29,7 @@ public class SlagalicaBaseTest extends TestBase {
 
     @Test(priority = 1)
     public void logInAndOpen() {
-        this.homePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"));
+        this.homePage = this.loginPage.openLoginPage().userLogin("",prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"),"User "+ prop.getProperty("userAdisUsername")+ " logged in.");
         this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }

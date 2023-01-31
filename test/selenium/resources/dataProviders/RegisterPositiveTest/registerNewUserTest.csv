@@ -1,0 +1,6 @@
+no,username,password,expectedMessage,description
+1,testUser,123456,You successfully registered,Successfully registered user testUser.
+,,,,
+2,katerinaN,9151pass,You successfully registered,Successfully registered user katerinaN.
+,,,,
+3,adisTest,adisadis,You successfully registered,Successfully registered user katerinaN.

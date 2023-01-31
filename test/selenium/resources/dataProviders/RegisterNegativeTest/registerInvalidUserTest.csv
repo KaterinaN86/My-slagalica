@@ -1,0 +1,4 @@
+no,username,password,expectedMessage,description
+1,testUser,123456,Username already taken,Registering existing user.
+2,,,Bad username or password,Registering empty user - sending empty strings in username and password input text fields.
+3,someUser,0000,Bad username or password,Registering user with bad username or password. Sending value made up of 4 chars in password text input field.

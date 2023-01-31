@@ -33,7 +33,7 @@ public class HomePageTest extends TestBase {
 
     @Test(priority = 2)
     public void verifySignIn() {
-        this.homePage = this.loginPage.userLogin(prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"));
+        this.homePage = this.loginPage.userLogin("",prop.getProperty("userKaterinaUsername"), prop.getProperty("userKaterinaPassword"),"User "+ prop.getProperty("userAdisUsername")+ " logged in.");
     }
 
     @Test(priority = 3)

@@ -42,7 +42,7 @@ public class MojBrojPageTest extends TestBase {
 
     @Test(priority = 1)
     public void verifyOpenMojBroj() {
-        this.homePage = this.loginPage.openLoginPage().userLogin(prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"));
+        this.homePage = this.loginPage.openLoginPage().userLogin("",prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"),"User "+ prop.getProperty("userAdisUsername")+ " logged in.");
         this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
         takeSnapShot("MojBroj\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
         this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();

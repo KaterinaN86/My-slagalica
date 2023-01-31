@@ -1,6 +1,7 @@
 package pages;
 
 import base.TestBase;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -12,10 +13,7 @@ import utility.slagalica.DictionaryWord;
 import utility.slagalica.LogicForSlagalicaGame;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.TreeSet;
+import java.util.*;
 
 public class SlagalicaPage extends TestBase {
     //Locators for lists of buttons with generated letters.
@@ -161,6 +159,9 @@ public class SlagalicaPage extends TestBase {
         } catch (Exception e) {
             System.err.println("*******Stale element error*********");
         }
+//        Reporter.log("Alert popup displayed.");
+//        System.out.println("Alert popup displayed.");
+//        driver.switchTo().alert();
         waitForElToBeClickable(locators.getH1TitleLoc());
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
@@ -182,12 +183,10 @@ public class SlagalicaPage extends TestBase {
     }
 
     public void getWordsFromDictionary() {
-        TreeSet<DictionaryWord> dictionaryWordsSet = new TreeSet<>();
         List<String> words = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
-        for (String word : words) {
-            dictionaryWordsSet.add(new DictionaryWord(word));
-        }
-        this.wordObjects = new ArrayList<>(dictionaryWordsSet);
+        Set<DictionaryWord> dictionaryWords = this.gameLogicObject.sortWords(words);
+        this.wordObjects=new ArrayList<>(dictionaryWords);
+
     }
 
     //Initializes expectedLongestWord. Reads from text file and finds the longest one to match generated letters.
@@ -197,6 +196,7 @@ public class SlagalicaPage extends TestBase {
         expectedLongestWord = gameLogicObject.computersLongestWord(randomLetters, wordObjects);
         Reporter.log("Expected longest generated word is: " + expectedLongestWord);
         System.out.println("Expected longest generated word is: " + expectedLongestWord);
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(buttonsInListLocator));
     }
 
     public void getPoints() {
@@ -264,7 +264,7 @@ public class SlagalicaPage extends TestBase {
         int maxValue = letterButtonsList.size();
         ArrayList<Integer> generated = new ArrayList<>();
         wait.until(ExpectedConditions.visibilityOfAllElements(letterButtonsList));
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             //Random int from 0 to 12 (excluding 12).
             int index = generateUnique(generated, maxValue);
             clickButtonWithIndex(index);
@@ -339,7 +339,7 @@ public class SlagalicaPage extends TestBase {
         waitForElToBeClickable(locators.getH1TitleLoc());
         waitForVisibilityOf(userWordFieldLocator);
         verifyUserWordFieldNotEmpty();
-        String userWordText = find(userWordFieldLocator).getText().toUpperCase();
+        String userWordText = find(userWordFieldLocator).getText();
         Reporter.log("Verifying clicked letters are shown in user word text field.");
         System.out.println("Verifying clicked letters are shown in user word text field.");
         Assert.assertEquals(userWordText, clickedLetters, "Clicked letters are not displayed.");
@@ -352,18 +352,17 @@ public class SlagalicaPage extends TestBase {
         System.out.println("Clicking letter contained in expected solution word.");
         wait.until(ExpectedConditions.visibilityOfAllElements(letterButtonsList));
         for (WebElement button : this.letterButtonsList) {
-            String letter = button.getText().toLowerCase();
-            if (button.isEnabled() && (this.expectedLongestWord.toLowerCase().charAt(i)==letter.charAt(0))) {
-                waitForElToBeClickable(button);
+            String letter = button.getText();
+            if (button.isEnabled() && (this.expectedLongestWord.charAt(i) == letter.toLowerCase().charAt(0))) {
+                waitForElToBeClickable(button,Duration.ofSeconds(10));
                 button.click();
                 Reporter.log("Clicked letter: " + letter);
                 System.out.println("Clicked letter: " + letter);
-                this.clickedLetters += letter.toUpperCase();
+                this.clickedLetters += letter;
                 break;
             }
         }
     }
-
     public void clickLettersMatchingComputerWord() {
         clickLettersSetup();
         waitForElToBeClickable(potvrdiButtonLocator);

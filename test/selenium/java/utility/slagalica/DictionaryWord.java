@@ -11,7 +11,7 @@ public class DictionaryWord implements Comparable<DictionaryWord> {
 
     @Override
     public int compareTo(@NotNull DictionaryWord o) {
-        return (Integer.compare(o.getWordFromDictionary().length(), getWordFromDictionary().length()) == 0) ? -1 : Integer.compare(o.getWordFromDictionary().length(), getWordFromDictionary().length());
+        return (Integer.compare(o.getWordFromDictionary().length(),getWordFromDictionary().length())==0) ? -1 : Integer.compare(o.getWordFromDictionary().length(),getWordFromDictionary().length());
     }
 
     public String getWordFromDictionary() {

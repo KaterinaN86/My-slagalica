@@ -9,6 +9,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.Reporter;
 import pages.HomePage;
 import pages.LoginPage;
@@ -21,6 +22,7 @@ import utility.VerifyMethods;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -210,35 +212,31 @@ public class TestBase {
     }
 
     /**
-     * Type given text into element with given locator
-     */
-    public void type(String text, By locator) {
-        waitForVisibilityOf(locator, Duration.ofSeconds(5));
-        find(locator).sendKeys(text);
-    }
-
-    /**
      * Helper method for sending username and password values to corresponding text input field elements. Before text is entered all existing data in text input fields (if any) is deleted.
      *
      * @param username String
      * @param password String
      */
     public void setUsernameAndPassword(String username, String password) {
-        //Initializing username and password web elements.
-        WebElement usernameEl = find(locators.getUsernameTextInputLoc());
-        WebElement passwordEl = find(locators.getPasswordTextInputLoc());
-        //Deleting existing data in text input fields (CTRL+delete).
-        usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-        usernameEl.sendKeys(Keys.DELETE);
-        passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-        passwordEl.sendKeys(Keys.DELETE);
-        //Sending new values for username and password. Logging entered data.
-        type(username, locators.getUsernameTextInputLoc());
-        Reporter.log("Entered username: " + username);
-        System.out.println("Entered username: " + username);
-        type(password, locators.getPasswordTextInputLoc());
-        Reporter.log("Entered password.");
-        System.out.println("Entered password.");
+         //Initializing username and password web elements.
+            WebElement usernameEl = find(locators.getUsernameTextInputLoc());
+            WebElement passwordEl = find(locators.getPasswordTextInputLoc());
+            //Deleting existing data in text input fields (CTRL+delete).
+            usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+            usernameEl.sendKeys(Keys.DELETE);
+            passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+            passwordEl.sendKeys(Keys.DELETE);
+            //Sending new values for username and password. Logging entered data.
+            usernameEl.sendKeys(username);
+            //Assert.assertEquals(usernameEl.getText(),username,"Username not entered!");
+            Reporter.log("Entered username: " + username);
+            System.out.println("Entered username: " + username);
+            waitForElToBeClickable(locators.getH1TitleLoc());
+            passwordEl.sendKeys(password);
+            //Assert.assertEquals(passwordEl.getText(),username,"Password not entered!");
+            Reporter.log("Entered password.");
+            System.out.println("Entered password.");
+            waitForElToBeClickable(locators.getRegisterBtnLoc());
     }
 
     /**
@@ -338,7 +336,7 @@ public class TestBase {
                 waitFor(ExpectedConditions.visibilityOfElementLocated(locator),
                         (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
                 break;
-            } catch (StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException ignored) {
             }
             attempts++;
         }
@@ -355,7 +353,7 @@ public class TestBase {
                 waitFor(ExpectedConditions.elementToBeClickable(locator),
                         (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
                 break;
-            } catch (StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException ignored) {
             }
             attempts++;
         }
@@ -372,7 +370,21 @@ public class TestBase {
                 waitFor(ExpectedConditions.elementToBeClickable(element),
                         (timeOutInSeconds.length > 0 ? timeOutInSeconds[0] : null));
                 break;
-            } catch (StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException ignored) {
+            }
+            attempts++;
+        }
+    }
+
+    public void waitForAlertToBePresent(Duration timeOutInSeconds){
+        int attempts = 0;
+        while (attempts < 2) {
+            try {
+                timeOutInSeconds = timeOutInSeconds != null ? timeOutInSeconds : Duration.ofSeconds(3);
+                WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
+                wait.until(ExpectedConditions.alertIsPresent());
+                break;
+            } catch (StaleElementReferenceException ignored) {
             }
             attempts++;
         }
