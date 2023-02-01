@@ -1,0 +1,4 @@
+no,username,password,expectedMessage,description
+1,testUser1,123456,wrong username or password,Logging in with unregistered user.
+2,katerinaN,somePass,wrong username or password,Logging in with wrong password.
+3,,,wrong username or password,Logging in with empty username and password.

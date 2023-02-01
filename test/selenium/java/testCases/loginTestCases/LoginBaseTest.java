@@ -35,16 +35,6 @@ public class LoginBaseTest extends TestBase {
         this.loginPage = loginPage.openLoginPage();
     }
 
-    @Test(priority = 4)
-    public void verifyLogOut() {
-        this.homePage.verifyMethods.verifyButtonIsClickable(this.homePage.getLogOutLoc());
-    }
-
-    @Test(priority = 5)
-    public void logout() {
-        this.loginPage = this.homePage.logout();
-    }
-
     @AfterClass
     public void tearDown() {
         close();

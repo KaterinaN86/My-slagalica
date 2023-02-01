@@ -89,6 +89,7 @@ public class SlagalicaServiceImp implements SlagalicaService {
                 longestWord = dictionaryWord.getWordFromDictionary();
            }
         }
+        System.err.println("Longest word: ");
         return longestWord;
     }
 
@@ -218,6 +219,8 @@ public class SlagalicaServiceImp implements SlagalicaService {
                 result = chosenUserWord.length()*2;
             }
         }
+        System.err.println("**********"+chosenUserWord);
+        System.err.println("*************"+computerWordlength);
         return result;
     }
 

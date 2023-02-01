@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-**/src/test/selenium/resources/snapshots
+dir_to_exclude/**/src/test/selenium/resources/snapshots
 .idea
 .mvn
 
