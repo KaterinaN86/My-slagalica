@@ -6,9 +6,9 @@ import utility.CsvDataProviders;
 
 import java.util.Map;
 
-public class RegisterNegativeTest extends RegisterBaseTest{
+public class RegisterInvalidUserTest extends RegisterBaseTest{
 
-    public RegisterNegativeTest(){
+    public RegisterInvalidUserTest(){
         super();
     }
 

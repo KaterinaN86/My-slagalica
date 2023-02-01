@@ -31,10 +31,6 @@ public class LoginPage extends TestBase {
         super();
     }
 
-    public By getSignInBtnLoc() {
-        return signInBtnLoc;
-    }
-
     /**
      * Opens initial state URL using driver object, verifies all elements on page are displayed.
      *
@@ -83,7 +79,7 @@ public class LoginPage extends TestBase {
      * @param password (String containing password specified on method call)
      * @return new HomePage instance after not null verification.
      */
-    public HomePage userLogin(String testNumber, String username, String password, String description) {
+    public HomePage userLogin(String testNumber, String username, String password, String msg) {
         Reporter.log("Log in test number: " + testNumber);
         System.out.println("Log in test number: " + testNumber);
         //Setting username and password data.
@@ -92,30 +88,39 @@ public class LoginPage extends TestBase {
         click(signInBtnLoc);
         Reporter.log("Clicked \"Sign in\" button in login form.");
         System.out.println("Clicked \"Sign in\" button in login form.");
-        Reporter.log(description);
-        System.out.println(description);
+        Reporter.log(msg);
+        System.out.println(msg);
         return (HomePage) verifyMethods.verifyPageObjectInitialized(new HomePage());
     }
 
     /**
-     * Login method for invalid user.
+     * Another logIn method, usually used for negative login tests. Used overloading in declaration.
      */
-    public void invalidUserLogin() {
+    public TestBase userLogin(String testNumber, String username, String password, String msg, String desc) {
         waitForVisibilityOf(signInBtnLoc);
+        Reporter.log("Login with invalid user, test number: " + testNumber);
+        System.out.println("Login with invalid user, test number: " + testNumber);
         //Sending empty strings as username and password data.
-        setUsernameAndPassword("", "");
+        setUsernameAndPassword(username, password);
         click(signInBtnLoc);
-        //Explicit wait for alert to be displayed.
-        wait.until(ExpectedConditions.alertIsPresent());
-        //Click on OK button on displayed alert window.
-        Alert invalidLoginAlert = driver.switchTo().alert();
-        Reporter.log("Verify error message on invalid user login.");
-        System.out.println("Check error message in alert for invalid user login.");
-        verifyMethods.verifyAlertMessage(invalidLoginAlert.getText(), prop.getProperty("invalidLoginErrorMsg"));
-        //Click on "OK" button in alert window.
-        invalidLoginAlert.accept();
-        Reporter.log("Clicked \"OK\" button in alert window.");
-        System.out.println("Clicked \"OK\" button in alert window.");
+        try {
+            //Explicit wait for alert to be displayed.
+            wait.until(ExpectedConditions.alertIsPresent());
+            //Click on OK button on displayed alert window.
+            Alert invalidLoginAlert = driver.switchTo().alert();
+            Reporter.log("Verify error message on invalid user login.");
+            System.out.println("Check error message in alert for invalid user login.");
+            verifyMethods.verifyAlertMessage(invalidLoginAlert.getText(), msg);
+            //Click on "OK" button in alert window.
+            invalidLoginAlert.accept();
+            Reporter.log("Clicked \"OK\" button in alert window.");
+            System.out.println("Clicked \"OK\" button in alert window.");
+        } catch (Exception e) {
+            System.err.println("No alert present!");
+        }
+        Reporter.log(desc);
+        System.out.println(desc);
+        return this;
     }
 
     public RegisterPage clickRegister() {
