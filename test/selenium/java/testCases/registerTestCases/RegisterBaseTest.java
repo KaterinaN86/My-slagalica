@@ -1,4 +1,4 @@
-package testCases.RegisterTestCases;
+package testCases.registerTestCases;
 
 import base.TestBase;
 import org.testng.annotations.AfterClass;

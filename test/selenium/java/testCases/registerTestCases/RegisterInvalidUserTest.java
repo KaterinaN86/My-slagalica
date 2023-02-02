@@ -1,4 +1,4 @@
-package testCases.RegisterTestCases;
+package testCases.registerTestCases;
 
 import org.testng.annotations.Test;
 import pages.RegisterPage;

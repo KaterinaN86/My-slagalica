@@ -13,6 +13,9 @@ import java.util.*;
 
 //Utility class used for reading data from CSV files.
 public class CsvDataProviders {
+
+    public static List<Map<String, String>> mapList;
+
     /**
      * Method used as data provider.
      *
@@ -21,8 +24,9 @@ public class CsvDataProviders {
      */
     @DataProvider(name = "csvReader")
     public static Iterator<Object[]> csvReader(Method method) {
-        //List of objects used for storing Map object for each key/value pair read from csv file.
+        //List of objects used for storing Map objects for each key/value pair read from csv file.
         List<Object[]> list = new ArrayList<>();
+        mapList=new ArrayList<>();
         //Path to csv file. Name of the file corresponds to name of test method that uses this data provider and name of package corresponds to declaring class name.
         String pathname = System.getProperty("user.dir") + File.separator + "test" + File.separator + "selenium" + File.separator + "resources" + File.separator
                 + "dataProviders" + File.separator + method.getDeclaringClass().getSimpleName() + File.separator
@@ -46,8 +50,9 @@ public class CsvDataProviders {
                         //Storing key/value pari in testData Map object. Key always matches one of header strings, and is paired with corresponding read value from file. Example: [no,1], [username, testUser], [password, 123456] and so on...
                         testData.put(keys[i], dataParts[i]);
                     }
-                    //Adding each Map object to array of objects.
+                    //Create Object array for each map object and add it to main list.
                     list.add(new Object[]{testData});
+                    mapList.add(testData);
                 }
             }
             reader.close();
