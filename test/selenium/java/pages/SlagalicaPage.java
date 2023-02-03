@@ -1,7 +1,6 @@
 package pages;
 
 import base.TestBase;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -13,7 +12,10 @@ import utility.slagalica.DictionaryWord;
 import utility.slagalica.LogicForSlagalicaGame;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class SlagalicaPage extends TestBase {
     //Locators for lists of buttons with generated letters.
@@ -42,8 +44,6 @@ public class SlagalicaPage extends TestBase {
     actualComputerWord = "",
     //Stores random letters generated after "Stop" button is clicked.
     randomLetters = "";
-    // Random object used for clicking letters.
-    Random rnd = new Random();
     //List of all DictionaryWord objects (objects that contain words).
     List<DictionaryWord> wordObjects;
     //LogicForSlagalicaGame object used for accessing methods for calculating expected word and points.
@@ -138,34 +138,6 @@ public class SlagalicaPage extends TestBase {
         waitForElToBeClickable(locators.getBackBtnLoc());
     }
 
-    /**
-     * Since there is no alert after player finishes game, we need different method to back to SinglePlayerGame page.
-     *
-     * @return SinglePlayerGamePage object
-     */
-    public SinglePlayerGamePage goBackAfterGameFinished() {
-        waitForElToBeClickable(locators.getContainerLoc());
-        //Variable for storing name of current class.
-        String page = this.getClass().getSimpleName();
-        Reporter.log("Click back button on page: " + page);
-        System.out.println("Click back button on page: " + page);
-        //Added because of pop up dialog covering back button bug.
-        try {
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            WebElement goBackButton = find(locators.getBackBtnLoc());
-            waitForElToBeClickable(goBackButton);
-            this.verifyMethods.verifyBackButtonIsClickable();
-            js.executeScript("arguments[0].click()", goBackButton);
-        } catch (Exception e) {
-            System.err.println("*******Stale element error*********");
-        }
-//        Reporter.log("Alert popup displayed.");
-//        System.out.println("Alert popup displayed.");
-//        driver.switchTo().alert();
-        waitForElToBeClickable(locators.getH1TitleLoc());
-        return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
-    }
-
     //Initialize randomLetters class variable.
     public void getRandomLettersFromButtons() {
         waitForVisibilityOf(locators.getH1TitleLoc());
@@ -185,7 +157,7 @@ public class SlagalicaPage extends TestBase {
     public void getWordsFromDictionary() {
         List<String> words = new ReadFromFile().readFromFile(prop.getProperty("pathToWordsFIle"));
         Set<DictionaryWord> dictionaryWords = this.gameLogicObject.sortWords(words);
-        this.wordObjects=new ArrayList<>(dictionaryWords);
+        this.wordObjects = new ArrayList<>(dictionaryWords);
 
     }
 
@@ -236,15 +208,6 @@ public class SlagalicaPage extends TestBase {
         waitForElToBeClickable(stopButtonLocator, Duration.ofSeconds(10));
     }
 
-    private int generateUnique(ArrayList<Integer> generated, int maxValue) {
-        int index = rnd.nextInt(maxValue);
-        while (generated.contains(index)) {
-            index = rnd.nextInt(maxValue);
-        }
-        generated.add(index);
-        return index;
-    }
-
     //Helper method that sets up environment  before clicking on letter buttons.
     public void clickLettersSetup() {
         getExpectedLongestWord();
@@ -286,17 +249,21 @@ public class SlagalicaPage extends TestBase {
             Reporter.log("Letter button on position " + (index + 1) + " not clickable.");
             System.out.println("Letter button on position " + (index + 1) + " not clickable.");
         } else {
-            waitForElToBeClickable(el, Duration.ofSeconds(10));
-            Assert.assertTrue(el.isEnabled(), "Selected letter button not clickable!");
-            el.click();
-            waitForElToBeClickable(locators.getH1TitleLoc());
-            Reporter.log("Clicked button on position " + (index + 1) + " in list of letters.");
-            System.out.println("Clicked button on position " + (index + 1) + " in list of letters.");
-            String letter = el.getText();
-            this.clickedLetters += letter;
-            Reporter.log("Clicked letter: " + letter);
-            System.out.println("Clicked letter: " + letter);
-            wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(el)));
+            try {
+                waitForElToBeClickable(el);
+                Assert.assertTrue(el.isEnabled(), "Selected letter button not clickable!");
+                el.click();
+                waitForElToBeClickable(locators.getH1TitleLoc());
+                Reporter.log("Clicked button on position " + (index + 1) + " in list of letters.");
+                System.out.println("Clicked button on position " + (index + 1) + " in list of letters.");
+                String letter = el.getText();
+                this.clickedLetters += letter;
+                Reporter.log("Clicked letter: " + letter);
+                System.out.println("Clicked letter: " + letter);
+                wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(el)));
+            }catch(Exception e){
+                System.err.println(e.getMessage());
+            }
         }
         waitForVisibilityOf(locators.getBackBtnLoc());
     }
@@ -354,7 +321,7 @@ public class SlagalicaPage extends TestBase {
         for (WebElement button : this.letterButtonsList) {
             String letter = button.getText();
             if (button.isEnabled() && (this.expectedLongestWord.charAt(i) == letter.toLowerCase().charAt(0))) {
-                waitForElToBeClickable(button,Duration.ofSeconds(10));
+                waitForElToBeClickable(button, Duration.ofSeconds(10));
                 button.click();
                 Reporter.log("Clicked letter: " + letter);
                 System.out.println("Clicked letter: " + letter);
@@ -363,6 +330,7 @@ public class SlagalicaPage extends TestBase {
             }
         }
     }
+
     public void clickLettersMatchingComputerWord() {
         clickLettersSetup();
         waitForElToBeClickable(potvrdiButtonLocator);

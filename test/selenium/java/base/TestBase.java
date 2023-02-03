@@ -9,7 +9,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 import org.testng.Reporter;
 import pages.*;
 import utility.Locators;
@@ -19,13 +18,13 @@ import utility.VerifyMethods;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 /**
  * Base class with driver and properties objects.
@@ -215,25 +214,25 @@ public class TestBase {
      * @param password String
      */
     public void setUsernameAndPassword(String username, String password) {
-         //Initializing username and password web elements.
-            WebElement usernameEl = find(locators.getUsernameTextInputLoc());
-            WebElement passwordEl = find(locators.getPasswordTextInputLoc());
-            //Deleting existing data in text input fields (CTRL+delete).
-            usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-            usernameEl.sendKeys(Keys.DELETE);
-            passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-            passwordEl.sendKeys(Keys.DELETE);
-            //Sending new values for username and password. Logging entered data.
-            usernameEl.sendKeys(username);
-            //Assert.assertEquals(usernameEl.getText(),username,"Username not entered!");
-            Reporter.log("Entered username: " + username);
-            System.out.println("Entered username: " + username);
-            waitForElToBeClickable(locators.getH1TitleLoc());
-            passwordEl.sendKeys(password);
-            //Assert.assertEquals(passwordEl.getText(),username,"Password not entered!");
-            Reporter.log("Entered password.");
-            System.out.println("Entered password.");
-            waitForElToBeClickable(locators.getRegisterBtnLoc());
+        //Initializing username and password web elements.
+        WebElement usernameEl = find(locators.getUsernameTextInputLoc());
+        WebElement passwordEl = find(locators.getPasswordTextInputLoc());
+        //Deleting existing data in text input fields (CTRL+delete).
+        usernameEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        usernameEl.sendKeys(Keys.DELETE);
+        passwordEl.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        passwordEl.sendKeys(Keys.DELETE);
+        //Sending new values for username and password. Logging entered data.
+        usernameEl.sendKeys(username);
+        //Assert.assertEquals(usernameEl.getText(),username,"Username not entered!");
+        Reporter.log("Entered username: " + username);
+        System.out.println("Entered username: " + username);
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        passwordEl.sendKeys(password);
+        //Assert.assertEquals(passwordEl.getText(),username,"Password not entered!");
+        Reporter.log("Entered password.");
+        System.out.println("Entered password.");
+        waitForElToBeClickable(locators.getRegisterBtnLoc());
     }
 
     /**
@@ -294,7 +293,7 @@ public class TestBase {
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
-        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox"))||(this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
+        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox")) || (this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
@@ -311,6 +310,31 @@ public class TestBase {
         registerAlert.accept();
         Reporter.log("User successfully accepted.");
         System.out.println("User successfully accepted.");
+    }
+
+    /**
+     * Since there is no alert after player finishes game, we need different method to back to SinglePlayerGame page.
+     *
+     * @return SinglePlayerGamePage object
+     */
+    public SinglePlayerGamePage goBackAfterGameFinished() {
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        //Variable for storing name of current class.
+        String page = this.getClass().getSimpleName();
+        Reporter.log("Click back button on page: " + page);
+        System.out.println("Click back button on page: " + page);
+        //Added because of pop up dialog covering back button bug.
+        try {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            WebElement goBackButton = find(locators.getBackBtnLoc());
+            waitForElToBeClickable(goBackButton);
+            this.verifyMethods.verifyBackButtonIsClickable();
+            js.executeScript("arguments[0].click()", goBackButton);
+        } catch (Exception e) {
+            System.err.println("*******Stale element error*********");
+        }
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
 
     /**
@@ -373,7 +397,7 @@ public class TestBase {
         }
     }
 
-    public void waitForAlertToBePresent(Duration timeOutInSeconds){
+    public void waitForAlertToBePresent(Duration timeOutInSeconds) {
         int attempts = 0;
         while (attempts < 2) {
             try {
@@ -410,6 +434,7 @@ public class TestBase {
         waitForVisibilityOf(locator, Duration.ofSeconds(5));
         find(locator).click();
     }
+
     /**
      * Workaround method for firefox go back bug.
      *
@@ -427,7 +452,7 @@ public class TestBase {
             HomePage homePage = (HomePage) pageObject;
             waitForVisibilityOf(homePage.getSinglePlayerLoc());
             this.verifyMethods.verifyButtonIsClickable(homePage.getSinglePlayerLoc());
-            takeSnapShot(this.getClass().getSimpleName()+"\\firefoxWorkaround", prop.getProperty("snapShotExtension"));
+            takeSnapShot(this.getClass().getSimpleName() + "\\firefoxWorkaround", prop.getProperty("snapShotExtension"));
             //Initializing SinglePlayerGamePage object to return value of clickSinglePlayerGame method in HomePage class.
             singlePlayerGamePage = homePage.clickSinglePlayerGame();
             waitForVisibilityOf(locators.getContainerLoc());
@@ -458,5 +483,16 @@ public class TestBase {
         Reporter.log("Closing page: " + page);
         driver.close();
         System.out.println("Page: " + page + " closed.");
+    }
+
+    public int generateUnique(ArrayList<Integer> generated, int maxValue) {
+        // Random object used for clicking letters.
+        Random rnd = new Random();
+        int index = rnd.nextInt(maxValue);
+        while (generated.contains(index)) {
+            index = rnd.nextInt(maxValue);
+        }
+        generated.add(index);
+        return index;
     }
 }
