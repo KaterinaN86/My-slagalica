@@ -2,7 +2,6 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Reporter;
 
 /**
@@ -50,6 +49,10 @@ public class SinglePlayerGamePage extends TestBase {
         return mojBrojBtnLoc;
     }
 
+    public By getSpojniceBtnLoc() {
+        return spojniceBtnLoc;
+    }
+
     public void clickNewGameButton() {
         //wait.until(ExpectedConditions.presenceOfElementLocated(newGameBtnLoc));
         this.verifyMethods.verifyButtonIsClickable(newGameBtnLoc);
@@ -76,8 +79,19 @@ public class SinglePlayerGamePage extends TestBase {
         click(slagalicaBtnLoc);
         return (SlagalicaPage) verifyMethods.verifyPageObjectInitialized(new SlagalicaPage());
     }
-    public void verifyBeforeGoingBack(){
+
+    public SpojnicePage openSpojnicePage() {
+        clickNewGameButton();
+        this.verifyMethods.verifyButtonIsClickable(spojniceBtnLoc);
+        Reporter.log("Click \"Spojnice\" button");
+        System.out.println("Click \"Spojnice\" button");
+        click(spojniceBtnLoc);
+        return (SpojnicePage) verifyMethods.verifyPageObjectInitialized(new SpojnicePage());
+    }
+
+    public void verifyBeforeGoingBack() {
         this.waitForElToBeClickable(locators.getH1TitleLoc());
+        this.waitForElToBeClickable(locators.getContainerLoc());
         this.waitForElToBeClickable(locators.getBackBtnLoc());
     }
 }

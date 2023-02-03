@@ -23,20 +23,19 @@ public class SlagalicaBaseTest extends TestBase {
     @BeforeClass
     public void setup() {
         init();
-        this.slagalicaPage = new SlagalicaPage();
         verifyMethods = new VerifyMethods(this.slagalicaPage);
     }
 
     @Test(priority = 1)
     public void logInAndOpen() {
-        this.homePage = this.loginPage.openLoginPage().userLogin("",prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"),"User "+ prop.getProperty("userAdisUsername")+ " logged in.");
+        this.homePage = this.loginPage.openLoginPage().userLogin("", prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"), "User " + prop.getProperty("userTestRegisterUsername") + " logged in.");
         this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
     }
 
     @Test(priority = 2)
     public void verifyTimerStart() {
-        verifyMethods.verifyTimerStartValue(prop.getProperty("slagalicaPageTimerStart"));
+        this.slagalicaPage.verifyMethods.verifyTimerStartValue(prop.getProperty("slagalicaPageTimerStart"));
     }
 
     @Test(priority = 3)
@@ -68,6 +67,7 @@ public class SlagalicaBaseTest extends TestBase {
 
     @Test(priority = 28)
     public void waitBeforeLogoutTest() {
+        this.waitForElToBeClickable(locators.getH1TitleLoc());
         this.homePage.waitBeforeLogout();
     }
 

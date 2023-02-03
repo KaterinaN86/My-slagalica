@@ -78,7 +78,7 @@ public class SinglePlayerGamePageTest extends TestBase {
     public void singlePlayerOpenedTest() {
         //Added because of firefox bug.
         this.singlePlayerGamePage = this.mojBrojPage.firefoxWorkaround(tempPageObject);
-        takeSnapShot("OnePlayer\\mojBrojGoBackTest", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\mojBrojGoBackTest", prop.getProperty("snapShotExtension"));
         //wait.until(ExpectedConditions.presenceOfElementLocated(locators.getContainerLoc()));
         this.singlePlayerGamePage.verifyMethods.verifyContainerDisplayed();
         verifyMethods.verifyButtonNotClickable(this.singlePlayerGamePage.getMojBrojBtnLoc());
@@ -88,7 +88,7 @@ public class SinglePlayerGamePageTest extends TestBase {
     public void openSlagalicaTest() {
         this.slagalicaPage = this.singlePlayerGamePage.openSlagalicaPage();
         this.slagalicaPage.verifyMethods.verifyContainerDisplayed();
-        takeSnapShot("OnePlayer\\openSlagalicaTest", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\openSlagalicaTest", prop.getProperty("snapShotExtension"));
     }
 
     /**
