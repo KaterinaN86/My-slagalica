@@ -57,7 +57,6 @@ public class SpojniceBaseTest extends TestBase {
     @Test(priority = 24)
     public void GoBackToSinglePlayerPageTest() {
         this.spojnicePage.verifyMethods.verifyBackButtonIsClickable();
-        //Added step as a workaround regarding error in firefox
         this.tempPageObject = this.spojnicePage.goBack();
     }
 
