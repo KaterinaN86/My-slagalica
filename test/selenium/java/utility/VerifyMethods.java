@@ -276,4 +276,13 @@ public class VerifyMethods {
         Reporter.log("Go back button is clickable.");
         System.out.println("Go back button is clickable.");
     }
+
+    public void verifyH1Content(String expected) {
+        String actualTitle = this.base.find(TestBase.locators.getH1TitleLoc()).getText();
+        Reporter.log("Verifying content title matches specified.");
+        System.out.println("Verifying content title matches specified.");
+        Assert.assertEquals(actualTitle, expected, "Title: " + " doesn't match expected: " + expected + ".");
+        Reporter.log("Title: " + " matches expected.");
+        System.out.println("Title: " + " matches expected.");
+    }
 }

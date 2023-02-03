@@ -49,7 +49,7 @@ public class SlagalicaGamePositiveTestCase extends SlagalicaBaseTest{
 
     @Test(priority = 12)
     public void verifyDialogClosed() {
-        takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopupToClose();
     }
 

@@ -37,20 +37,19 @@ public class MojBrojPageTest extends TestBase {
     public void setup() {
         //Calling parent class init method to initialize properties and drivers.
         init();
-        this.mojBrojPage = new MojBrojPage();
     }
 
     @Test(priority = 1)
     public void verifyOpenMojBroj() {
         this.homePage = this.loginPage.openLoginPage().userLogin("",prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"),"User "+ prop.getProperty("userAdisUsername")+ " logged in.");
         this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
-        takeSnapShot("MojBroj\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
         this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();
     }
 
     @Test(priority = 2)
     public void verifyTimerStart() {
-        takeSnapShot("MojBroj\\verifyTimerStart", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\verifyTimerStart", prop.getProperty("snapShotExtension"));
         this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
     }
 
@@ -103,7 +102,7 @@ public class MojBrojPageTest extends TestBase {
     @Test(priority = 11)
     public void logout() {
         this.homePage.logout();
-        takeSnapShot("MojBroj\\logout", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\logout", prop.getProperty("snapShotExtension"));
     }
 
     @AfterClass

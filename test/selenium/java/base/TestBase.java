@@ -11,10 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.Reporter;
-import pages.HomePage;
-import pages.LoginPage;
-import pages.MojBrojPage;
-import pages.SinglePlayerGamePage;
+import pages.*;
 import utility.Locators;
 import utility.VerifyBrokenLink;
 import utility.VerifyMethods;
@@ -282,7 +279,7 @@ public class TestBase {
      * @return TestBase instance (depending on where the user is in the application different type of instance is returned).
      */
     public TestBase goBack() {
-        waitForElToBeClickable(locators.getContainerLoc());
+        waitForElToBeClickable(locators.getH1TitleLoc());
         waitForVisibilityOf(locators.getBackBtnLoc());
         String page = this.getClass().getSimpleName();
         Reporter.log("Click back button on page: " + page);
@@ -297,7 +294,7 @@ public class TestBase {
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
-        if (this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox")) {
+        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox"))||(this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
@@ -412,6 +409,33 @@ public class TestBase {
     public void click(By locator) {
         waitForVisibilityOf(locator, Duration.ofSeconds(5));
         find(locator).click();
+    }
+    /**
+     * Workaround method for firefox go back bug.
+     *
+     * @param pageObject TestBase object (depending on browser object type can be HomePage or SinglePlayerGame).
+     * @return SinglePlayerGamePage object
+     */
+    public SinglePlayerGamePage firefoxWorkaround(TestBase pageObject) {
+        waitForElToBeClickable(locators.getH1TitleLoc());
+        //If browser is set to firefox back button on some game pages leads to HomePage directly instead of going back to One Player first. In order to get SinglePlayerGamePage object as return value steps for going back to that page sre added.
+        //Object that will be returned if browser is set to firefox.
+        SinglePlayerGamePage singlePlayerGamePage;
+        //Checking browser value.
+        if (prop.getProperty("browser").equals("firefox")) {
+            //Initializing HomePage object to return value of goBack method called by mojBroj instance in test.
+            HomePage homePage = (HomePage) pageObject;
+            waitForVisibilityOf(homePage.getSinglePlayerLoc());
+            this.verifyMethods.verifyButtonIsClickable(homePage.getSinglePlayerLoc());
+            takeSnapShot(this.getClass().getSimpleName()+"\\firefoxWorkaround", prop.getProperty("snapShotExtension"));
+            //Initializing SinglePlayerGamePage object to return value of clickSinglePlayerGame method in HomePage class.
+            singlePlayerGamePage = homePage.clickSinglePlayerGame();
+            waitForVisibilityOf(locators.getContainerLoc());
+            //Returning previously initialized object;
+            return singlePlayerGamePage;
+        }
+        //if browser is not set to firefox goBack method called by MojBroj instance results in SinglePlayerGamePage object, which is received as method parameter and simply returned.
+        return (SinglePlayerGamePage) pageObject;
     }
 
 

@@ -34,7 +34,7 @@ public class SlagalicaLongestWordTest extends SlagalicaBaseTest {
 
     @Test(priority = 10)
     public void verifyDialogClosed() {
-        takeSnapShot("Slagalica\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName()+"\\verifyDialogClosed", prop.getProperty("snapShotExtension"));
         this.slagalicaPage.waitForPopupToClose();
     }
     @Test(priority = 11)
