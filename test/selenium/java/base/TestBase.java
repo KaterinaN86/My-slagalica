@@ -75,6 +75,8 @@ public class TestBase {
     private String configTitle;
     //Variable used to store text message from alert popup.
     private String alertMsg;
+    //Variable that stores expected points after playing game.
+    private int calculatedPoints = 0;
 
     /**
      * Empty constructor.
@@ -86,7 +88,6 @@ public class TestBase {
     /**
      * This method will take screenshot.
      */
-
     public static void takeSnapShot(String methodName, String ext) {
         //Convert web driver object to TakeScreenshot
         TakesScreenshot scrShot = ((TakesScreenshot) driver);
@@ -115,6 +116,22 @@ public class TestBase {
      */
     public String getAlertMsg() {
         return alertMsg;
+    }
+
+    /**
+     * Getter method for calculated expected points for a game.
+     * @return int, number of calculated expected points for a game.
+     */
+    public int getCalculatedPoints() {
+        return calculatedPoints;
+    }
+
+    /**
+     * Setter method for calculated expected points for a game.
+     * @param calculatedPoints int
+     */
+    public void setCalculatedPoints(int calculatedPoints) {
+        this.calculatedPoints = calculatedPoints;
     }
 
     /**
@@ -304,7 +321,7 @@ public class TestBase {
         Reporter.log("Alert popup displayed.");
         System.out.println("Alert popup displayed.");
         Alert registerAlert = driver.switchTo().alert();
-        alertMsg = registerAlert.getText();
+        this.alertMsg = registerAlert.getText();
         Reporter.log("Verify accept option in alert popup.");
         System.out.println("Checking if player can accept to go back.");
         registerAlert.accept();
@@ -333,7 +350,11 @@ public class TestBase {
         } catch (Exception e) {
             System.err.println("*******Stale element error*********");
         }
-        waitForElToBeClickable(locators.getH1TitleLoc());
+        try {
+            waitForElToBeClickable(locators.getH1TitleLoc());
+        }catch (Exception e){
+            System.err.println("********Unhandled alert exception!**********");
+        }
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
     }
 
@@ -447,7 +468,7 @@ public class TestBase {
         //Object that will be returned if browser is set to firefox.
         SinglePlayerGamePage singlePlayerGamePage;
         //Checking browser value.
-        if (prop.getProperty("browser").equals("firefox")) {
+        if (prop.getProperty("browser").equals("firefox")&& (pageObject instanceof HomePage)) {
             //Initializing HomePage object to return value of goBack method called by mojBroj instance in test.
             HomePage homePage = (HomePage) pageObject;
             waitForVisibilityOf(homePage.getSinglePlayerLoc());
