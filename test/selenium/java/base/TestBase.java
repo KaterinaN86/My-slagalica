@@ -63,8 +63,6 @@ public class TestBase {
      * LoginPage instance, used in several classes.
      */
     public LoginPage loginPage;
-    //Class variable that stores points for played slagalica game.
-    protected int slagalicaPoints;
     /**
      * Variable used for storing page title.
      */
@@ -120,6 +118,7 @@ public class TestBase {
 
     /**
      * Getter method for calculated expected points for a game.
+     *
      * @return int, number of calculated expected points for a game.
      */
     public int getCalculatedPoints() {
@@ -128,6 +127,7 @@ public class TestBase {
 
     /**
      * Setter method for calculated expected points for a game.
+     *
      * @param calculatedPoints int
      */
     public void setCalculatedPoints(int calculatedPoints) {
@@ -306,11 +306,15 @@ public class TestBase {
         } catch (Exception e) {
             System.err.println("Stale element error.");
         }
-        dealWithAlert();
+        try {
+            dealWithAlert();
+        } catch (Exception e) {
+            System.err.println("No alert displayed!");
+        }
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
-        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox")) || (this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
+        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox"))||(this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
@@ -352,7 +356,7 @@ public class TestBase {
         }
         try {
             waitForElToBeClickable(locators.getH1TitleLoc());
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println("********Unhandled alert exception!**********");
         }
         return (SinglePlayerGamePage) verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
@@ -463,23 +467,25 @@ public class TestBase {
      * @return SinglePlayerGamePage object
      */
     public SinglePlayerGamePage firefoxWorkaround(TestBase pageObject) {
+
         waitForElToBeClickable(locators.getH1TitleLoc());
         //If browser is set to firefox back button on some game pages leads to HomePage directly instead of going back to One Player first. In order to get SinglePlayerGamePage object as return value steps for going back to that page sre added.
         //Object that will be returned if browser is set to firefox.
         SinglePlayerGamePage singlePlayerGamePage;
         //Checking browser value.
-        if (prop.getProperty("browser").equals("firefox")&& (pageObject instanceof HomePage)) {
+        if (prop.getProperty("browser").equals("firefox") && (pageObject instanceof HomePage)) {
             //Initializing HomePage object to return value of goBack method called by mojBroj instance in test.
             HomePage homePage = (HomePage) pageObject;
+
             waitForVisibilityOf(homePage.getSinglePlayerLoc());
             this.verifyMethods.verifyButtonIsClickable(homePage.getSinglePlayerLoc());
-            takeSnapShot(this.getClass().getSimpleName() + "\\firefoxWorkaround", prop.getProperty("snapShotExtension"));
             //Initializing SinglePlayerGamePage object to return value of clickSinglePlayerGame method in HomePage class.
             singlePlayerGamePage = homePage.clickSinglePlayerGame();
             waitForVisibilityOf(locators.getContainerLoc());
             //Returning previously initialized object;
             return singlePlayerGamePage;
         }
+
         //if browser is not set to firefox goBack method called by MojBroj instance results in SinglePlayerGamePage object, which is received as method parameter and simply returned.
         return (SinglePlayerGamePage) pageObject;
     }

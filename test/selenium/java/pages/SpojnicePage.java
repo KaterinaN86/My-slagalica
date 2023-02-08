@@ -57,10 +57,10 @@ public class SpojnicePage extends TestBase {
     //Checks if columns with buttons are displayed. Verifies data in buttons with words. Initializes lists of Web elements and String values for each column.
     public void verifyTableContent() {
         //Initializing lists of words and button elements.
-        column1Words = new ArrayList<>();
-        column2Words = new ArrayList<>();
-        column1Btns = new ArrayList<>();
-        column2Btns = new ArrayList<>();
+        this.column1Words = new ArrayList<>();
+        this.column2Words = new ArrayList<>();
+        this.column1Btns = new ArrayList<>();
+        this.column2Btns = new ArrayList<>();
         //int variable used as index to determine in which column an element belongs.
         int i = 1;
         waitForVisibilityOf(tableBodyLoc);
@@ -76,12 +76,12 @@ public class SpojnicePage extends TestBase {
                 //All buttons with odd index values belong to column1.
                 if (i % 2 != 0) {
                     //Adding WebElement and String object to corresponding lists.
-                    column1Btns.add(el);
-                    column1Words.add(el.getText());
+                    this.column1Btns.add(el);
+                    this.column1Words.add(el.getText());
                 } else {
                     //Adding WebElement and String object with even index value to corresponding lists.
-                    column2Btns.add(el);
-                    column2Words.add(el.getText());
+                    this.column2Btns.add(el);
+                    this.column2Words.add(el.getText());
                 }
                 //Checking if element is enabled.
                 Assert.assertTrue(el.isEnabled(), "Button not enabled!");
@@ -145,16 +145,19 @@ public class SpojnicePage extends TestBase {
     public void clickSubmitBtn() {
         noAlertOnSubmit = false;
         this.waitForElToBeClickable(submitBtnLoc);
+        this.waitForElToBeClickable(locators.getH1TitleLoc());
         click(submitBtnLoc);
         //Added to handle exception that appears when alert is not displayed.
         try {
             this.dealWithAlert();
+            TestBase.takeSnapShot(this.getClass().getSimpleName() + "\\clickSubmitBtn", prop.getProperty("snapShotExtension"));
         } catch (Exception e) {
             noAlertOnSubmit = true;
             System.err.println("Submit button alert not displayed!");
         }
     }
 
+    //Depending on whether alert has been displayed correct method for going to previous page is called.
     public TestBase pickGoBackMethod() {
         //Sometimes alert on submit button is not displayed. If that is the case noAlertOnSubmit will equal true.
         if (noAlertOnSubmit) {
@@ -224,6 +227,7 @@ public class SpojnicePage extends TestBase {
         try {
             //Adding all elements that match the locator to the list.
             selectedBtns = findAll(new By.ByXPath("//button[@class='selected']"));
+            wait.until(ExpectedConditions.visibilityOfAllElements(selectedBtns));
         } catch (Exception e) {
             System.err.println("Error displaying columns with text buttons!");
         }
@@ -289,6 +293,7 @@ public class SpojnicePage extends TestBase {
      * Uses list of pairs that match selected pairs to calculate game points.
      */
     public void calculateGamePoints() {
+        int points = 0;
         Reporter.log("Game data according to user selections");
         System.out.println("Game data according to user selections");
         //Displaying game data that matches user selected pairs selected from UI.
@@ -306,11 +311,13 @@ public class SpojnicePage extends TestBase {
             //Extracting starting number for values corresponding to each column.
             String num1 = column1Data.substring(0, 1);
             String num2 = column2Data.substring(0, 1);
+            //System.err.println("Number 1: " + num1 + " "+" Number 2: "+num2);
             //Adding three points to calculated game points when starting numbers match.
             if (num1.equals(num2)) {
-                setCalculatedPoints(this.getCalculatedPoints() + 3);
+                points += 3;
             }
         }
+        this.setCalculatedPoints(points);
     }
 
     /**
@@ -330,5 +337,72 @@ public class SpojnicePage extends TestBase {
         Assert.assertEquals(computerPoints, this.getCalculatedPoints(), "Computer calculated points: " + computerPoints + " don't match expected value: " + this.getCalculatedPoints());
         Reporter.log("Computer calculated points: " + computerPoints + " matches expected value.");
         System.out.println("Computer calculated points: " + computerPoints + " matches expected value.");
+    }
+
+    /**
+     * Selects matching value form GameData column2 List of strings, according to specified selected column1 value.
+     *
+     * @param column1Text String that contains selected value from column1 (stored in GameData object, which means it starts with number).
+     * @return String matching value from column2 (starting with same number).
+     */
+    public String getSecondValueOfPair(String column1Text) {
+        //Extracting starting number.
+        String number = column1Text.trim().substring(0, 1);
+        //Looping over column2 values to until one starting with matching number is found.
+        for (String text : this.gameData.getColumn2()) {
+            String temp = text.trim();
+            if (temp.startsWith(number)) {
+                return text;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Method that selects value from column1 (specified by index) and matching value from column2 (according to gameData object).
+     *
+     * @param index int, used to select value from column1
+     */
+    public void selectMatchingPair(int index) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfAllElements(this.column1Btns));
+            //Text displayed on selected button.
+            String selectedText = this.column1Btns.get(index).getText();
+            //Clicking specified button from column1.
+            this.clickButtonWithIndex(index, this.column1Btns);
+            this.waitForElToBeClickable(locators.getH1TitleLoc());
+            //Get final selection from column1.
+            String column1Data = getFinalSelection();
+            //Value that corresponds to selected (same but starts with number).
+            String matchingValue = this.userTextLookup(this.gameData.getColumn1(), selectedText);
+            //Matching value, also starting with number.
+            String secondValue = this.getSecondValueOfPair(matchingValue);
+            wait.until(ExpectedConditions.visibilityOfAllElements(this.column2Btns));
+            for (int i = 0; i < this.column2Btns.size(); i++) {
+                String btnText = column2Btns.get(i).getText();
+                if (secondValue.contains(btnText)) {
+                    this.clickButtonWithIndex(i, this.column2Btns);
+                }
+            }
+            this.waitForElToBeClickable(locators.getH1TitleLoc());
+            //Get final selection from column1.
+            String column2Data = getFinalSelection();
+            //Selected pair is added to list of userPicks (String pairs).
+            this.userPicksList.add(new String[]{column1Data, column2Data});
+        } catch (Exception e) {
+            System.err.println("Columns with buttons not displayed!");
+        }
+    }
+
+    //Selects 8 matching pairs of column1 and column2 values.
+    public void selectSpecifiedPairs() {
+        try {
+            for (int i = 0; i < 8; i++) {
+                this.selectMatchingPair(i);
+                waitForElToBeClickable(locators.getH1TitleLoc());
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Buttons with columns not displayed!");
+        }
     }
 }

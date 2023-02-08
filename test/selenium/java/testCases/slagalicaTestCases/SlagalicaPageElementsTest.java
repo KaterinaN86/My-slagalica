@@ -28,6 +28,11 @@ public class SlagalicaPageElementsTest extends SlagalicaBaseTest {
         this.slagalicaPage.verifyStopButtonDisplayed();
     }
 
+    @Test(priority = 8)
+    public void clickStopButtonTest() {
+        this.slagalicaPage.verifyThatStopButtonIsClicked();
+    }
+
     @Test(priority = 9)
     public void verifyPotvrdiButton() {
         this.slagalicaPage.verifyThatPotvrdiButtonIsClicked();
