@@ -62,6 +62,7 @@ public class SlagalicaGamePositiveTestCase extends SlagalicaBaseTest{
     public void goBackToSinglePlayerGamePage() {
         this.singlePlayerGamePage = new SinglePlayerGamePage();
         this.singlePlayerGamePage = this.slagalicaPage.goBackAfterGameFinished();
+        this.singlePlayerGamePage.verifyTotalPoints(this.slagalicaPage);
         this.singlePlayerGamePage.verifyBeforeGoingBack();
     }
 }

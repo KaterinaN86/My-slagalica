@@ -47,6 +47,7 @@ public class SlagalicaLongestWordTest extends SlagalicaBaseTest {
         this.singlePlayerGamePage=new SinglePlayerGamePage();
         this.singlePlayerGamePage = this.slagalicaPage.goBackAfterGameFinished();
         this.singlePlayerGamePage.verifyBeforeGoingBack();
+        this.singlePlayerGamePage.verifyTotalPoints(this.slagalicaPage);
     }
 
 }

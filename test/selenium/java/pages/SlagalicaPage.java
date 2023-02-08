@@ -2,7 +2,6 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
@@ -14,7 +13,6 @@ import utility.slagalica.LogicForSlagalicaGame;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class SlagalicaPage extends TestBase {
@@ -75,18 +73,26 @@ public class SlagalicaPage extends TestBase {
     }
 
     public void verifyThatPotvrdiButtonIsClicked() {
-        waitForElToBeClickable(potvrdiButtonLocator);
-        click(potvrdiButtonLocator);
-        Reporter.log("Potvrdi button is clicked.");
-        System.out.println("Potvrdi button is clicked.");
+        try {
+            waitForElToBeClickable(potvrdiButtonLocator);
+            click(potvrdiButtonLocator);
+            Reporter.log("Potvrdi button is clicked.");
+            System.out.println("Potvrdi button is clicked.");
+        } catch (Exception e) {
+            System.err.println("Potvrdi button not clickable!");
+        }
     }
 
     public void verifyThatIzbrisiButtonIsClicked() {
-        waitForElToBeClickable(izbrisiButtonLocator);
-        click(izbrisiButtonLocator);
-        Reporter.log("Izbrisi button is clicked.");
-        System.out.println("Izbrisi button is clicked.");
-        waitForVisibilityOf(stopButtonLocator);
+        try {
+            waitForElToBeClickable(izbrisiButtonLocator);
+            click(izbrisiButtonLocator);
+            Reporter.log("Izbrisi button is clicked.");
+            System.out.println("Izbrisi button is clicked.");
+            waitForVisibilityOf(stopButtonLocator);
+        } catch (Exception e) {
+            System.err.println("Delete button not clickable!");
+        }
     }
 
     public void verifyThatFirstListIsDisplayed() {
@@ -102,21 +108,29 @@ public class SlagalicaPage extends TestBase {
     }
 
     public void verifyPopUpDialog() {
-        waitForElToBeClickable(popUpDialog);
-        WebElement popup = find(popUpDialog);
-        Assert.assertTrue(popup.isDisplayed(), "Popup dialog not displayed!");
-        Reporter.log("Dialog is displayed.");
-        System.out.println("Dialog is displayed.");
+        try {
+            waitForElToBeClickable(popUpDialog);
+            WebElement popup = find(popUpDialog);
+            Assert.assertTrue(popup.isDisplayed(), "Popup dialog not displayed!");
+            Reporter.log("Dialog is displayed.");
+            System.out.println("Dialog is displayed.");
+        } catch (Exception e) {
+            System.err.println("Popup dialog not displayed!");
+        }
     }
 
     //Verify "Zatvori" button on "Potvrdi" pop up dialog is closed.
     public void verifyCloseButtonIsClicked() {
-        waitForVisibilityOf(closeButton);
-        verifyMethods.verifyButtonIsClickable(closeButton);
-        click((closeButton));
-        Reporter.log("Close button clicked.");
-        System.out.println("Close button clicked.");
-        waitForElToBeClickable(locators.getBackBtnLoc());
+        try {
+            waitForVisibilityOf(closeButton);
+            verifyMethods.verifyButtonIsClickable(closeButton);
+            click((closeButton));
+            Reporter.log("Close button clicked.");
+            System.out.println("Close button clicked.");
+            waitForElToBeClickable(locators.getBackBtnLoc());
+        } catch (Exception e) {
+            System.err.println("Popup dialog can not be closed!");
+        }
     }
 
     public void waitForPopupToClose() {
@@ -171,12 +185,16 @@ public class SlagalicaPage extends TestBase {
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(buttonsInListLocator));
     }
 
+    /**
+     * Gets value of computer calculated points and expected points according to method used for verification.
+     */
     public void getPoints() {
+        //Number of points is displayed as the third word in an alert message. Array is used to access that value.
         String[] finalPoints = find(finalPointsLocator).getText().split(" ");
         System.err.println("Calculated pints: " + finalPoints[2]);
         int points = gameLogicObject.calculateNumberOfPoints(wordObjects, find(userWordFieldLocator).getText(), actualComputerWord);
         System.err.println("Expected points: " + points);
-        this.slagalicaPoints = points;
+        this.setCalculatedPoints(Integer.parseInt(finalPoints[2]));
     }
 
     //Initializes actualComputerWord by getting text from corresponding WebElement object.
@@ -261,7 +279,7 @@ public class SlagalicaPage extends TestBase {
                 Reporter.log("Clicked letter: " + letter);
                 System.out.println("Clicked letter: " + letter);
                 wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(el)));
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
         }

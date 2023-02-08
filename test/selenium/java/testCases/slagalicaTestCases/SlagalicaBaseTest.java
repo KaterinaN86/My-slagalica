@@ -51,6 +51,8 @@ public class SlagalicaBaseTest extends TestBase {
     @Test(priority = 25)
     public void goBackToSinglePlayerGamePage() {
         this.singlePlayerGamePage = (SinglePlayerGamePage) this.slagalicaPage.goBack();
+        this.singlePlayerGamePage.waitForElToBeClickable(locators.getH1TitleLoc());
+        this.singlePlayerGamePage.verifyTotalPoints(this.slagalicaPage);
     }
 
     @Test(priority = 26)

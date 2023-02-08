@@ -74,6 +74,17 @@ public class SpojniceBaseTest extends TestBase {
     }
 
     @Test(priority = 27)
+    public void verifySpojnicePointsTest() {
+        this.singlePlayerGamePage.verifySpojnicePoints(this.spojnicePage);
+        takeSnapShot(this.getClass().getSimpleName() + "\\verifySpojnicePointsTest", prop.getProperty("snapShotExtension"));
+    }
+    @Test(priority = 28)
+    public void verifyTotalPointsAfterGame() {
+        this.singlePlayerGamePage.verifyTotalPoints(this.spojnicePage);
+        takeSnapShot(this.getClass().getSimpleName() + "\\verifyTotalPointsAfterGame", prop.getProperty("snapShotExtension"));
+    }
+
+    @Test(priority = 29)
     public void goBackToHomePage() {
         this.singlePlayerGamePage.waitForElToBeClickable(locators.getH1TitleLoc());
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
@@ -81,13 +92,13 @@ public class SpojniceBaseTest extends TestBase {
         this.homePage.verifyMethods.verifyContainerDisplayed();
     }
 
-    @Test(priority = 28)
+    @Test(priority = 30)
     public void waitBeforeLogoutTest() {
         this.homePage.waitForElToBeClickable(locators.getH1TitleLoc());
         this.homePage.waitBeforeLogout();
     }
 
-    @Test(priority = 29)
+    @Test(priority = 31)
     public void logout() {
         this.homePage.logout();
     }
