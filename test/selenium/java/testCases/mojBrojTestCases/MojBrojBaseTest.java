@@ -1,7 +1,6 @@
-package testCases;
+package testCases.mojBrojTestCases;
 
 import base.TestBase;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -9,7 +8,8 @@ import pages.HomePage;
 import pages.MojBrojPage;
 import pages.SinglePlayerGamePage;
 
-public class MojBrojPageTest extends TestBase {
+public class MojBrojBaseTest extends TestBase {
+
     /**
      * MojBrojPage instance used in several tests.
      */
@@ -18,15 +18,10 @@ public class MojBrojPageTest extends TestBase {
      * SinglePlayerGamePage instance used in several tests.
      */
     SinglePlayerGamePage singlePlayerGamePage;
-
     HomePage homePage;
-
     TestBase tempPageObject;
 
-    /**
-     * Constructor
-     */
-    public MojBrojPageTest() {
+    public MojBrojBaseTest() {
         super();
     }
 
@@ -41,15 +36,15 @@ public class MojBrojPageTest extends TestBase {
 
     @Test(priority = 1)
     public void verifyOpenMojBroj() {
-        this.homePage = this.loginPage.openLoginPage().userLogin("",prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"),"User "+ prop.getProperty("userAdisUsername")+ " logged in.");
+        this.homePage = this.loginPage.openLoginPage().userLogin("", prop.getProperty("userTestRegisterUsername"), prop.getProperty("userTestRegisterPassword"), "User " + prop.getProperty("userAdisUsername") + " logged in.");
         this.singlePlayerGamePage = this.homePage.clickSinglePlayerGame();
-        takeSnapShot(this.getClass().getSimpleName()+"\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName() + "\\verifyOpenMojBroj", prop.getProperty("snapShotExtension"));
         this.mojBrojPage = singlePlayerGamePage.openMojBrojPage();
     }
 
     @Test(priority = 2)
     public void verifyTimerStart() {
-        takeSnapShot(this.getClass().getSimpleName()+"\\verifyTimerStart", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName() + "\\verifyTimerStart", prop.getProperty("snapShotExtension"));
         this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
     }
 
@@ -59,33 +54,34 @@ public class MojBrojPageTest extends TestBase {
     }
 
     @Test(priority = 4)
-    public void verifyTargetNumber() {
+    public void verifyTargetNumberTest() {
         this.mojBrojPage.verifyTargetValueIsPositiveInteger();
     }
 
     @Test(priority = 5)
-    public void verifyTotalNumbers() {
+    public void verifyTotalNumbersTest() {
         this.mojBrojPage.verifyNumberButtonsTotal();
     }
 
     @Test(priority = 6)
-    public void verifyNumbers() {
+    public void verifyNumbersTest() {
         this.mojBrojPage.verifyNumbersValues();
     }
 
     @Test(priority = 7)
-    public void userExpressionMatchesClickedNumberTest() {
-        this.mojBrojPage.clickEachNumberAndDelete();
+    public void verifyOperatorsTest() {
+        this.mojBrojPage.verifyOperators();
     }
 
-    @Test(priority = 8)
+
+    @Test(priority = 24)
     public void GoBackToSinglePlayerPageTest() {
         this.mojBrojPage.verifyMethods.verifyBackButtonIsClickable();
         //Added step as a workaround regarding error in firefox
         this.tempPageObject = this.mojBrojPage.goBack();
     }
 
-    @Test(priority = 9)
+    @Test(priority = 25)
     public void singlePlayerPageOpenedTest() {
         //Added because of firefox bug.
         this.singlePlayerGamePage = this.mojBrojPage.firefoxWorkaround(tempPageObject);
@@ -93,16 +89,16 @@ public class MojBrojPageTest extends TestBase {
         this.singlePlayerGamePage.verifyMethods.verifyButtonNotClickable(this.singlePlayerGamePage.getMojBrojBtnLoc());
     }
 
-    @Test(priority = 10)
+    @Test(priority = 26)
     public void goBackToHomePage() {
         this.singlePlayerGamePage.verifyMethods.verifyBackButtonIsClickable();
         this.homePage = (HomePage) this.singlePlayerGamePage.goBack();
     }
 
-    @Test(priority = 11)
+    @Test(priority = 27)
     public void logout() {
         this.homePage.logout();
-        takeSnapShot(this.getClass().getSimpleName()+"\\logout", prop.getProperty("snapShotExtension"));
+        takeSnapShot(this.getClass().getSimpleName() + "\\logout", prop.getProperty("snapShotExtension"));
     }
 
     @AfterClass
