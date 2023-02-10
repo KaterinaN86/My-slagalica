@@ -522,4 +522,37 @@ public class TestBase {
         generated.add(index);
         return index;
     }
+
+    /**
+     * Sets timer element value to 00:00. Verifies timer value and deals with alert that pops up when time is up. Verifies alert message.
+     * @param expectedMessage String (Read from config.properties file. Appears in alert popup.)
+     */
+    public void setTimerToZero(String expectedMessage){
+        //Reading new timer value from config.properties file.
+        String timerValue = prop.getProperty("timerEndValue");
+        Reporter.log("Setting timer to zero.");
+        System.out.println("Setting timer to zero.");
+        //Script that stops running timer and sets time to 0.
+        String script = "startTimer(\"stop\"); timerInterval = setInterval(function(){submit();},1000)";
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        try {
+            //Executing script.
+            js.executeScript(script);
+            //Initialize timer WebElement object.
+            WebElement timerEl = find(locators.getTimerLoc());
+            //Set web element value to 00:00.
+            js.executeScript("arguments[0].innerHTML = arguments[1]", timerEl, timerValue);
+            //Verifying timer value.
+            this.verifyMethods.verifyTimerValue(timerValue, true);
+        } catch (Exception e) {
+            System.err.println("Stale element error.");
+        }
+        try {
+            dealWithAlert();
+            //Verifying alert message.
+            this.verifyMethods.verifyAlertMessage(this.getAlertMsg(),expectedMessage);
+        } catch (Exception e) {
+            System.err.println("No alert displayed!");
+        }
+    }
 }

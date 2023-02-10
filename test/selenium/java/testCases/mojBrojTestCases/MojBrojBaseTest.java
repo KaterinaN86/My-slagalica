@@ -45,7 +45,7 @@ public class MojBrojBaseTest extends TestBase {
     @Test(priority = 2)
     public void verifyTimerStart() {
         takeSnapShot(this.getClass().getSimpleName() + "\\verifyTimerStart", prop.getProperty("snapShotExtension"));
-        this.mojBrojPage.verifyMethods.verifyTimerStartValue(prop.getProperty("mojBrojPageTimerStart"));
+        this.mojBrojPage.verifyMethods.verifyTimerValue(prop.getProperty("mojBrojPageTimerStart"));
     }
 
     @Test(priority = 3)

@@ -35,7 +35,7 @@ public class SlagalicaBaseTest extends TestBase {
 
     @Test(priority = 2)
     public void verifyTimerStart() {
-        this.slagalicaPage.verifyMethods.verifyTimerStartValue(prop.getProperty("slagalicaPageTimerStart"));
+        this.slagalicaPage.verifyMethods.verifyTimerValue(prop.getProperty("slagalicaPageTimerStart"));
     }
 
     @Test(priority = 3)

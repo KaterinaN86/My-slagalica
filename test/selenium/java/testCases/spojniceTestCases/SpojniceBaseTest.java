@@ -35,7 +35,7 @@ public class SpojniceBaseTest extends TestBase {
 
     @Test(priority = 2)
     public void verifyTimerStart() {
-        this.spojnicePage.verifyMethods.verifyTimerStartValue(prop.getProperty("spojnicePageTimerStart"));
+        this.spojnicePage.verifyMethods.verifyTimerValue(prop.getProperty("spojnicePageTimerStart"));
     }
 
     @Test(priority = 3)

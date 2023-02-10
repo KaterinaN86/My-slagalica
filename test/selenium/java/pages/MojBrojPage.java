@@ -4,9 +4,11 @@ import base.TestBase;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.Reporter;
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -287,4 +289,6 @@ public class MojBrojPage extends TestBase {
         res = (int) Math.floor(exprs.evaluate());
         System.out.println( result+ " = "+res);
     }
+
+
 }
