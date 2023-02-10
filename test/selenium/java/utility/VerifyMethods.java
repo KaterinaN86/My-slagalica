@@ -205,18 +205,19 @@ public class VerifyMethods {
     }
 
     /**
-     * Verifies starting value of timer on pages that have one.
-     *
-     * @param startValue (String value specified in config file.)
+     * Verifies value of timer on pages that have one.
+     * @param timerValue String (specified in config.properties file).
+     * @param zero boolean (set to true if time is up when verification happens).
      */
-    public void verifyTimerStartValue(String startValue) {
+    public void verifyTimerValue(String timerValue, boolean... zero) {
+        String startValue = zero.length>0?" ":" starting " ;
         base.waitForVisibilityOf(TestBase.locators.getTimerLoc());
         String actualValue = base.find(TestBase.locators.getTimerLoc()).getText();
-        Reporter.log("Verifying timer element start value.");
-        System.out.println("Verifying timer element start value.");
-        Assert.assertEquals(actualValue, startValue, "Timer start value " + actualValue + " doesn't match expected " + startValue + ".");
-        Reporter.log("Timer start value matches expected.");
-        System.out.println("Timer start value matches expected.");
+        Reporter.log("Verifying timer element value.");
+        System.out.println("Verifying timer element value.");
+        Assert.assertEquals(actualValue, timerValue, "Timer" +startValue + "value " + actualValue + " doesn't match expected: " + timerValue + ".");
+        Reporter.log("Timer" +startValue + "value " + actualValue + " matches expected.");
+        System.out.println("Timer" +startValue + "value " + actualValue + " matches expected.");
     }
 
     /**

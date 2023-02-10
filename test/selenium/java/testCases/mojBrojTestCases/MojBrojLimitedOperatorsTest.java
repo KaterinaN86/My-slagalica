@@ -21,6 +21,7 @@ public class MojBrojLimitedOperatorsTest extends MojBrojBaseTest {
     public void verifySolutionTest() {
         this.mojBrojPage.verifySolutionExpression();
     }
+
     @Test(priority = 11)
     public void solutionTest() {
         this.mojBrojPage.getSolutionExpression();
