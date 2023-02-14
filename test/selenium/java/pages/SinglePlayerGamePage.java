@@ -2,6 +2,7 @@ package pages;
 
 import base.TestBase;
 import org.openqa.selenium.By;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.Reporter;
 
@@ -39,6 +40,7 @@ public class SinglePlayerGamePage extends TestBase {
 
     public SinglePlayerGamePage() {
         super();
+        logger= LoggerFactory.getLogger(this.getClass());
     }
 
     public By getSlagalicaBtnLoc() {
@@ -96,6 +98,16 @@ public class SinglePlayerGamePage extends TestBase {
         this.pointsBeforeGame= Integer.parseInt(find(totalPointsLoc).getText());
         click(spojniceBtnLoc);
         return (SpojnicePage) verifyMethods.verifyPageObjectInitialized(new SpojnicePage());
+    }
+    public AsocijacijaPage openAsocijacijaPage() {
+        clickNewGameButton();
+        this.verifyMethods.verifyButtonIsClickable(asocijacijeBtnLoc);
+        Reporter.log("Click \"Asocijacije\" button");
+        logger.info("Click \"Asocijacije\" button");
+        //Storing value of points before game is played.
+        this.pointsBeforeGame= Integer.parseInt(find(totalPointsLoc).getText());
+        click(asocijacijeBtnLoc);
+        return (AsocijacijaPage) verifyMethods.verifyPageObjectInitialized(new AsocijacijaPage());
     }
 
     public void verifyBeforeGoingBack() {

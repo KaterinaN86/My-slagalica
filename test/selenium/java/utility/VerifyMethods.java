@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
+import pages.AsocijacijaPage;
 import pages.HomePage;
 import pages.MojBrojPage;
 import pages.SlagalicaPage;

@@ -2,6 +2,11 @@ package base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -9,6 +14,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
 import org.testng.Reporter;
 import pages.*;
 import utility.Locators;
@@ -55,6 +61,12 @@ public class TestBase {
      * Current URL.
      */
     public static String currentUrl;
+    //Used for logging with log4j
+    public static Logger logger;
+    //Used for logging testSuite name, test name and test method name.
+    protected static String testSuiteName;
+    protected static String testName;
+    protected static String testMethodName;
     /**
      * Instance used to access methods for verification.
      */
@@ -171,6 +183,11 @@ public class TestBase {
         this.loginPage = new LoginPage();
         //Initializing Locators object.
         locators = new Locators();
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
+        Configuration config = context.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+        loggerConfig.setLevel(Level.toLevel("INFO"));
+        context.updateLoggers();
     }
 
     /**
@@ -314,7 +331,7 @@ public class TestBase {
         if (this instanceof SinglePlayerGamePage) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
-        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox"))||(this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
+        if ((this instanceof MojBrojPage && prop.getProperty("browser").equals("firefox")) || (this instanceof SpojnicePage && prop.getProperty("browser").equals("firefox"))) {
             return verifyMethods.verifyPageObjectInitialized(new HomePage());
         }
         return verifyMethods.verifyPageObjectInitialized(new SinglePlayerGamePage());
@@ -525,15 +542,15 @@ public class TestBase {
 
     /**
      * Sets timer element value to 00:00. Verifies timer value and deals with alert that pops up when time is up. Verifies alert message.
+     *
      * @param expectedMessage String (Read from config.properties file. Appears in alert popup.)
+     * @param script          String containing script that stops running timer and sets time to 0.
      */
-    public void setTimerToZero(String expectedMessage){
+    public void setTimerToZero(String expectedMessage, String script) {
         //Reading new timer value from config.properties file.
         String timerValue = prop.getProperty("timerEndValue");
         Reporter.log("Setting timer to zero.");
         System.out.println("Setting timer to zero.");
-        //Script that stops running timer and sets time to 0.
-        String script = "startTimer(\"stop\"); timerInterval = setInterval(function(){submit();},1000)";
         JavascriptExecutor js = (JavascriptExecutor) driver;
         try {
             //Executing script.
@@ -550,7 +567,7 @@ public class TestBase {
         try {
             dealWithAlert();
             //Verifying alert message.
-            this.verifyMethods.verifyAlertMessage(this.getAlertMsg(),expectedMessage);
+            this.verifyMethods.verifyAlertMessage(this.getAlertMsg(), expectedMessage);
         } catch (Exception e) {
             System.err.println("No alert displayed!");
         }

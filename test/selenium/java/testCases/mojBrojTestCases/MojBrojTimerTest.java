@@ -9,6 +9,6 @@ public class MojBrojTimerTest extends MojBrojBaseTest {
 
     @Test(priority = 8)
     public void timerTest() {
-        this.mojBrojPage.setTimerToZero(prop.getProperty("mojBrojBadExpMsg"));
+        this.mojBrojPage.setTimerToZero(prop.getProperty("mojBrojBadExpMsg"), prop.getProperty("mojBrojTimerScript"));
     }
 }
