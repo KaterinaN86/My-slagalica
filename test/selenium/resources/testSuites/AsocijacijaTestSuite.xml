@@ -1,0 +1,21 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="AsocijacijaTestSuite" verbose="1">
+    <listeners>
+        <listener class-name="base.TestListener"></listener>
+        <listener class-name="base.ExtentReporterNG"></listener>
+    </listeners>
+
+    <test name="logInAndOpenTest">
+        <parameter name="no" value=""></parameter>
+        <parameter name="username" value="testUser"></parameter>
+        <parameter name="password" value="123456"></parameter>
+        <parameter name="expectedMessage" value="User successfully logged in."></parameter>
+        <classes>
+            <class name="testCases.asocijacija.AsocijacijaBaseTest">
+            </class>
+        </classes>
+    </test>
+
+
+</suite>
