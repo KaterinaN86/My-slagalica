@@ -1,0 +1,13 @@
+!define TEST_SYSTEM {slim}
+!path target\test-classes
+
+
+|import|
+|fitnesse|
+
+
+!|SpojniceFunctionalityTest|
+|headline                                                   |column1Text               |matchingDataFound?|
+|SPOJITE SRPSKE VOJSKOVOĐE SA MESTOM ROĐENJA                |3:VUK ISAKOVIĆ            |3:SREDSKA         |
+|SPOJITE POZNATA PIĆA SA DRŽAVAMA POREKLA                   |2:APSENT                  |2:ČEŠKA           |
+|SPOJITE NOVČANICE SA OSOBAMA ČIJI SE LIKOVI NALAZE NA NJIMA|2:10 USD                  |                  |

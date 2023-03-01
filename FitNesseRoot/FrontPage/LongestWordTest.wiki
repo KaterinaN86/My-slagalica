@@ -1,0 +1,12 @@
+!define TEST_SYSTEM {slim}
+
+!path target\test-classes
+
+
+
+|fitnesse.LongestWordTest     |
+|randomLetters |getExpectedLongestWord?|
+|IBALUMUĆOCAZ  |obuzimala              |
+|AROTOMANjUŽIŠ |mutiranja              |
+|GORAONIEVLJT  |antologije             |
+|FOERANIUANjUŽ |uronjeni               |

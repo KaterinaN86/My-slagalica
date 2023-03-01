@@ -64,9 +64,9 @@ public class TestBase {
     //Used for logging with log4j
     public static Logger logger;
     //Used for logging testSuite name, test name and test method name.
-    protected static String testSuiteName;
-    protected static String testName;
-    protected static String testMethodName;
+    public static String testSuiteName;
+    public static String testName;
+    public static String testMethodName;
     /**
      * Instance used to access methods for verification.
      */
@@ -183,11 +183,6 @@ public class TestBase {
         this.loginPage = new LoginPage();
         //Initializing Locators object.
         locators = new Locators();
-        LoggerContext context = (LoggerContext) LogManager.getContext(false);
-        Configuration config = context.getConfiguration();
-        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-        loggerConfig.setLevel(Level.toLevel("INFO"));
-        context.updateLoggers();
     }
 
     /**

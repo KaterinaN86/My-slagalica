@@ -405,4 +405,5 @@ public class SpojnicePage extends TestBase {
             System.out.println("Buttons with columns not displayed!");
         }
     }
+
 }

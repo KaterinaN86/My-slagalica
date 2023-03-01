@@ -1,0 +1,4 @@
+|FrontPage.LongestWordTest||23:38:25 Fri, Feb 17, 2023|
+|FrontPage||23:13:56 Fri, Feb 17, 2023|
+|FrontPage.SpojniceFunctionalityTest||22:30:57 Fri, Feb 17, 2023|
+|FrontPage.MyCalculator||20:05:24 Fri, Feb 17, 2023|

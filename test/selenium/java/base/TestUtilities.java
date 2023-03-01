@@ -15,7 +15,6 @@ import java.util.List;
 
 public class TestUtilities extends TestBase {
 
-
     static String getTodaysDate() {
         return new SimpleDateFormat("yyyMMdd").format(new Date());
     }
