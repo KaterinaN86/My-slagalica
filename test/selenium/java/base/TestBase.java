@@ -9,6 +9,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -166,7 +167,11 @@ public class TestBase {
         switch (browserName) {
             case "chrome" -> {
                 WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver();
+                //After Chrome browser 1.1.0 and ChromeDriver update there is forbidden access issue.
+                //Adding this argument to the options object is necessary for chromeDriver to work.
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--remote-allow-origins=*");
+                driver = new ChromeDriver(chromeOptions);
             }
             case "firefox" -> {
                 WebDriverManager.firefoxdriver().setup();
